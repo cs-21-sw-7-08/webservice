@@ -27,20 +27,40 @@ namespace wasp.Controllers
         [HttpGet]
         public WASPResponse<IEnumerable<WeatherForecast>> Get()
         {
-            var rng = new Random();
-
-            return new WASPResponse<IEnumerable<WeatherForecast>>()
+            try
             {
-                isSuccessful = true,
-                ErrorNo = 0,
-                Result = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateTime.Now.AddDays(index),
-                    TemperatureC = rng.Next(-20, 55),
-                    Summary = Summaries[rng.Next(Summaries.Length)]
-                })
-            .ToArray()
+                var rng = new Random();
+                return new WASPResponse<IEnumerable<WeatherForecast>>(
+                    Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                    {
+                        Date = DateTime.Now.AddDays(index),
+                        TemperatureC = rng.Next(-20, 55),
+                        Summary = Summaries[rng.Next(Summaries.Length)]
+                    })
+                    .ToArray()
+                );
+            } catch (Exception exc)
+            {
+                return new WASPResponse<IEnumerable<WeatherForecast>>(1000, exc.Message);
+            }
+        }
+        [HttpPost]
+        public WASPResponse CreateReponse()
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return new WASPResponse
+            {
+                
             };
         }
-    }
+
+    }   
 }
