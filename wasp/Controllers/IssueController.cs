@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wasp.DataAccessLayer;
 using wasp.Models;
 
 namespace wasp.Controllers
@@ -12,11 +13,13 @@ namespace wasp.Controllers
     public class IssueController : ControllerBase
     {
         [HttpGet]
-        public WASPResponse<Issue> GetIssue()
+        public async Task<WASPResponse<Issue>> GetIssue()
             {
-            return new WASPResponse<Issue>(new Issue { Name = "Hul i Vejen",
-                Description = "der er et hul i vejen" } 
-                );
+            var dataService = new DataService();
+            var issue = await dataService.GetIssueDetails();
+
+
+            return new WASPResponse<Issue>(issue);
             }
     }
 }

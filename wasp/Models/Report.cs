@@ -7,5 +7,6 @@ namespace wasp.Models
 {
     public class Report
     {
+        //TODO: Make Issue-Report Class
     }
 }
