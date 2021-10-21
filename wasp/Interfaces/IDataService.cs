@@ -11,29 +11,29 @@ namespace wasp.Interfaces
 
         //Issue Functions
         //TODO : make DALResponse maybe.
-        public Task<Issue> GetIssueDetails();
-        public Task<IEnumerable<Issue>> GetIssueOverview();
-        public Task CreateIssue();
-        public Task<Issue> UpdateIssue();
-        public Task DeleteIssue();
-        public Task VerifyIssue();
-        public Task<Report> ReportIssue();
+        public Task<Issue> GetIssueDetails(int issueId);
+        public Task<IEnumerable<Issue>> GetIssueOverview(IssueOverviewFilter x);
+        public Task CreateIssue(Issue issue);
+        public Task<Issue> UpdateIssue(Issue issue);
+        public Task DeleteIssue(int issueId);
+        public Task VerifyIssue(int issueId);
+        public Task<Report> ReportIssue(int issueId);
+        public Task<IEnumerable<Category>> GetCategories();
 
         //Municipality Functions
-        public Task<MuncResponse> CreateResponse();
-        public Task<MuncResponse> UpdateResponse();
-        public Task DeleteResponse();
-        public Task UpdateIssueStatus();
+        public Task<MuniUser> MuniSignUp(MuniUser muniUser);
+        public Task<MuniUser> MuniLogIn(MuniUser muniUser);
+        public Task<MuniResponse> CreateResponse(MuniResponse response);
+        public Task<MuniResponse> UpdateResponse(MuniResponse response);
+        public Task DeleteResponse(int responseId);
+        public Task UpdateIssueStatus(int issueId);
 
         //User
-        public Task<Citizen> SignUp();
-        public Task<Citizen> LogIn();
-        public Task BlockUser();
-        public Task UnblockUser();
-        public Task DeleteUser();
-
-        //
-        public Task<IEnumerable<Category>> GetCategories();
+        public Task<Citizen> CitSignUp(Citizen citizen);
+        public Task<Citizen> CitLogIn(Citizen citizen);
+        public Task BlockUser(int citizenId);
+        public Task UnblockUser(int citizenId);
+        public Task DeleteUser(int citizenId);
 
     }
 }

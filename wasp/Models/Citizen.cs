@@ -1,7 +1,10 @@
-﻿namespace wasp.Interfaces
+﻿using wasp.Models;
+
+namespace wasp.Interfaces
 {
-    public class Citizen
+    public class Citizen : User
     {
-        //TODO: Make Citizen Class
+        public int PhoneNum { get; set; }
+        public bool isBlocked { get; set; }
     }
 }

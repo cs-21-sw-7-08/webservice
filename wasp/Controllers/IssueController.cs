@@ -9,17 +9,50 @@ using wasp.Models;
 namespace wasp.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("WASP/Issues/")]
     public class IssueController : ControllerBase
     {
-        [HttpGet]
-        public async Task<WASPResponse<Issue>> GetIssue()
+        TestData dummy = new();
+        DataService dataService = new();
+
+        [HttpGet(nameof(GetIssueDetails))]
+        public async Task<WASPResponse<Issue>> GetIssueDetails(int id)
+        {
+            var issuedets = await dataService.GetIssueDetails(id);
+
+
+            return new WASPResponse<Issue>(issuedets);
+        }
+
+        [HttpPost(nameof(CreateIssue))]
+        public async Task<WASPResponse> CreateIssue(Issue issue)
+        {
+            Issue formatted = new()
             {
-            var dataService = new DataService();
-            var issue = await dataService.GetIssueDetails();
+                Id = issue.Id,
+                Name = issue.Name,
+                Description = issue.Description,
+                Status = issue.Status
+            };
+            await dataService.CreateIssue(formatted);
 
+            return new WASPResponse();
 
-            return new WASPResponse<Issue>(issue);
+        }
+
+        [HttpPut]
+        public async Task<WASPResponse> UpdateIssue(Issue issue)
+        {
+            Issue updatedIssue;
+            try
+            {
+                updatedIssue = await dataService.UpdateIssue(issue);
             }
+            catch (NullReferenceException)
+            {
+                return new WASPResponse(25, "There was no issue to be edited");
+            }
+            return new WASPResponse<Issue>(updatedIssue);
+        }
     }
 }

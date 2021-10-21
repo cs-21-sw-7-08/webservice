@@ -1,8 +1,7 @@
 ﻿namespace wasp.Interfaces
 {
-    internal class MuncResponse
+    public class MuniResponse
     {
         //TODO: Make Municipality-Response Class
-        //TODO: Change name to MuniResponse
     }
 }
