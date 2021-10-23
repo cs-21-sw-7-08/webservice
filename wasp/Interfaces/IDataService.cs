@@ -13,9 +13,9 @@ namespace wasp.Interfaces
         //TODO : make DALResponse maybe.
         public Task<Issue> GetIssueDetails(int issueId);
         public Task<IEnumerable<Issue>> GetIssueOverview(IssueOverviewFilter x);
-        public Task CreateIssue(Issue issue);
+        public Task<bool> CreateIssue(Issue issue);
         public Task<Issue> UpdateIssue(Issue issue);
-        public Task DeleteIssue(int issueId);
+        public Task<bool> DeleteIssue(int issueId);
         public Task VerifyIssue(int issueId);
         public Task<Report> ReportIssue(int issueId);
         public Task<IEnumerable<Category>> GetCategories();

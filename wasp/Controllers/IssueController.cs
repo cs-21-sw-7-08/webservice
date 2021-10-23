@@ -9,13 +9,12 @@ using wasp.Models;
 namespace wasp.Controllers
 {
     [ApiController]
-    [Route("WASP/Issues/")]
+    [Route("WASP/Issues/[action]")]
     public class IssueController : ControllerBase
     {
-        TestData dummy = new();
         DataService dataService = new();
 
-        [HttpGet(nameof(GetIssueDetails))]
+        [HttpGet]
         public async Task<WASPResponse<Issue>> GetIssueDetails(int id)
         {
             var issuedets = await dataService.GetIssueDetails(id);
@@ -24,7 +23,17 @@ namespace wasp.Controllers
             return new WASPResponse<Issue>(issuedets);
         }
 
-        [HttpPost(nameof(CreateIssue))]
+        [HttpGet]
+        public async Task<WASPResponse<IEnumerable<Issue>>> GetListOfIssues()
+        {
+            IssueOverviewFilter filter = new();
+            IEnumerable<Issue> issueList = await dataService.GetIssueOverview(filter);
+            return (WASPResponse<IEnumerable<Issue>>)issueList;
+        }
+
+
+
+        [HttpPost]
         public async Task<WASPResponse> CreateIssue(Issue issue)
         {
             Issue formatted = new()
@@ -34,9 +43,12 @@ namespace wasp.Controllers
                 Description = issue.Description,
                 Status = issue.Status
             };
-            await dataService.CreateIssue(formatted);
+            bool waitResult = await dataService.CreateIssue(formatted);
 
-            return new WASPResponse();
+            if (waitResult)
+                return new WASPResponse();
+            else
+                return new WASPResponse(500);
 
         }
 
@@ -50,9 +62,24 @@ namespace wasp.Controllers
             }
             catch (NullReferenceException)
             {
-                return new WASPResponse(25, "There was no issue to be edited");
+                return new WASPResponse(500, "There was no issue to be edited");
             }
             return new WASPResponse<Issue>(updatedIssue);
+        }
+
+        [HttpDelete]
+        public async Task<WASPResponse> DeleteIssue(int issue_id)
+        {
+            bool delResult = await dataService.DeleteIssue(issue_id);
+
+            if (delResult)
+            {
+                return new WASPResponse();
+            }
+            else
+            {
+                return new WASPResponse(500);
+            }    
         }
     }
 }

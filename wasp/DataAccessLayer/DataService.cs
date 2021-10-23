@@ -27,11 +27,13 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task CreateIssue(Issue issue)
+        public Task<bool> CreateIssue(Issue issue)
             {
             testy.mockdata.Add(issue);
-
-            return Task.CompletedTask;
+            if (testy.mockdata.Last().Id == issue.Id)
+                return Task.FromResult(true);
+            else
+                return Task.FromResult(false);
         }
 
         public Task<MuniResponse> CreateResponse(MuniResponse response)
@@ -39,7 +41,7 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task DeleteIssue(int issueId)
+        public Task<bool> DeleteIssue(int issueId)
         {
             throw new NotImplementedException();
         }
