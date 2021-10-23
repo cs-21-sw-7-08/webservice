@@ -19,10 +19,5 @@ namespace wasp.Models
             var objIssue = obj as Issue;
             return objIssue.Id == Id && objIssue.Name == Name && objIssue.Description == Description && objIssue.Status == Status;
         }
-
-        public override int GetHashCode()
-        {
-            return GetHashCode();
-        }
     }
 }

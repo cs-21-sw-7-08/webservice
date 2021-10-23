@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using wasp.DataAccessLayer;
-using wasp.Interfaces;
 using wasp.Models;
 
 namespace wasp.Controllers
@@ -80,35 +79,7 @@ namespace wasp.Controllers
             else
             {
                 return new WASPResponse(500);
-            }
-        }
-
-        [HttpPut]
-        public async Task<WASPResponse> VerifyIssue(int issue_id)
-        {
-            await dataService.VerifyIssue(issue_id);
-            return new WASPResponse();
-        }
-        
-        [HttpPost]
-        public async Task<WASPResponse> ReportIssue(int issue_id)
-        {
-            await dataService.ReportIssue(issue_id);
-            return new WASPResponse();
-        }
-
-        [HttpGet]
-        public async Task<WASPResponse> GetCategories()
-        {
-            var categoryList = await dataService.GetCategories();
-            if (categoryList != null)
-            {
-                return new WASPResponse<IEnumerable<Category>>(categoryList);
-            }
-            else
-            {
-                return new WASPResponse(500);
-            }
+            }    
         }
     }
 }
