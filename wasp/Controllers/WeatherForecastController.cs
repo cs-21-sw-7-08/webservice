@@ -10,6 +10,7 @@ namespace wasp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)] //Remove this line to un-hide the WeatherForecast controller
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
