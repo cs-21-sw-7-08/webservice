@@ -89,7 +89,7 @@ namespace wasp.Controllers
             await dataService.VerifyIssue(issue_id);
             return new WASPResponse();
         }
-        
+
         [HttpPost]
         public async Task<WASPResponse> ReportIssue(int issue_id)
         {
