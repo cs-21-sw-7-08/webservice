@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 namespace wasp.Models
 {
-    public class WASPResponse
+    public class DataResponse
     {
         public bool IsSuccessful { get; set; }
         public int ErrorNo { get; set; }
         public string ErrorMessage { get; set; }
 
-        public WASPResponse()
+        public DataResponse()
         {
             IsSuccessful = true;
             ErrorNo = 0;
         }
 
-        public WASPResponse(int errorNo, string errorMessage = null)
+        public DataResponse(int errorNo, string errorMessage = null)
         {
             IsSuccessful = false;
             ErrorNo = errorNo;
@@ -25,19 +25,19 @@ namespace wasp.Models
         }
     }
 
-    public class WASPResponse<ResultType> : WASPResponse
+    public class DataResponse<ResultType> : DataResponse
     {
 
         public ResultType Result { get; set; }
 
-        public WASPResponse(ResultType result)
+        public DataResponse(ResultType result)
         {
             IsSuccessful = true;
             ErrorNo = 0;
             Result = result;
         }
 
-        public WASPResponse(int errorNo, string errorMessage = null) : base(errorNo, errorMessage)
+        public DataResponse(int errorNo, string errorMessage = null) : base(errorNo, errorMessage)
         {
             Result = default;
         }

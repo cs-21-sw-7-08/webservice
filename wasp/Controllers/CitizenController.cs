@@ -46,7 +46,7 @@ namespace wasp.Controllers
 
         }
 
-        [HttpPut]
+        [HttpDelete]
         public async Task<WASPResponse> DeleteUser(int citizen_id)
         {
             await dataService.DeleteCitizen(citizen_id);

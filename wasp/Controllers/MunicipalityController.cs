@@ -13,7 +13,7 @@ namespace wasp.Controllers
     public class MunicipalityController : ControllerBase
     {
         DataService dataService = new();
-        
+
         [HttpPost]
         public async Task<WASPResponse> SignUp(MunicipalUser munUser)
         {

@@ -28,7 +28,7 @@ namespace wasp.DataAccessLayer
         }
 
         public Task<bool> CreateIssue(Issue issue)
-            {
+        {
             testy.mockdata.Add(issue);
             if (testy.mockdata.Last().Id == issue.Id)
                 return Task.FromResult(true);
