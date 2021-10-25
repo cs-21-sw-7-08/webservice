@@ -21,19 +21,18 @@ namespace wasp.Interfaces
         public Task<IEnumerable<Category>> GetCategories();
 
         //Municipality Functions
-        public Task<MuniUser> MuniSignUp(MuniUser muniUser);
-        public Task<MuniUser> MuniLogIn(MuniUser muniUser);
-        public Task<MuniResponse> CreateResponse(MuniResponse response);
-        public Task<MuniResponse> UpdateResponse(MuniResponse response);
+        public Task<MunicipalUser> MunicipalSignUp(MunicipalUser muniUser);
+        public Task<MunicipalUser> MunicipalLogIn(MunicipalUser muniUser);
+        public Task<MunicipalResponse> CreateResponse(MunicipalResponse response);
+        public Task<MunicipalResponse> UpdateResponse(MunicipalResponse response);
         public Task DeleteResponse(int responseId);
         public Task UpdateIssueStatus(int issueId);
 
-        //User
-        public Task<Citizen> CitSignUp(Citizen citizen);
-        public Task<Citizen> CitLogIn(Citizen citizen);
-        public Task BlockUser(int citizenId);
-        public Task UnblockUser(int citizenId);
-        public Task DeleteUser(int citizenId);
-
+        //User Functions
+        public Task<Citizen> CitizenSignUp(Citizen citizen);
+        public Task<Citizen> CitizenLogIn(Citizen citizen);
+        public Task BlockCitizen(int citizenId);
+        public Task UnblockCitizen(int citizenId);
+        public Task DeleteCitizen(int citizenId);
     }
 }

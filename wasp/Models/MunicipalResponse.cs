@@ -1,6 +1,6 @@
-﻿namespace wasp.Interfaces
+﻿namespace wasp.Models
 {
-    public class MuniResponse
+    public class MunicipalResponse
     {
         //TODO: Make Municipality-Response Class
     }

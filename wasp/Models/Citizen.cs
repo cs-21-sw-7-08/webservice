@@ -1,10 +1,16 @@
 ﻿using wasp.Models;
 
-namespace wasp.Interfaces
+namespace wasp.Models
 {
     public class Citizen : User
     {
         public int PhoneNum { get; set; }
-        public bool isBlocked { get; set; }
+        public bool IsBlocked { get; set; }
+
+        public Citizen() : base()
+        {
+            PhoneNum = 0;
+            IsBlocked = false;
+        }
     }
 }

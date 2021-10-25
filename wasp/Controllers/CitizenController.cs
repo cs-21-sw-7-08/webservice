@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using wasp.Models;
 using wasp.DataAccessLayer;
-using wasp.Interfaces;
 
 namespace wasp.Controllers
 {
@@ -16,17 +15,17 @@ namespace wasp.Controllers
         DataService dataService = new();
 
         [HttpPost]
-        public async Task<WASPResponse> CitizenSignUp(Citizen citizen)
+        public async Task<WASPResponse> SignUp(Citizen citizen)
         {
-            await dataService.CitSignUp(citizen);
+            await dataService.CitizenSignUp(citizen);
             return new WASPResponse();
 
         }
 
         [HttpGet]
-        public async Task<WASPResponse> CitizenLogIn(Citizen citizen)
+        public async Task<WASPResponse> LogIn(Citizen citizen)
         {
-            await dataService.CitLogIn(citizen);
+            await dataService.CitizenLogIn(citizen);
             return new WASPResponse();
 
         }
@@ -34,7 +33,7 @@ namespace wasp.Controllers
         [HttpPut]
         public async Task<WASPResponse> BlockUser(int citizen_id)
         {
-            await dataService.BlockUser(citizen_id);
+            await dataService.BlockCitizen(citizen_id);
             return new WASPResponse();
 
         }
@@ -42,7 +41,7 @@ namespace wasp.Controllers
         [HttpPut]
         public async Task<WASPResponse> UnblockUser(int citizen_id)
         {
-            await dataService.UnblockUser(citizen_id);
+            await dataService.UnblockCitizen(citizen_id);
             return new WASPResponse();
 
         }
@@ -50,7 +49,7 @@ namespace wasp.Controllers
         [HttpPut]
         public async Task<WASPResponse> DeleteUser(int citizen_id)
         {
-            await dataService.DeleteUser(citizen_id);
+            await dataService.DeleteCitizen(citizen_id);
             return new WASPResponse();
 
         }

@@ -12,17 +12,17 @@ namespace wasp.DataAccessLayer
     {
         static TestData testy = new();
 
-        public Task BlockUser(int citizenId)
+        public Task BlockCitizen(int citizenId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Citizen> CitLogIn(Citizen citizen)
+        public Task<Citizen> CitizenLogIn(Citizen citizen)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Citizen> CitSignUp(Citizen citizen)
+        public Task<Citizen> CitizenSignUp(Citizen citizen)
         {
             throw new NotImplementedException();
         }
@@ -36,7 +36,7 @@ namespace wasp.DataAccessLayer
                 return Task.FromResult(false);
         }
 
-        public Task<MuniResponse> CreateResponse(MuniResponse response)
+        public Task<MunicipalResponse> CreateResponse(MunicipalResponse response)
         {
             throw new NotImplementedException();
         }
@@ -51,7 +51,7 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task DeleteUser(int citizenId)
+        public Task DeleteCitizen(int citizenId)
         {
             throw new NotImplementedException();
         }
@@ -74,12 +74,12 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task<MuniUser> MuniLogIn(MuniUser muniUser)
+        public Task<MunicipalUser> MunicipalLogIn(MunicipalUser muniUser)
         {
             throw new NotImplementedException();
         }
 
-        public Task<MuniUser> MuniSignUp(MuniUser muniUser)
+        public Task<MunicipalUser> MunicipalSignUp(MunicipalUser muniUser)
         {
             throw new NotImplementedException();
         }
@@ -89,7 +89,7 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task UnblockUser(int citizenId)
+        public Task UnblockCitizen(int citizenId)
         {
             throw new NotImplementedException();
         }
@@ -116,7 +116,7 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task<MuniResponse> UpdateResponse(MuniResponse response)
+        public Task<MunicipalResponse> UpdateResponse(MunicipalResponse response)
         {
             throw new NotImplementedException();
         }
