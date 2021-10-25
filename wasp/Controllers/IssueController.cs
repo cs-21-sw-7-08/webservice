@@ -31,8 +31,6 @@ namespace wasp.Controllers
             return (WASPResponse<IEnumerable<Issue>>)issueList;
         }
 
-
-
         [HttpPost]
         public async Task<WASPResponse> CreateIssue(Issue issue)
         {
@@ -79,7 +77,7 @@ namespace wasp.Controllers
             else
             {
                 return new WASPResponse(500);
-            }    
+            }
         }
     }
 }

@@ -25,14 +25,14 @@ namespace wasp.Interfaces
         public Task<MunicipalUser> MunicipalLogIn(MunicipalUser muniUser);
         public Task<MunicipalResponse> CreateResponse(MunicipalResponse response);
         public Task<MunicipalResponse> UpdateResponse(MunicipalResponse response);
-        public Task DeleteResponse(int responseId);
-        public Task UpdateIssueStatus(int issueId);
+        public Task<bool> DeleteResponse(int responseId);
+        public Task<Issue> UpdateIssueStatus(int issueId);
 
         //User Functions
         public Task<Citizen> CitizenSignUp(Citizen citizen);
         public Task<Citizen> CitizenLogIn(Citizen citizen);
-        public Task BlockCitizen(int citizenId);
-        public Task UnblockCitizen(int citizenId);
-        public Task DeleteCitizen(int citizenId);
+        public Task<bool> BlockCitizen(int citizenId);
+        public Task<bool> UnblockCitizen(int citizenId);
+        public Task<bool> DeleteCitizen(int citizenId);
     }
 }

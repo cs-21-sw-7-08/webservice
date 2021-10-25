@@ -12,7 +12,7 @@ namespace wasp.DataAccessLayer
     {
         static TestData testy = new();
 
-        public Task BlockCitizen(int citizenId)
+        public Task<bool> BlockCitizen(int citizenId)
         {
             throw new NotImplementedException();
         }
@@ -46,12 +46,12 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task DeleteResponse(int responseId)
+        public Task<bool> DeleteResponse(int responseId)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteCitizen(int citizenId)
+        public Task<bool> DeleteCitizen(int citizenId)
         {
             throw new NotImplementedException();
         }
@@ -89,7 +89,7 @@ namespace wasp.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task UnblockCitizen(int citizenId)
+        public Task<bool> UnblockCitizen(int citizenId)
         {
             throw new NotImplementedException();
         }
@@ -111,7 +111,7 @@ namespace wasp.DataAccessLayer
             return Task.FromResult(modIssue);
         }
 
-        public Task UpdateIssueStatus(int issueId)
+        public Task<Issue> UpdateIssueStatus(int issueId)
         {
             throw new NotImplementedException();
         }
