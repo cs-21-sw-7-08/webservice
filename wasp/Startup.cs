@@ -42,7 +42,7 @@ namespace WASP
                     options.UseSqlServer(Configuration.GetConnectionString("HiveConnection"), x => x.UseNetTopologySuite());
                     options.UseLoggerFactory(_myLoggerFactory);
                 }
-            );
+            );            
             // Change JSON output to PascalCase
             services.AddMvc().AddJsonOptions(options =>
             {

@@ -19,7 +19,7 @@ namespace WASP.Controllers
     {
         public IssueController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
         {
-
+            
         }
 
 
