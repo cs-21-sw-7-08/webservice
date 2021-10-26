@@ -19,12 +19,12 @@ namespace WASP.Controllers
     {
         public IssueController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
         {
-            
+
         }
 
 
         [HttpGet]
-        public async Task<WASPResponse<Issue>> GetIssueDetails(int issueId)
+        public async Task<ActionResult<WASPResponse<Issue>>> GetIssueDetails(int issueId)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.GetIssueDetails(issueId),
@@ -33,25 +33,25 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse<IEnumerable<IssuesOverviewDTO>>> GetListOfIssues(IssuesOverviewFilter filter)
+        public async Task<ActionResult<WASPResponse<IEnumerable<IssuesOverviewDTO>>>> GetListOfIssues(IssuesOverviewFilter filter)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.GetIssueOverview(filter),
                 (dataResponse) => new WASPResponse<IEnumerable<IssuesOverviewDTO>>(dataResponse.Result)
-            );            
-        }     
+            );
+        }
 
         [HttpPost]
-        public async Task<WASPResponse<Issue>> CreateIssue(Issue issue)
+        public async Task<ActionResult<WASPResponse<Issue>>> CreateIssue(Issue issue)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CreateIssue(issue),
-                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)                
-            );            
+                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+            );
         }
 
         [HttpPut]
-        public async Task<WASPResponse<Issue>> UpdateIssue(Issue issue)
+        public async Task<ActionResult<WASPResponse<Issue>>> UpdateIssue(Issue issue)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.UpdateIssue(issue),
@@ -60,7 +60,7 @@ namespace WASP.Controllers
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteIssue(int issueId)
+        public async Task<ActionResult<WASPResponse>> DeleteIssue(int issueId)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.DeleteIssue(issueId),

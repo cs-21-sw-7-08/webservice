@@ -43,7 +43,7 @@ namespace WASP
                     options.UseLoggerFactory(_myLoggerFactory);
                 }
             );            
-            // Change JSON output to PascalCase
+            // Set JSON options
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
