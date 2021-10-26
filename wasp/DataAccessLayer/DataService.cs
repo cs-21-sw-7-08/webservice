@@ -38,7 +38,7 @@ namespace WASP.DataAccessLayer
                 Citizen citizen = await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId);
                 // Make error checks
                 if (citizen == null)
-                    return new DataResponse(((int)ResponseErrors.CitizenDoesNotExist));
+                    return new DataResponse((int)ResponseErrors.CitizenDoesNotExist);
                 // Set flag
                 citizen.IsBlocked = true;
                 // Save the changes
@@ -83,51 +83,98 @@ namespace WASP.DataAccessLayer
             throw new NotImplementedException();
         }
 
-        public Task<DataResponse<IEnumerable<Category>>> GetCategories()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<DataResponse<Issue>> GetIssueDetails(int issueId)
+        public async Task<DataResponse<IEnumerable<CategoryListDTO>>> GetCategories()
         {
             using (var context = ContextFactory.CreateDbContext())
             {
+                var categories = await context.Categories
+                    .AsNoTracking()
+                    .Include(category => category.SubCategories)
+                    .Select(category => new CategoryListDTO(category))
+                    .ToListAsync();
+                return new DataResponse<IEnumerable<CategoryListDTO>>(categories);
+            }
+        }
+
+        public async Task<DataResponse<IssueDetailsDTO>> GetIssueDetails(int issueId)
+        {
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                // Get issue
                 var issue = await context.Issues
                     .AsNoTracking()
                     .Include(issue => issue.MunicipalityResponses)
                     .Include(issue => issue.IssueState)
-                    .FirstOrDefaultAsync();
-                return new DataResponse<Issue>(issue);
+                    .Include(issue => issue.Category)
+                    .Include(issue => issue.SubCategory)
+                    .Include(issue => issue.Municipality)
+                    .Select(issue => new IssueDetailsDTO(issue))
+                    .FirstOrDefaultAsync(x => x.Id == issueId);
+                // Make error checks
+                if (issue == null)
+                    return new DataResponse<IssueDetailsDTO>((int)ResponseErrors.IssueDoesNotExist);
+                // Return success response
+                return new DataResponse<IssueDetailsDTO>(issue);
             }
         }
 
         public async Task<DataResponse<IEnumerable<IssuesOverviewDTO>>> GetIssueOverview(IssuesOverviewFilter filter)
         {
             using (var context = ContextFactory.CreateDbContext())
-            {                
-                var list = await context.Issues.Select(issue => new IssuesOverviewDTO
-                {
-                    Id = issue.Id,
-                    Description = issue.Description,
-                    MunicipalityId = issue.MunicipalityId,
-                    CategoryId = issue.CategoryId,
-                    CitizenId = issue.CitizenId,
-                    DateCreated = issue.DateCreated,
-                    IssueStateId = issue.IssueStateId,
-                    Location = issue.Location,
-                    SubCategoryId = issue.SubCategoryId
-                })
-                .ToListAsync();
+            {
+                // Get issues
+                var list = await context.Issues
+                    .AsNoTracking()
+                    .Select(issue => new IssuesOverviewDTO(issue)
+                    {
+                        DateCreated = issue.DateCreated,
+                        MunicipalityId = issue.MunicipalityId,
+                        IssueStateId = issue.IssueStateId,
+                        CategoryId = issue.CategoryId,
+                        SubCategoryId = issue.SubCategoryId
+                    })
+                    // Filter -> FromTime
+                    .Where(issue =>
+                        filter.FromTime == null ||
+                        (filter.FromTime != null && DateTime.Compare(filter.FromTime.Value, issue.DateCreated) <= 0)
+                    )
+                    // Filter -> ToTime
+                    .Where(issue =>
+                        filter.ToTime == null ||
+                        (filter.ToTime != null && DateTime.Compare(filter.ToTime.Value, issue.DateCreated) > 0)
+                    )
+                    // Filter -> IssueState
+                    .Where(issue =>
+                        filter.IssueStateId == null ||
+                        (filter.IssueStateId != null && issue.IssueStateId == filter.IssueStateId)
+                    )
+                    // Filter ->  Municipality
+                    .Where(issue =>
+                        filter.MunicipalityId == null ||
+                        (filter.MunicipalityId != null && issue.MunicipalityId == filter.MunicipalityId)
+                    )
+                    // Filter -> SubCategory
+                    .Where(issue =>
+                        filter.SubCategoryId == null ||
+                        (filter.SubCategoryId != null && issue.SubCategoryId == filter.SubCategoryId)
+                    )
+                    // Filter -> Category
+                    .Where(issue =>
+                        filter.CategoryId == null ||
+                        (filter.CategoryId != null && issue.CategoryId == filter.CategoryId)
+                    )
+                    .ToListAsync();
+                // Return success response
                 return new DataResponse<IEnumerable<IssuesOverviewDTO>>(list.AsEnumerable());
             }
         }
 
-        public Task<DataResponse<MunicipalityUser>> MunicipalLogIn(MunicipalityUser muniUser)
+        public Task<DataResponse<MunicipalityUser>> MunicipalityLogIn(MunicipalityUser muniUser)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DataResponse<MunicipalityUser>> MunicipalSignUp(MunicipalityUser muniUser)
+        public Task<DataResponse<MunicipalityUser>> MunicipalitySignUp(MunicipalityUser muniUser)
         {
             throw new NotImplementedException();
         }
@@ -170,6 +217,11 @@ namespace WASP.DataAccessLayer
         }
 
         public Task<DataResponse> VerifyIssue(int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities()
         {
             throw new NotImplementedException();
         }

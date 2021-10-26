@@ -15,6 +15,7 @@ namespace WASP.Enums
         MunicipalityDoesNotExist = 102,
         PleaseProvideBothToAndFromTime = 103,
         IssueStateDoesNotExist = 104,
-        CitizenDoesNotExist = 105
+        CitizenDoesNotExist = 105,
+        IssueDoesNotExist = 106
     }
 }

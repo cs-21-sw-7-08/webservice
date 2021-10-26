@@ -19,7 +19,7 @@ namespace WASP_UnitTests
         public async Task GetListOfIssues()
         {
             // Arrange
-            var controller = new IssueController(new HiveContextFactory());            
+            var controller = new IssueController(new MockHiveContextFactory());            
 
             // Act
             var response = await controller.GetListOfIssues(new IssuesOverviewFilter());            

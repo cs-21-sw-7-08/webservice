@@ -8,7 +8,7 @@ using WASP.Models;
 
 namespace WASP.Test.Model
 {
-    public class HiveContextFactory : IDbContextFactory<HiveContext>
+    public class MockHiveContextFactory : IDbContextFactory<HiveContext>
     {
         public HiveContext CreateDbContext()
         {

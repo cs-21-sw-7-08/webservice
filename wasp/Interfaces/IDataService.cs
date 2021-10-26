@@ -11,18 +11,19 @@ namespace WASP.Interfaces
     {
 
         // Issue Functions        
-        public Task<DataResponse<Issue>> GetIssueDetails(int issueId);
+        public Task<DataResponse<IssueDetailsDTO>> GetIssueDetails(int issueId);
         public Task<DataResponse<IEnumerable<IssuesOverviewDTO>>> GetIssueOverview(IssuesOverviewFilter issueOverviewFilter);
         public Task<DataResponse<Issue>> CreateIssue(Issue issue);
         public Task<DataResponse<Issue>> UpdateIssue(Issue issue);
         public Task<DataResponse> DeleteIssue(int issueId);
         public Task<DataResponse> VerifyIssue(int issueId);
         public Task<DataResponse> ReportIssue(int issueId);
-        public Task<DataResponse<IEnumerable<Category>>> GetCategories();
+        public Task<DataResponse<IEnumerable<CategoryListDTO>>> GetCategories();
 
         // Municipality Functions
-        public Task<DataResponse<MunicipalityUser>> MunicipalSignUp(MunicipalityUser muniUser);
-        public Task<DataResponse<MunicipalityUser>> MunicipalLogIn(MunicipalityUser muniUser);
+        public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities();
+        public Task<DataResponse<MunicipalityUser>> MunicipalitySignUp(MunicipalityUser muniUser);
+        public Task<DataResponse<MunicipalityUser>> MunicipalityLogIn(MunicipalityUser muniUser);
         public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response);
         public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response);
         public Task<DataResponse> DeleteResponse(int responseId);

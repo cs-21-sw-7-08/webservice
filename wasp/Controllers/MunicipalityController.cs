@@ -22,14 +22,14 @@ namespace WASP.Controllers
         [HttpPost]
         public async Task<WASPResponse> SignUp(MunicipalityUser munUser)
         {
-            await DataService.MunicipalSignUp(munUser);
+            await DataService.MunicipalitySignUp(munUser);
             return new WASPResponse();
         }
 
         [HttpGet]
         public async Task<WASPResponse> LogIn(MunicipalityUser munUser)
         {
-            await DataService.MunicipalLogIn(munUser);
+            await DataService.MunicipalityLogIn(munUser);
             return new WASPResponse();
         }
 

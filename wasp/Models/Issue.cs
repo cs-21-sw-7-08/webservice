@@ -22,8 +22,7 @@ namespace WASP.Models
         public int CategoryId { get; set; }
         public int SubCategoryId { get; set; }
         public string Description { get; set; }
-        public DateTime DateCreated { get; set; }
-        [JsonIgnore]
+        public DateTime DateCreated { get; set; }        
         public Geometry Location { get; set; }        
         public string Picture1 { get; set; }
         public string Picture2 { get; set; }
@@ -33,6 +32,7 @@ namespace WASP.Models
         public virtual IssueState IssueState { get; set; }
         public virtual Municipality Municipality { get; set; }
         public virtual SubCategory SubCategory { get; set; }
+        public virtual Category Category { get; set; }
         public virtual ICollection<MunicipalityResponse> MunicipalityResponses { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }

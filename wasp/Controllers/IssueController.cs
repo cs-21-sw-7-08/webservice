@@ -24,11 +24,11 @@ namespace WASP.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<WASPResponse<Issue>>> GetIssueDetails(int issueId)
+        public async Task<ActionResult<WASPResponse<IssueDetailsDTO>>> GetIssueDetails(int issueId)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.GetIssueDetails(issueId),
-                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+                (dataResponse) => new WASPResponse<IssueDetailsDTO>(dataResponse.Result)
             );
         }
 
@@ -38,6 +38,15 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.GetIssueOverview(filter),
                 (dataResponse) => new WASPResponse<IEnumerable<IssuesOverviewDTO>>(dataResponse.Result)
+            );
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<CategoryListDTO>>>> GetListOfCategories()
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetCategories(),
+                (dataResponse) => new WASPResponse<IEnumerable<CategoryListDTO>>(dataResponse.Result)
             );
         }
 

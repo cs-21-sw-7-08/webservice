@@ -13,9 +13,10 @@ namespace WASP.Models
     {
         [NotMapped]
         [JsonPropertyName(nameof(Location))]
-        public Objects.Location LocationPlaceHolder { get => new Objects.Location(Point.Y, Point.X); set => Point = new Point(value.Longitude, value.Latitude); }
-        [NotMapped]
-        [JsonIgnore]
-        public Point Point { get => Location as Point; set => Location = value; }
+        public Objects.Location LocationPlaceHolder
+        {
+            get => new Objects.Location((Location as Point).Y, (Location as Point).X);
+            set => Location = new Point(value.Longitude, value.Latitude) { SRID = 4326 };
+        }
     }
 }
