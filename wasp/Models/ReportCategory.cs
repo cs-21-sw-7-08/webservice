@@ -5,16 +5,16 @@ using System.Collections.Generic;
 
 namespace WASP.Models
 {
-    public partial class Category
+    public partial class ReportCategory
     {
-        public Category()
+        public ReportCategory()
         {
-            SubCategories = new HashSet<SubCategory>();
+            Reports = new HashSet<Report>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<SubCategory> SubCategories { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

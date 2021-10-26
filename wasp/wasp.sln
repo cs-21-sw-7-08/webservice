@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wasp", "wasp.csproj", "{4174854D-8C77-4E1F-9555-01A165D433E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASP", "WASP.csproj", "{4174854D-8C77-4E1F-9555-01A165D433E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WASP_UnitTests", "..\WASP_UnitTests\WASP_UnitTests.csproj", "{2729255E-41B7-4145-BC7A-674260E3251C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASP.Test", "..\WASP_UnitTests\WASP.Test.csproj", "{2729255E-41B7-4145-BC7A-674260E3251C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

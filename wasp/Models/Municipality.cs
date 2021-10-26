@@ -5,19 +5,18 @@ using System.Collections.Generic;
 
 namespace WASP.Models
 {
-    public partial class Citizen
+    public partial class Municipality
     {
-        public Citizen()
+        public Municipality()
         {
             Issues = new HashSet<Issue>();
+            MunicipalityUsers = new HashSet<MunicipalityUser>();
         }
 
         public int Id { get; set; }
-        public string Email { get; set; }
-        public string PhoneNo { get; set; }
         public string Name { get; set; }
-        public bool IsBlocked { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
+        public virtual ICollection<MunicipalityUser> MunicipalityUsers { get; set; }
     }
 }

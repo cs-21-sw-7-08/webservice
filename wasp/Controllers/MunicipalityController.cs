@@ -3,56 +3,61 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using wasp.Models;
-using wasp.DataAccessLayer;
+using WASP.Models;
+using WASP.DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 
-namespace wasp.Controllers
+namespace WASP.Controllers
 {
     [ApiController]
     [Route("WASP/Municipality/[action]")]
-    public class MunicipalityController : ControllerBase
+    public class MunicipalityController : BaseController
     {
-        DataService dataService = new();
+        public MunicipalityController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
+        {
+
+        }
+
 
         [HttpPost]
-        public async Task<WASPResponse> SignUp(MunicipalUser munUser)
+        public async Task<WASPResponse> SignUp(MunicipalityUser munUser)
         {
-            await dataService.MunicipalSignUp(munUser);
+            await DataService.MunicipalSignUp(munUser);
             return new WASPResponse();
         }
 
         [HttpGet]
-        public async Task<WASPResponse> LogIn(MunicipalUser munUser)
+        public async Task<WASPResponse> LogIn(MunicipalityUser munUser)
         {
-            await dataService.MunicipalLogIn(munUser);
+            await DataService.MunicipalLogIn(munUser);
             return new WASPResponse();
         }
 
         [HttpPost]
-        public async Task<WASPResponse> CreateResponse(MunicipalResponse response)
+        public async Task<WASPResponse> CreateResponse(MunicipalityResponse response)
         {
-            await dataService.CreateResponse(response);
+            await DataService.CreateResponse(response);
             return new WASPResponse();
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateResponse(MunicipalResponse response)
+        public async Task<WASPResponse> UpdateResponse(MunicipalityResponse response)
         {
-            await dataService.UpdateResponse(response);
+            await DataService.UpdateResponse(response);
             return new WASPResponse();
         }
 
         [HttpDelete]
         public async Task<WASPResponse> DeleteResponse(int response_id)
         {
-            await dataService.DeleteResponse(response_id);
+            await DataService.DeleteResponse(response_id);
             return new WASPResponse();
         }
 
         [HttpPut]
         public async Task<WASPResponse> UpdateIssueStatus(int issue_id)
         {
-            await dataService.UpdateIssueStatus(issue_id);
+            await DataService.UpdateIssueStatus(issue_id);
             return new WASPResponse();
         }
 

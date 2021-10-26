@@ -1,83 +1,71 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-using wasp.DataAccessLayer;
-using wasp.Models;
+using WASP.DataAccessLayer;
+using WASP.Enums;
+using WASP.Models;
+using WASP.Objects;
+using WASP.Utilities;
 
-namespace wasp.Controllers
+namespace WASP.Controllers
 {
     [ApiController]
     [Route("WASP/Issues/[action]")]
-    public class IssueController : ControllerBase
+    public class IssueController : BaseController
     {
-        DataService dataService = new();
-
-        [HttpGet]
-        public async Task<WASPResponse<Issue>> GetIssueDetails(int id)
+        public IssueController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
         {
-            var issuedets = await dataService.GetIssueDetails(id);
 
-
-            return new WASPResponse<Issue>(issuedets);
         }
 
+
         [HttpGet]
-        public async Task<WASPResponse<IEnumerable<Issue>>> GetListOfIssues()
+        public async Task<WASPResponse<Issue>> GetIssueDetails(int issueId)
         {
-            IssueOverviewFilter filter = new();
-            IEnumerable<Issue> issueList = await dataService.GetIssueOverview(filter);
-            return (WASPResponse<IEnumerable<Issue>>)issueList;
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetIssueDetails(issueId),
+                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+            );
         }
 
         [HttpPost]
-        public async Task<WASPResponse> CreateIssue(Issue issue)
+        public async Task<WASPResponse<IEnumerable<IssuesOverviewDTO>>> GetListOfIssues(IssuesOverviewFilter filter)
         {
-            Issue formatted = new()
-            {
-                Id = issue.Id,
-                Name = issue.Name,
-                Description = issue.Description,
-                Status = issue.Status
-            };
-            bool waitResult = await dataService.CreateIssue(formatted);
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetIssueOverview(filter),
+                (dataResponse) => new WASPResponse<IEnumerable<IssuesOverviewDTO>>(dataResponse.Result)
+            );            
+        }     
 
-            if (waitResult)
-                return new WASPResponse();
-            else
-                return new WASPResponse(500);
-
+        [HttpPost]
+        public async Task<WASPResponse<Issue>> CreateIssue(Issue issue)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.CreateIssue(issue),
+                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)                
+            );            
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateIssue(Issue issue)
+        public async Task<WASPResponse<Issue>> UpdateIssue(Issue issue)
         {
-            Issue updatedIssue;
-            try
-            {
-                updatedIssue = await dataService.UpdateIssue(issue);
-            }
-            catch (NullReferenceException)
-            {
-                return new WASPResponse(500, "There was no issue to be edited");
-            }
-            return new WASPResponse<Issue>(updatedIssue);
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UpdateIssue(issue),
+                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+            );
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteIssue(int issue_id)
+        public async Task<WASPResponse> DeleteIssue(int issueId)
         {
-            bool delResult = await dataService.DeleteIssue(issue_id);
-
-            if (delResult)
-            {
-                return new WASPResponse();
-            }
-            else
-            {
-                return new WASPResponse(500);
-            }
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.DeleteIssue(issueId),
+                (dataResponse) => new WASPResponse()
+            );
         }
     }
 }

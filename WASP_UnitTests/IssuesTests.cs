@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using wasp;
-using wasp.Models;
-using wasp.DataAccessLayer;
-using wasp.Controllers;
+using WASP;
+using WASP.Models;
+using WASP.DataAccessLayer;
+using WASP.Controllers;
 using System.Threading.Tasks;
 
 namespace WASP_UnitTests

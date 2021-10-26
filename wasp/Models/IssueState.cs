@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 #nullable disable
 
 namespace WASP.Models
 {
-    public partial class Citizen
+    public partial class IssueState
     {
-        public Citizen()
+        public IssueState()
         {
             Issues = new HashSet<Issue>();
         }
 
         public int Id { get; set; }
-        public string Email { get; set; }
-        public string PhoneNo { get; set; }
         public string Name { get; set; }
-        public bool IsBlocked { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Issue> Issues { get; set; }
     }
 }

@@ -3,21 +3,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using wasp.Models;
-using wasp.DataAccessLayer;
+using WASP.Models;
+using WASP.DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 
-namespace wasp.Controllers
+namespace WASP.Controllers
 {
     [ApiController]
     [Route("WASP/Citizen/[action]")]
-    public class CitizenController : ControllerBase
+    public class CitizenController : BaseController
     {
-        DataService dataService = new();
+        public CitizenController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
+        {
+
+        }
 
         [HttpPost]
         public async Task<WASPResponse> SignUp(Citizen citizen)
         {
-            await dataService.CitizenSignUp(citizen);
+            await DataService.CitizenSignUp(citizen);
             return new WASPResponse();
 
         }
@@ -25,7 +29,7 @@ namespace wasp.Controllers
         [HttpGet]
         public async Task<WASPResponse> LogIn(Citizen citizen)
         {
-            await dataService.CitizenLogIn(citizen);
+            await DataService.CitizenLogIn(citizen);
             return new WASPResponse();
 
         }
@@ -33,7 +37,7 @@ namespace wasp.Controllers
         [HttpPut]
         public async Task<WASPResponse> BlockUser(int citizen_id)
         {
-            await dataService.BlockCitizen(citizen_id);
+            await DataService.BlockCitizen(citizen_id);
             return new WASPResponse();
 
         }
@@ -41,7 +45,7 @@ namespace wasp.Controllers
         [HttpPut]
         public async Task<WASPResponse> UnblockUser(int citizen_id)
         {
-            await dataService.UnblockCitizen(citizen_id);
+            await DataService.UnblockCitizen(citizen_id);
             return new WASPResponse();
 
         }
@@ -49,7 +53,7 @@ namespace wasp.Controllers
         [HttpDelete]
         public async Task<WASPResponse> DeleteUser(int citizen_id)
         {
-            await dataService.DeleteCitizen(citizen_id);
+            await DataService.DeleteCitizen(citizen_id);
             return new WASPResponse();
 
         }

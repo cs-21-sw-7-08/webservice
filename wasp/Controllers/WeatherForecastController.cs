@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using wasp.Models;
+using WASP.Models;
 
-namespace wasp.Controllers
+namespace WASP.Controllers
 {
     [ApiController]
     [Route("[controller]")]

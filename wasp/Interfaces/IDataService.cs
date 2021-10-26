@@ -2,37 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using wasp.Models;
+using WASP.Models;
+using WASP.Objects;
 
-namespace wasp.Interfaces
+namespace WASP.Interfaces
 {
-    internal interface IDataService
+    public interface IDataService
     {
 
-        //Issue Functions
-        //TODO : make DALResponse maybe.
-        public Task<Issue> GetIssueDetails(int issueId);
-        public Task<IEnumerable<Issue>> GetIssueOverview(IssueOverviewFilter x);
-        public Task<bool> CreateIssue(Issue issue);
-        public Task<Issue> UpdateIssue(Issue issue);
-        public Task<bool> DeleteIssue(int issueId);
-        public Task VerifyIssue(int issueId);
-        public Task<Report> ReportIssue(int issueId);
-        public Task<IEnumerable<Category>> GetCategories();
+        // Issue Functions        
+        public Task<DataResponse<Issue>> GetIssueDetails(int issueId);
+        public Task<DataResponse<IEnumerable<IssuesOverviewDTO>>> GetIssueOverview(IssuesOverviewFilter issueOverviewFilter);
+        public Task<DataResponse<Issue>> CreateIssue(Issue issue);
+        public Task<DataResponse<Issue>> UpdateIssue(Issue issue);
+        public Task<DataResponse> DeleteIssue(int issueId);
+        public Task<DataResponse> VerifyIssue(int issueId);
+        public Task<DataResponse> ReportIssue(int issueId);
+        public Task<DataResponse<IEnumerable<Category>>> GetCategories();
 
-        //Municipality Functions
-        public Task<MunicipalUser> MunicipalSignUp(MunicipalUser muniUser);
-        public Task<MunicipalUser> MunicipalLogIn(MunicipalUser muniUser);
-        public Task<MunicipalResponse> CreateResponse(MunicipalResponse response);
-        public Task<MunicipalResponse> UpdateResponse(MunicipalResponse response);
-        public Task<bool> DeleteResponse(int responseId);
-        public Task<Issue> UpdateIssueStatus(int issueId);
+        // Municipality Functions
+        public Task<DataResponse<MunicipalityUser>> MunicipalSignUp(MunicipalityUser muniUser);
+        public Task<DataResponse<MunicipalityUser>> MunicipalLogIn(MunicipalityUser muniUser);
+        public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response);
+        public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response);
+        public Task<DataResponse> DeleteResponse(int responseId);
+        public Task<DataResponse<Issue>> UpdateIssueStatus(int issueId);
 
-        //User Functions
-        public Task<Citizen> CitizenSignUp(Citizen citizen);
-        public Task<Citizen> CitizenLogIn(Citizen citizen);
-        public Task<bool> BlockCitizen(int citizenId);
-        public Task<bool> UnblockCitizen(int citizenId);
-        public Task<bool> DeleteCitizen(int citizenId);
+        // User Functions
+        public Task<DataResponse<Citizen>> CitizenSignUp(Citizen citizen);
+        public Task<DataResponse<Citizen>> CitizenLogIn(Citizen citizen);
+        public Task<DataResponse> BlockCitizen(int citizenId);
+        public Task<DataResponse> UnblockCitizen(int citizenId);
+        public Task<DataResponse> DeleteCitizen(int citizenId);
     }
 }

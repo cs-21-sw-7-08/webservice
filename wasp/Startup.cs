@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,9 +12,11 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using WASP.Models;
 
-namespace wasp
+namespace WASP
 {
     public class Startup
     {
@@ -24,16 +27,31 @@ namespace wasp
 
         public IConfiguration Configuration { get; }
 
+        public static readonly LoggerFactory _myLoggerFactory =
+    new LoggerFactory(new[] {
+        new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider()
+    });
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+            // Add DB context
+            services.AddDbContextFactory<HiveContext>(
+                options => {
+                    options.UseSqlServer(Configuration.GetConnectionString("HiveConnection"), x => x.UseNetTopologySuite());
+                    options.UseLoggerFactory(_myLoggerFactory);
+                }
+            );
             // Change JSON output to PascalCase
-            services.AddMvc().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;                
+            });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "wasp", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WASP", Version = "v1" });
             });
         }
 

@@ -1,27 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using NetTopologySuite.Geometries;
 
-namespace wasp.Models
+#nullable disable
+
+namespace WASP.Models
 {
-    public class Issue
+    public partial class Issue
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int Status { get; set; }
+        public Issue()
+        {
+            MunicipalityResponses = new HashSet<MunicipalityResponse>();
+            Reports = new HashSet<Report>();
+        }
 
-        public override bool Equals(object obj)
-        {
-            if (obj is not Issue)
-                return false;
-            var objIssue = obj as Issue;
-            return objIssue.Id == Id && objIssue.Name == Name && objIssue.Description == Description && objIssue.Status == Status;
-        }
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public int Id { get; set; }
+        public int CitizenId { get; set; }
+        public int MunicipalityId { get; set; }
+        public int IssueStateId { get; set; }
+        public int CategoryId { get; set; }
+        public int SubCategoryId { get; set; }
+        public string Description { get; set; }
+        public DateTime DateCreated { get; set; }
+        [JsonIgnore]
+        public Geometry Location { get; set; }        
+        public string Picture1 { get; set; }
+        public string Picture2 { get; set; }
+        public string Picture3 { get; set; }
+
+        public virtual Citizen Citizen { get; set; }
+        public virtual IssueState IssueState { get; set; }
+        public virtual Municipality Municipality { get; set; }
+        public virtual SubCategory SubCategory { get; set; }
+        public virtual ICollection<MunicipalityResponse> MunicipalityResponses { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

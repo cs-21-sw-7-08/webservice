@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace wasp.Models
+namespace WASP.Models
 {
     public class WASPResponse
     {
-        public bool IsSuccessful { get; set; }
+        public bool IsSuccessful => ErrorNo == 0;
         public int ErrorNo { get; set; }
         public string ErrorMessage { get; set; }
 
         public WASPResponse()
         {
-            IsSuccessful = true;
             ErrorNo = 0;
         }
 
         public WASPResponse(int errorNo, string errorMessage = null)
         {
-            IsSuccessful = false;
             ErrorNo = errorNo;
             ErrorMessage = errorMessage;
         }
@@ -27,12 +25,10 @@ namespace wasp.Models
 
     public class WASPResponse<ResultType> : WASPResponse
     {
-
         public ResultType Result { get; set; }
 
         public WASPResponse(ResultType result)
         {
-            IsSuccessful = true;
             ErrorNo = 0;
             Result = result;
         }
@@ -41,6 +37,5 @@ namespace wasp.Models
         {
             Result = default;
         }
-
     }
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace wasp
+namespace WASP
 {
     public class WeatherForecast
     {
