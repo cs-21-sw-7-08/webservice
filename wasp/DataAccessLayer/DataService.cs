@@ -108,7 +108,10 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
-                    .Select(issue => new IssueDetailsDTO(issue))
+                    .Select(issue => new IssueDetailsDTO(issue)
+                    {
+                        Id = issue.Id
+                    })
                     .FirstOrDefaultAsync(x => x.Id == issueId);
                 // Make error checks
                 if (issue == null)
