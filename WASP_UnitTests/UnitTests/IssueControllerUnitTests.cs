@@ -22,10 +22,10 @@ namespace WASP_UnitTests
             var controller = new IssueController(new MockHiveContextFactory());            
 
             // Act
-            var response = await controller.GetListOfIssues(new IssuesOverviewFilter());            
-
+            var result = await controller.GetListOfIssues(new IssuesOverviewFilter());            
+            var response = result.Value;
             // Assert            
-            Assert.IsTrue(true);
+            Assert.IsTrue(response.Result.Count() == 1);
         }        
     }
 }
