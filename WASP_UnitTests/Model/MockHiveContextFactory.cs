@@ -8,13 +8,13 @@ using WASP.Models;
 
 namespace WASP.Test.Model
 {
-    public class MockHiveContextFactory : IDbContextFactory<HiveContext>
+    public class MockHiveContextFactory : IDbContextFactory<MockHiveContext>
     {
-        public HiveContext CreateDbContext()
+        public MockHiveContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<HiveContext>();
             optionsBuilder.UseInMemoryDatabase("Hive");
-            return new HiveContext(optionsBuilder.Options);
+            return new MockHiveContext(optionsBuilder.Options);
         }
     }
 }
