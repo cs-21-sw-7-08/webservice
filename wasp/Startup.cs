@@ -47,6 +47,7 @@ namespace WASP
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                //options.JsonSerializerOptions.WriteIndented = true;
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;                
             });
             services.AddSwaggerGen(c =>
