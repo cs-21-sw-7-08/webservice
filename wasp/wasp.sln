@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASP", "WASP.csproj", "{4174854D-8C77-4E1F-9555-01A165D433E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WASP.Test", "..\WASP_UnitTests\WASP.Test.csproj", "{2729255E-41B7-4145-BC7A-674260E3251C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4174854D-8C77-4E1F-9555-01A165D433E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4174854D-8C77-4E1F-9555-01A165D433E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4174854D-8C77-4E1F-9555-01A165D433E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4174854D-8C77-4E1F-9555-01A165D433E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2729255E-41B7-4145-BC7A-674260E3251C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2729255E-41B7-4145-BC7A-674260E3251C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2729255E-41B7-4145-BC7A-674260E3251C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2729255E-41B7-4145-BC7A-674260E3251C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1CE532C2-7A39-495E-82BA-462CE5686245}
+	EndGlobalSection
+EndGlobal
