@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Models;
@@ -30,11 +31,21 @@ namespace WASP.Utilities
         }
 
         public static void UpdateProperty<Target>(object sourceValue, string targetPropertyName, Target targetObj)
-        {                        
+        {
+            if (targetPropertyName == null)
+                return;
+
             var targetObjPropertyInfos = typeof(Target).GetProperties();
-            // Get property info
-            var targetObjPropertyInfo = targetObjPropertyInfos.FirstOrDefault(x => x.Name == targetPropertyName);
-            // Return if property does not exist in target object
+            // Get property info from JSON property name first
+            var targetObjPropertyInfo = targetObjPropertyInfos.FirstOrDefault(x =>
+            {
+                var attribute = x.GetCustomAttributes<JsonPropertyNameAttribute>().FirstOrDefault();                
+                return attribute != null && attribute.Name == targetPropertyName;
+            });
+            // If no match with JSON property name then check property names
+            if (targetObjPropertyInfo == null)
+                targetObjPropertyInfos.FirstOrDefault(x => x.Name == targetPropertyName);
+            // Return if property could not be found
             if (targetObjPropertyInfo == null)
                 return;
             object value = sourceValue;
