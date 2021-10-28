@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,21 @@ using WASP.Models;
 
 namespace WASP.Test.Model
 {
-    public class MockHiveContextFactory : IDbContextFactory<HiveContext>
+    public class MockHiveContextFactory : IDbContextFactory<MockHiveContext>
     {
-        public HiveContext CreateDbContext()
+        private bool ResetDatabase { get; set; } = true;
+
+        public MockHiveContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<HiveContext>();
             optionsBuilder.UseInMemoryDatabase("Hive");
-            return new HiveContext(optionsBuilder.Options);
+            // Get reset flag
+            var resetDatabase = ResetDatabase;
+            // Set the flag to false if it is true
+            if (ResetDatabase)
+                ResetDatabase = false;
+            // Return context
+            return new MockHiveContext(optionsBuilder.Options, resetDatabase);
         }
     }
 }

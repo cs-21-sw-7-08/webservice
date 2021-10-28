@@ -9,6 +9,7 @@ namespace WASP.Models
     {
         public Citizen()
         {
+            IssueVerifications = new HashSet<IssueVerification>();
             Issues = new HashSet<Issue>();
         }
 
@@ -18,6 +19,7 @@ namespace WASP.Models
         public string Name { get; set; }
         public bool IsBlocked { get; set; }
 
+        public virtual ICollection<IssueVerification> IssueVerifications { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }
     }
 }

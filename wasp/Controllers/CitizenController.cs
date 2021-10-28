@@ -39,24 +39,27 @@ namespace WASP.Controllers
         [HttpPut]
         public async Task<WASPResponse> BlockUser(int citizen_id)
         {
-            await DataService.BlockCitizen(citizen_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.BlockCitizen(citizen_id),
+                (dataResponse) => new WASPResponse());
 
         }
 
         [HttpPut]
         public async Task<WASPResponse> UnblockUser(int citizen_id)
         {
-            await DataService.UnblockCitizen(citizen_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UnblockCitizen(citizen_id),
+                (dataResponse) => new WASPResponse());
 
         }
 
         [HttpDelete]
         public async Task<WASPResponse> DeleteUser(int citizen_id)
         {
-            await DataService.DeleteCitizen(citizen_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.DeleteCitizen(citizen_id),
+                (dataResponse) => new WASPResponse());
 
         }
 
