@@ -13,8 +13,8 @@ namespace WASP.Interfaces
         // Issue Functions        
         public Task<DataResponse<IssueDetailsDTO>> GetIssueDetails(int issueId);
         public Task<DataResponse<IEnumerable<IssuesOverviewDTO>>> GetIssueOverview(IssuesOverviewFilter issueOverviewFilter);
-        public Task<DataResponse<Issue>> CreateIssue(Issue issue);
-        public Task<DataResponse<Issue>> UpdateIssue(Issue issue);
+        public Task<DataResponse> CreateIssue(IssueCreateDTO issue);
+        public Task<DataResponse> UpdateIssue(int issueId, IEnumerable<WASPUpdate> updates);
         public Task<DataResponse> DeleteIssue(int issueId);
         public Task<DataResponse> VerifyIssue(int issueId);
         public Task<DataResponse> ReportIssue(int issueId);

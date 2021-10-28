@@ -7,6 +7,10 @@ namespace WASP.Objects
 {
     public class Location
     {
+        public Location()
+        {
+
+        }
         public Location(double latitude, double longitude)
         {
             Latitude = latitude;

@@ -8,15 +8,11 @@ using System.Threading.Tasks;
 namespace WASP.Models
 {
     public class IssueCreateDTO
-    {
-        public int Id { get; set; }
+    {        
         public int CitizenId { get; set; }
-        public int MunicipalityId { get; set; }
-        public int IssueStateId { get; set; }
-        public int CategoryId { get; set; }
+        public int MunicipalityId { get; set; }                
         public int SubCategoryId { get; set; }
-        public string Description { get; set; }
-        public DateTime DateCreated { get; set; }
+        public string Description { get; set; }        
         [JsonIgnore]
         public Geometry Location { get; set; }
         public string Picture1 { get; set; }

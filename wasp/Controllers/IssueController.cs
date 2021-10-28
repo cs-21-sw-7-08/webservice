@@ -51,20 +51,20 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WASPResponse<Issue>>> CreateIssue(Issue issue)
+        public async Task<ActionResult<WASPResponse>> CreateIssue(IssueCreateDTO issue)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CreateIssue(issue),
-                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+                (dataResponse) => new WASPResponse()
             );
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse<Issue>>> UpdateIssue(Issue issue)
+        public async Task<ActionResult<WASPResponse>> UpdateIssue(int issueId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.UpdateIssue(issue),
-                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+                async () => await DataService.UpdateIssue(issueId, updates),
+                (dataResponse) => new WASPResponse()
             );
         }
 
