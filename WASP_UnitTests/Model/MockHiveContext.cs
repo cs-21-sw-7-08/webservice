@@ -238,7 +238,7 @@ namespace WASP.Test.Model
                 },
                 new IssueVerification()
                 {
-                    Id = 1,
+                    Id = 2,
                     IssueId = 2,
                     CitizenId = 1
                 }
