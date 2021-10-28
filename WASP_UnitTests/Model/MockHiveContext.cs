@@ -236,6 +236,21 @@ namespace WASP.Test.Model
                     TypeCounter = 1
                 }
             );
+            // IssueVerifications
+            IssueVerifications.AddRange(
+                new IssueVerification()
+                {
+                    Id = 1,
+                    IssueId = 1,
+                    CitizenId = 2
+                },
+                new IssueVerification()
+                {
+                    Id = 1,
+                    IssueId = 2,
+                    CitizenId = 1
+                }
+            );
 
             // Save the data
             SaveChanges();
