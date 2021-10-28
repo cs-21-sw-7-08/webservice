@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using NetTopologySuite.Geometries;
 
 #nullable disable
@@ -11,6 +10,7 @@ namespace WASP.Models
     {
         public Issue()
         {
+            IssueVerifications = new HashSet<IssueVerification>();
             MunicipalityResponses = new HashSet<MunicipalityResponse>();
             Reports = new HashSet<Report>();
         }
@@ -22,8 +22,8 @@ namespace WASP.Models
         public int CategoryId { get; set; }
         public int SubCategoryId { get; set; }
         public string Description { get; set; }
-        public DateTime DateCreated { get; set; }        
-        public Geometry Location { get; set; }        
+        public DateTime DateCreated { get; set; }
+        public Geometry Location { get; set; }
         public string Picture1 { get; set; }
         public string Picture2 { get; set; }
         public string Picture3 { get; set; }
@@ -33,6 +33,7 @@ namespace WASP.Models
         public virtual Municipality Municipality { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         public virtual Category Category { get; set; }
+        public virtual ICollection<IssueVerification> IssueVerifications { get; set; }
         public virtual ICollection<MunicipalityResponse> MunicipalityResponses { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }

@@ -17,6 +17,7 @@ namespace WASP.Models
         public virtual DbSet<Citizen> Citizens { get; set; }
         public virtual DbSet<Issue> Issues { get; set; }
         public virtual DbSet<IssueState> IssueStates { get; set; }
+        public virtual DbSet<IssueVerification> IssueVerifications { get; set; }
         public virtual DbSet<Municipality> Municipalities { get; set; }
         public virtual DbSet<MunicipalityResponse> MunicipalityResponses { get; set; }
         public virtual DbSet<MunicipalityUser> MunicipalityUsers { get; set; }
@@ -26,7 +27,11 @@ namespace WASP.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=Hive;Trusted_Connection=True;", x => x.UseNetTopologySuite());
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -110,6 +115,24 @@ namespace WASP.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<IssueVerification>(entity =>
+            {
+                entity.HasIndex(e => new { e.IssueId, e.CitizenId }, "IssueVerifications_UQ")
+                    .IsUnique();
+
+                entity.HasOne(d => d.Citizen)
+                    .WithMany(p => p.IssueVerifications)
+                    .HasForeignKey(d => d.CitizenId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__IssueVeri__Citiz__45F365D3");
+
+                entity.HasOne(d => d.Issue)
+                    .WithMany(p => p.IssueVerifications)
+                    .HasForeignKey(d => d.IssueId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__IssueVeri__Issue__44FF419A");
+            });
+
             modelBuilder.Entity<Municipality>(entity =>
             {
                 entity.Property(e => e.Name)
@@ -142,7 +165,7 @@ namespace WASP.Models
 
             modelBuilder.Entity<MunicipalityUser>(entity =>
             {
-                entity.HasIndex(e => e.Email, "UQ__Municipa__A9D105348B21313D")
+                entity.HasIndex(e => e.Email, "UQ__Municipa__A9D10534A7EEABC1")
                     .IsUnique();
 
                 entity.Property(e => e.Email)
