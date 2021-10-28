@@ -1,32 +1,74 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
+using WASP.Enums;
+using WASP.Models;
 
 namespace WASP.Utilities
 {
     public class DataServiceUtil
     {
-        public static void UpdateChangedProperties<Source, Target>(Source sourceObj, Target targetObj)
+        public static void UpdateProperties<Source, Target>(Source sourceObj, Target targetObj)
         {
             var sourceObjPropertyInfos = typeof(Source).GetProperties();
             var targetObjPropertyInfos = typeof(Target).GetProperties();
 
-            /*foreach (var sourceObjPropertyInfo in sourceObjPropertyInfos)
+            foreach (var sourceObjPropertyInfo in sourceObjPropertyInfos)
             {
                 // Get property info
                 var targetObjPropertyInfo = targetObjPropertyInfos.FirstOrDefault(x => x.Name == sourceObjPropertyInfo.Name);
-                // Continue if property exist in target object
+                // Continue if property does not exist in target object
                 if (targetObjPropertyInfo == null)
                     continue;
-                var sourceValue = sourceObjPropertyInfo.GetValue(sourceObj);
-                var targetValue = targetObjPropertyInfo.GetValue(targetObj);
-                if (sourceValue != targetValue)
-
-
                 // Set property
-                targetObjPropertyInfo.SetValue(newIssue, sourceObjPropertyInfo.GetValue(issue));
-            }*/
+                targetObjPropertyInfo.SetValue(targetObj, sourceObjPropertyInfo.GetValue(sourceObj));
+            }
+        }
+
+        public static void UpdateProperty<Target>(object sourceValue, string targetPropertyName, Target targetObj)
+        {                        
+            var targetObjPropertyInfos = typeof(Target).GetProperties();
+            // Get property info
+            var targetObjPropertyInfo = targetObjPropertyInfos.FirstOrDefault(x => x.Name == targetPropertyName);
+            // Return if property does not exist in target object
+            if (targetObjPropertyInfo == null)
+                return;
+            object value = sourceValue;
+            if (sourceValue is JsonElement)
+            {
+                Type type = targetObjPropertyInfo.PropertyType;
+                value = JsonSerializer.Deserialize(sourceValue.ToString(), type);
+            }
+            // Set property
+            targetObjPropertyInfo.SetValue(targetObj, value);
+        }
+
+        public static async Task<TypeDataResponse> GetResponse<TypeDataResponse>(IDbContextFactory<HiveContext> contextFactory, Func<HiveContext, Task<TypeDataResponse>> getDataResponseMethod)
+            where TypeDataResponse : DataResponse
+        {
+            TypeDataResponse getErrorResponse(int errorNo, string errorMessage)
+            {
+                Type type = typeof(TypeDataResponse);
+                ConstructorInfo ctor = type.GetConstructor(new[] { typeof(int), typeof(string) });
+                object instance = ctor.Invoke(new object[] { errorNo, errorMessage });
+                return (TypeDataResponse)instance;
+            }
+
+            try
+            {
+                using (var context = contextFactory.CreateDbContext())
+                {
+                    return await getDataResponseMethod(context);
+                }
+            }
+            catch (Exception exc)
+            {
+                return getErrorResponse(((int)ResponseErrors.AnExceptionOccurredInTheDAL), exc.Message);
+            }
         }
 
     }
