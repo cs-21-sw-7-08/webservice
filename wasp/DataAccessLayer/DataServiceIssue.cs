@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
@@ -14,9 +15,47 @@ namespace WASP.DataAccessLayer
     {
         #region Methods
 
-        public Task<DataResponse<Issue>> CreateIssue(Issue issue)
+        public async Task<DataResponse> CreateIssue(IssueCreateDTO issue)
         {
-            throw new NotImplementedException();
+            // Create new issue
+            Issue newIssue = new();
+
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                var subCategory = await context.SubCategories.FirstOrDefaultAsync(x => x.Id == issue.SubCategoryId);
+                // Check if subcategory with the given ID exist
+                if (subCategory == null)
+                    return new DataResponse(((int)ResponseErrors.SubCategoryDoesNotExist));
+
+                // Get property infos from DB Issue
+                var issueProperties = typeof(Issue).GetProperties();
+                // Get property infos from DTO Issue
+                var issueDTOProperties = typeof(IssueCreateDTO).GetProperties();
+                // Set properties
+                foreach (var propertyInfo in issueDTOProperties)
+                {
+                    var issuePropertyInfo = issueProperties.FirstOrDefault(x => x.Name == propertyInfo.Name);
+                    // Continue if property does not exist in DB Issue
+                    if (issuePropertyInfo == null)
+                        continue;
+
+                    // Set property
+                    issuePropertyInfo.SetValue(newIssue, propertyInfo.GetValue(issue));
+                }
+                // Set date created
+                newIssue.DateCreated = DateTime.Now;
+                // Set category ID                
+                newIssue.CategoryId = subCategory.CategoryId;
+                // Set state ID
+                newIssue.IssueStateId = 1;
+
+                // Add new issue
+                var response = await context.Issues.AddAsync(newIssue);
+                // Save changes in database
+                var changes = await context.SaveChangesAsync();
+                // Return success response
+                return new DataResponse();
+            }
         }
 
         public Task<DataResponse> DeleteIssue(int issueId)
