@@ -63,6 +63,7 @@ namespace WASP.DataAccessLayer
                 if (citizen.IsBlocked == true)
                     citizen.IsBlocked = false;
                 else
+                    //TODO: Add errorcode in ErrorResponse enum
                     return new DataResponse(400, "User is not blocked");
                 await context.SaveChangesAsync();
                 return new DataResponse();
