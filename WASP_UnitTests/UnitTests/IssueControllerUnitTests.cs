@@ -10,7 +10,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WASP_UnitTests
+namespace WASP.Test.UnitTests
 {
     [TestClass]
     public class IssueControllerUnitTests
