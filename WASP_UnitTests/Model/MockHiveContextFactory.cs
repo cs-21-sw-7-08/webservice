@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,16 @@ namespace WASP.Test.Model
 {
     public class MockHiveContextFactory : IDbContextFactory<MockHiveContext>
     {
+        private bool ResetDatabase { get; set; } = true;
+
         public MockHiveContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<HiveContext>();
             optionsBuilder.UseInMemoryDatabase("Hive");
-            return new MockHiveContext(optionsBuilder.Options);
+            var resetDatabase = ResetDatabase;
+            if (ResetDatabase)
+                ResetDatabase = false;
+            return new MockHiveContext(optionsBuilder.Options, resetDatabase);
         }
     }
 }

@@ -10,8 +10,10 @@ namespace WASP.Test.Model
 {
     public class MockHiveContext : HiveContext
     {
-        public MockHiveContext(DbContextOptions<HiveContext> options) : base(options)
+        public MockHiveContext(DbContextOptions<HiveContext> options, bool resetDatabase = false) : base(options)
         {
+            if (resetDatabase)
+                this.Database.EnsureDeleted();
             AddMockData();
         }
 
@@ -20,6 +22,9 @@ namespace WASP.Test.Model
         /// </summary>
         private void AddMockData()
         {
+            if (Citizens.Any())
+                return;
+
             // Citizens
             Citizens.AddRange(
                 new Citizen()
