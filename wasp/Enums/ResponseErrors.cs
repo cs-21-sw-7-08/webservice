@@ -16,6 +16,9 @@ namespace WASP.Enums
         PleaseProvideBothToAndFromTime = 103,
         IssueStateDoesNotExist = 104,
         CitizenDoesNotExist = 105,
-        IssueDoesNotExist = 106
+        MunicipalityUserDoesNotExistsueDoesNotExist = 106,
+        MunicipalityUserEmailAndOrPasswordNotMatched = 200,
+        CitizenLoginBothEmailAndPhoneNumberCannotBeFilled = 201,
+        CitizenWithTheseCredentialsHasNotBeenSignedUp = 202,
     }
 }

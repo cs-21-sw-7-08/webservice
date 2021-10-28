@@ -23,7 +23,7 @@ namespace WASP.Interfaces
         // Municipality Functions
         public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities();
         public Task<DataResponse<MunicipalityUser>> MunicipalitySignUp(MunicipalityUser muniUser);
-        public Task<DataResponse<MunicipalityUser>> MunicipalityLogIn(MunicipalityUser muniUser);
+        public Task<DataResponse<MunicipalityUserDTO>> MunicipalityLogIn(MunicipalityUserLoginDTO muniUser);
         public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response);
         public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response);
         public Task<DataResponse> DeleteResponse(int responseId);
@@ -31,7 +31,7 @@ namespace WASP.Interfaces
 
         // User Functions
         public Task<DataResponse<Citizen>> CitizenSignUp(Citizen citizen);
-        public Task<DataResponse<Citizen>> CitizenLogIn(Citizen citizen);
+        public Task<DataResponse<CitizenDTO>> CitizenLogIn(CitizenLoginDTO citizen);
         public Task<DataResponse> BlockCitizen(int citizenId);
         public Task<DataResponse> UnblockCitizen(int citizenId);
         public Task<DataResponse> DeleteCitizen(int citizenId);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WASP.Models;
 using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
+using WASP.Utilities;
 
 namespace WASP.Controllers
 {
@@ -26,11 +27,13 @@ namespace WASP.Controllers
             return new WASPResponse();
         }
 
-        [HttpGet]
-        public async Task<WASPResponse> LogIn(MunicipalityUser munUser)
+        [HttpPost]
+        public async Task<WASPResponse<MunicipalityUserDTO>> LogIn(MunicipalityUserLoginDTO munUser)
         {
-            await DataService.MunicipalityLogIn(munUser);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.MunicipalityLogIn(munUser),
+                (dataResponse) => new WASPResponse<MunicipalityUserDTO>(dataResponse.Result)
+            );
         }
 
         [HttpPost]

@@ -70,9 +70,36 @@ namespace WASP.DataAccessLayer
             }
         }
 
-        public Task<DataResponse<Citizen>> CitizenLogIn(Citizen citizen)
+        public async Task<DataResponse<CitizenDTO>> CitizenLogIn(CitizenLoginDTO citizenLogin)
         {
-            throw new NotImplementedException();
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                Citizen citizen = null;
+                //case if PhoneNo is given
+                if (citizenLogin.Email == null && citizenLogin.PhoneNo != null)
+                {
+                    citizen = await context.Citizens
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.PhoneNo == citizenLogin.PhoneNo);
+                }
+                //case if Email is given
+                else if (citizenLogin.Email != null && citizenLogin.PhoneNo == null)
+                {
+                    citizen = await context.Citizens
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Email.ToLower() == citizenLogin.Email.ToLower());
+                }
+                //if both email and phone number is null or if they are both not null an error is thrown
+                else
+                {
+                    return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+                }
+                // TODO: ADD ERROR
+                if(citizen == null)
+                    return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+                //Returns success response
+                return new DataResponse<CitizenDTO>(new CitizenDTO(citizen));
+            }
         }
 
         public Task<DataResponse<Citizen>> CitizenSignUp(Citizen citizen)
