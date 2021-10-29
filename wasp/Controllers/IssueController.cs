@@ -76,5 +76,23 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse()
             );
         }
+
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> VerifyIssue(int issueId, int citizenId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.VerifyIssue(issueId, citizenId),
+                (dataResponse) => new WASPResponse()
+            );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> ReportIssue(int issueId, int reportCategoryId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.ReportIssue(issueId, reportCategoryId),
+                (dataResponse) => new WASPResponse()
+            );
+        }
     }
 }

@@ -60,7 +60,7 @@ namespace WASP.Controllers
         [HttpPut]
         public async Task<WASPResponse> UpdateIssueStatus(int issue_id)
         {
-            await DataService.UpdateIssueStatus(issue_id);
+            //await DataService.UpdateIssueStatus(issue_id);
             return new WASPResponse();
         }
 
