@@ -124,6 +124,7 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
+                    .Include(issue => issue.IssueVerifications)
                     .Select(issue => new IssueDetailsDTO(issue)
                     {
                         Id = issue.Id
