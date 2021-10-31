@@ -7,6 +7,7 @@ using WASP.Models;
 using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using WASP.Utilities;
+using WASP.Objects;
 
 namespace WASP.Controllers
 {
@@ -44,21 +45,23 @@ namespace WASP.Controllers
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateResponse(MunicipalityResponse response)
+        public async Task<WASPResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
-            await DataService.UpdateResponse(response);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.UpdateIssue(responseId, updates),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteResponse(int response_id)
+        public async Task<WASPResponse> DeleteResponse(int responseId)
         {
-            await DataService.DeleteResponse(response_id);
+            await DataService.DeleteResponse(responseId);
             return new WASPResponse();
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateIssueStatus(int issue_id)
+        public async Task<WASPResponse> UpdateIssueStatus(int issueId)
         {
             //await DataService.UpdateIssueStatus(issue_id);
             return new WASPResponse();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Objects;
 using WASP.Utilities;
 
 namespace WASP.DataAccessLayer
@@ -32,12 +33,6 @@ namespace WASP.DataAccessLayer
                 if (issue.MunicipalityId == municipalityUser.MunicipalityId)
                     return new DataResponse<MunicipalityResponse>((int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueId);
 
-                var municipalityResponse = await context.MunicipalityResponses
-                                                .FirstOrDefaultAsync(x => x.IssueId == response.IssueId && x.MunicipalityUserId == response.MunicipalityUserId);
-                // Check if response exist
-                if (municipalityResponse != null)
-                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.ResponseDoesNotExist);
-
                 // Create new issue
                 MunicipalityResponse newResponse = new();
                 // Update properties
@@ -50,21 +45,61 @@ namespace WASP.DataAccessLayer
                 // Check that the number of changed entities is 1
                 // as one new Rosponse is added to the database
                 if (changes != 1)
-                    return new DataResponse<MunicipalityResponse>(((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase));
+                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
 
                 // Return success response
                 return new DataResponse<MunicipalityResponse>(newResponse);
             }
         }
 
-        public Task<DataResponse> DeleteResponse(int responseId)
+        public async Task<DataResponse> DeleteResponse(int responseId)
         {
-            throw new NotImplementedException();
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                // Get response
+                var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
+                // Check if response exist
+                if (response == null)
+                    return new DataResponse((int)ResponseErrors.ResponseDoesNotExist);
+
+                // Remove response
+                context.MunicipalityResponses.Remove(response);
+
+                // Save changes in database
+                var changes = await context.SaveChangesAsync();
+
+                // Return success response
+                return new DataResponse();
+            }
         }
 
-        public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response)
+
+        public async Task<DataResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
-            throw new NotImplementedException();
+            // Check WASPUpdate list
+            if (!DataServiceUtil.CheckWASPUpdateList(updates.ToList(), MunicipalityResponse.GetPropertiesThatAreAllowedToBeUpdated()))
+                return new DataResponse((int)ResponseErrors.WASPUpdateListBadFormat);
+
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Get response
+                   var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
+                   // Check if response exist
+                   if (response == null)
+                       return new DataResponse(((int)ResponseErrors.ResponseDoesNotExist));
+                   // Go through the updates
+                   foreach (var update in updates)
+                   {
+                       // Update property value
+                       DataServiceUtil.UpdateProperty(update.Value, update.Name, response);
+                   }
+                   // Save changes to the database
+                   await context.SaveChangesAsync();
+                   // Return success response
+                   return new DataResponse();
+               }
+            );
         }
 
         public async Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities()

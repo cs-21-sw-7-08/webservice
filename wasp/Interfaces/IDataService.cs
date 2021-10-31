@@ -26,7 +26,7 @@ namespace WASP.Interfaces
         public Task<DataResponse<MunicipalityUser>> MunicipalitySignUp(MunicipalityUser muniUser);
         public Task<DataResponse<MunicipalityUserDTO>> MunicipalityLogIn(MunicipalityUserLoginDTO muniUser);
         public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response);
-        public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response);
+        public Task<DataResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
         public Task<DataResponse> DeleteResponse(int responseId);
 
         // User Functions
