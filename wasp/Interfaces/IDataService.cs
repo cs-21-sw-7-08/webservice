@@ -25,7 +25,7 @@ namespace WASP.Interfaces
         public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities();
         public Task<DataResponse<MunicipalityUser>> MunicipalitySignUp(MunicipalityUser muniUser);
         public Task<DataResponse<MunicipalityUserDTO>> MunicipalityLogIn(MunicipalityUserLoginDTO muniUser);
-        public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response);
+        public Task<DataResponse<MunicipalityResponseDTO>> CreateResponse(MunicipalityResponseDTO response);
         public Task<DataResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
         public Task<DataResponse> DeleteResponse(int responseId);
 

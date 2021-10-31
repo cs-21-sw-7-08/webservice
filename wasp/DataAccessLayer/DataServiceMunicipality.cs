@@ -15,62 +15,56 @@ namespace WASP.DataAccessLayer
     {
         #region Methods
 
-        public async Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response)
+        public async Task<DataResponse<MunicipalityResponseDTO>> CreateResponse(MunicipalityResponseDTO response)
         {
-            using (var context = ContextFactory.CreateDbContext())
-            {
-                // Get issue
-                var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == response.IssueId);
-                // Check if issue exist
-                if (issue == null)
-                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.IssueDoesNotExist);
-                // Get municipality user
-                var municipalityUser = await context.MunicipalityUsers.FirstOrDefaultAsync(x => x.Id == response.MunicipalityUserId);
-                // Check if municipality user exist
-                if (municipalityUser == null)
-                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.MunicipalityUserDoesNotExist);
-                // Check if municipality user and issue are from the same municipality
-                if (issue.MunicipalityId == municipalityUser.MunicipalityId)
-                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueId);
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Create new issue
+                   MunicipalityResponse newResponse = new();
+                   // Update properties
+                   DataServiceUtil.UpdateProperties(response, newResponse);
+                   // Set date created
+                   newResponse.DateCreated = DateTime.Now;
 
-                // Create new issue
-                MunicipalityResponse newResponse = new();
-                // Update properties
-                DataServiceUtil.UpdateProperties(response, newResponse);
-                // Set date created
-                newResponse.DateCreated = DateTime.Now;
+                   // Save changes to the database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one new Rosponse is added to the database
+                   if (changes != 1)
+                       return new DataResponse<MunicipalityResponseDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
 
-                // Save changes to the database
-                var changes = await context.SaveChangesAsync();
-                // Check that the number of changed entities is 1
-                // as one new Rosponse is added to the database
-                if (changes != 1)
-                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
-
-                // Return success response
-                return new DataResponse<MunicipalityResponse>(newResponse);
-            }
+                   // Return success response
+                   return new DataResponse<MunicipalityResponseDTO>(new MunicipalityResponseDTO(newResponse));
+               }
+            );
         }
 
         public async Task<DataResponse> DeleteResponse(int responseId)
         {
-            using (var context = ContextFactory.CreateDbContext())
-            {
-                // Get response
-                var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
-                // Check if response exist
-                if (response == null)
-                    return new DataResponse((int)ResponseErrors.ResponseDoesNotExist);
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Get response
+                   var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
+                   // Check if response exist
+                   if (response == null)
+                       return new DataResponse((int)ResponseErrors.ResponseDoesNotExist);
 
-                // Remove response
-                context.MunicipalityResponses.Remove(response);
+                   // Remove response
+                   context.MunicipalityResponses.Remove(response);
 
-                // Save changes in database
-                var changes = await context.SaveChangesAsync();
+                   // Save changes in database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one Rosponse is deleted from the database
+                   if (changes != 1)
+                       return new DataResponse((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
 
-                // Return success response
-                return new DataResponse();
-            }
+                   // Return success response
+                   return new DataResponse();
+               }
+            );
         }
 
 
@@ -95,7 +89,11 @@ namespace WASP.DataAccessLayer
                        DataServiceUtil.UpdateProperty(update.Value, update.Name, response);
                    }
                    // Save changes to the database
-                   await context.SaveChangesAsync();
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one Rosponse is changed in the database
+                   if (changes != 1)
+                       return new DataResponse((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
                    // Return success response
                    return new DataResponse();
                }

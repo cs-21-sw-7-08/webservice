@@ -38,17 +38,19 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse> CreateResponse(MunicipalityResponse response)
+        public async Task<WASPResponse> CreateResponse(MunicipalityResponseDTO response)
         {
-            await DataService.CreateResponse(response);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.CreateResponse(response),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
         [HttpPut]
         public async Task<WASPResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
-               async () => await DataService.UpdateIssue(responseId, updates),
+               async () => await DataService.UpdateResponse(responseId, updates),
                (dataResponse) => new WASPResponse()
            );
         }
@@ -56,8 +58,10 @@ namespace WASP.Controllers
         [HttpDelete]
         public async Task<WASPResponse> DeleteResponse(int responseId)
         {
-            await DataService.DeleteResponse(responseId);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.DeleteResponse(responseId),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
         [HttpPut]
