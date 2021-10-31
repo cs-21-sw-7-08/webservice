@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Utilities;
 
 namespace WASP.DataAccessLayer
 {
@@ -13,9 +14,47 @@ namespace WASP.DataAccessLayer
     {
         #region Methods
 
-        public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response)
+        public async Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response)
         {
-            throw new NotImplementedException();
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                // Get issue
+                var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == response.IssueId);
+                // Check if issue exist
+                if (issue == null)
+                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.IssueDoesNotExist);
+                // Get municipality user
+                var municipalityUser = await context.MunicipalityUsers.FirstOrDefaultAsync(x => x.Id == response.MunicipalityUserId);
+                // Check if municipality user exist
+                if (municipalityUser == null)
+                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.MunicipalityUserDoesNotExist);
+                // Check if municipality user and issue are from the same municipality
+                if (issue.MunicipalityId == municipalityUser.MunicipalityId)
+                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueId);
+
+                var municipalityResponse = await context.MunicipalityResponses
+                                                .FirstOrDefaultAsync(x => x.IssueId == response.IssueId && x.MunicipalityUserId == response.MunicipalityUserId);
+                // Check if response exist
+                if (municipalityResponse != null)
+                    return new DataResponse<MunicipalityResponse>((int)ResponseErrors.ResponseDoesNotExist);
+
+                // Create new issue
+                MunicipalityResponse newResponse = new();
+                // Update properties
+                DataServiceUtil.UpdateProperties(response, newResponse);
+                // Set date created
+                newResponse.DateCreated = DateTime.Now;
+
+                // Save changes to the database
+                var changes = await context.SaveChangesAsync();
+                // Check that the number of changed entities is 1
+                // as one new Rosponse is added to the database
+                if (changes != 1)
+                    return new DataResponse<MunicipalityResponse>(((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase));
+
+                // Return success response
+                return new DataResponse<MunicipalityResponse>(newResponse);
+            }
         }
 
         public Task<DataResponse> DeleteResponse(int responseId)
