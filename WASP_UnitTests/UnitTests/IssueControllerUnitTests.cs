@@ -9,6 +9,7 @@ using WASP.Objects;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using WASP.Enums;
 
 namespace WASP.Test.UnitTests
 {
@@ -77,11 +78,7 @@ namespace WASP.Test.UnitTests
             MockHiveContextFactory contextFactory = new();
             IssueController controller = new(contextFactory);
             int issueID = 1;
-
-            // Act
-            using (var context = contextFactory.CreateDbContext())
-            {
-                IEnumerable<WASPUpdate> update = new List<WASPUpdate>()
+            IEnumerable<WASPUpdate> update = new List<WASPUpdate>()
                 {
                     new()
                     {
@@ -90,21 +87,38 @@ namespace WASP.Test.UnitTests
                     }
                 };
 
-                // Get the issue (and description) from the context
-                var oldIssue = context.Issues.FirstOrDefault(x => x.Id == issueID);
-                string oldDesc = oldIssue.Description;
-                // Acquire the same issue, using the database controller.
-                var acquiredIssue = await controller.GetIssueDetails(issueID);
-                var result = await controller.UpdateIssue(issueID, update);
-                var newAcquiredIssue = controller.GetIssueDetails(issueID).Result;
-
+            // Act
+            var result = await controller.UpdateIssue(issueID, update);
+            var newIssue = await controller.GetIssueDetails(issueID);
+            using (var context = contextFactory.CreateDbContext())
+            {
                 // Assert
 
-                // Check if the description from the context and from using the controller are identical
-                Assert.AreEqual(oldDesc, acquiredIssue.Value.Result.Description);
-
                 // Check if the description has been updated after using UpdateIssue controller function
-                Assert.AreEqual(newAcquiredIssue.Value.Result.Description, update.First().Value);
+                Assert.AreEqual(update.First().Value, newIssue.Value.Result.Description);
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        public async Task IssueError_IssueDoesNotExist()
+        {
+            //Arrange
+            int testID = 99;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            //Act
+
+            //Attempt to return an issue using a non-existant ID
+            var result = await controller.GetIssueDetails(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                //Assert
+
+                //Verify that the function returns the relevant error code.
+                Assert.AreEqual((int)ResponseErrors.IssueDoesNotExist, (int)result.Value.ErrorNo);
             }
         }
     }

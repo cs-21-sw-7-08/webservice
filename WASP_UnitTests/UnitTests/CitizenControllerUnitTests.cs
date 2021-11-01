@@ -67,7 +67,7 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
-        public async Task BlockErrorUserAlreadyBlocked()
+        public async Task CitizenError_UserAlreadyBlocked()
         {
             //Arrange
             int testID = 4;
@@ -75,17 +75,21 @@ namespace WASP.Test.UnitTests
             CitizenController controller = new(contextFactory);
 
             //Act
+
+            //Attempt to block a user that is already blocked
             var result = await controller.BlockUser(testID);
             using (var context = contextFactory.CreateDbContext())
             {
 
                 //Assert
+
+                //Verify that the function return the relevant error code
                 Assert.AreEqual((int)ResponseErrors.CitizenAlreadyBlocked, (int)result.ErrorNo);
             }
         }
 
         [TestMethod]
-        public async Task BlockErrorUserAlreadyUnblocked()
+        public async Task CitizenError_UserAlreadyUnblocked()
         {
             //Arrange
             int testID = 2;
@@ -93,13 +97,42 @@ namespace WASP.Test.UnitTests
             CitizenController controller = new(contextFactory);
 
             //Act
+
+            //Attempt to unblock a user that is already unblocked
             var result = await controller.UnblockUser(testID);
             using (var context = contextFactory.CreateDbContext())
             {
 
                 //Assert
+
+                //Verify that the function return the relevant error code
                 Assert.AreEqual((int)ResponseErrors.CitizenAlreadyUnblocked, (int)result.ErrorNo);
             }
         }
+
+        [TestMethod]
+        public async Task CitizenError_UserDoesNotExist()
+        {
+            //Arrange
+            int testID = 99;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            //Act
+
+            // Attempt block & unblock functions on non-existant ID
+            var blockResult = await controller.BlockUser(testID);
+            var unblockResult = await controller.UnblockUser(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                //Assert
+
+                //Verify that the functions return the relevant error codes
+                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)blockResult.ErrorNo);
+                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)unblockResult.ErrorNo);
+            }
+        }
+
     }
 }
