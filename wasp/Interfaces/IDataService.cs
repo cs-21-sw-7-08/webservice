@@ -13,12 +13,13 @@ namespace WASP.Interfaces
         // Issue Functions        
         public Task<DataResponse<IssueDetailsDTO>> GetIssueDetails(int issueId);
         public Task<DataResponse<IEnumerable<IssuesOverviewDTO>>> GetIssueOverview(IssuesOverviewFilter issueOverviewFilter);
-        public Task<DataResponse<Issue>> CreateIssue(Issue issue);
-        public Task<DataResponse<Issue>> UpdateIssue(Issue issue);
+        public Task<DataResponse> CreateIssue(IssueCreateDTO issue);
+        public Task<DataResponse> UpdateIssue(int issueId, IEnumerable<WASPUpdate> updates);
         public Task<DataResponse> DeleteIssue(int issueId);
-        public Task<DataResponse> VerifyIssue(int issueId);
-        public Task<DataResponse> ReportIssue(int issueId);
+        public Task<DataResponse> VerifyIssue(int issueId, int citizenId);
+        public Task<DataResponse> ReportIssue(int issueId, int reportCategoryId);
         public Task<DataResponse<IEnumerable<CategoryListDTO>>> GetCategories();
+        public Task<DataResponse> UpdateIssueStatus(int issueId, int issueStateId);
 
         // Municipality Functions
         public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities();
@@ -27,7 +28,6 @@ namespace WASP.Interfaces
         public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response);
         public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response);
         public Task<DataResponse> DeleteResponse(int responseId);
-        public Task<DataResponse<Issue>> UpdateIssueStatus(int issueId);
 
         // User Functions
         public Task<DataResponse<Citizen>> CitizenSignUp(Citizen citizen);
