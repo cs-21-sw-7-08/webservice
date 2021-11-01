@@ -39,18 +39,61 @@ namespace WASP.DataAccessLayer
                     newIssue.IssueStateId = 1;
 
                     // Add new issue
-                    var response = await context.Issues.AddAsync(newIssue);
+                    await context.Issues.AddAsync(newIssue);
                     // Save changes in database
                     var changes = await context.SaveChangesAsync();
+                    // Check that the number of changed entities is 1
+                    // as one new Issue is added to the database
+                    if (changes != 1)
+                        return new DataResponse(((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase));
+
                     // Return success response
                     return new DataResponse();
                 }
             );
         }
 
-        public Task<DataResponse> DeleteIssue(int issueId)
+        public async Task<DataResponse> DeleteIssue(int issueId)
         {
-            throw new NotImplementedException();
+            return await DataServiceUtil.GetResponse(ContextFactory,
+                async (context) =>
+                {
+                    // Get issue
+                    var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
+                    // Check if issue exist
+                    if (issue == null)
+                        return new DataResponse((int)ResponseErrors.IssueDoesNotExist);
+                    // Get verifications
+                    var verifications = await context.IssueVerifications
+                                             .Where(x => x.IssueId == issueId)
+                                             .ToListAsync();
+                    // Remove any verifications
+                    if (verifications.Count > 0)
+                        context.IssueVerifications.RemoveRange(verifications);
+                    // Get reports
+                    var reports = await context.Reports
+                                        .Where(x => x.IssueId == issueId)
+                                        .ToListAsync();
+                    // Remove any reports
+                    if (reports.Count > 0)
+                        context.Reports.RemoveRange(reports);
+                    // Get municipality responses
+                    var municipalityResponses = await context.MunicipalityResponses
+                                                .Where(x => x.IssueId == issueId)
+                                                .ToListAsync();
+                    // Remove any municipality responses
+                    if (municipalityResponses.Count > 0)
+                        context.MunicipalityResponses.RemoveRange(municipalityResponses);
+                    // Remove issue
+                    context.Issues.Remove(issue);
+
+                    // Save changes in database
+                    var changes = await context.SaveChangesAsync();                    
+
+                    // Return success response
+                    return new DataResponse();
+                }
+            );
         }
 
         public async Task<DataResponse<IEnumerable<CategoryListDTO>>> GetCategories()
@@ -81,6 +124,7 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
+                    .Include(issue => issue.IssueVerifications)
                     .Select(issue => new IssueDetailsDTO(issue)
                     {
                         Id = issue.Id
@@ -148,41 +192,177 @@ namespace WASP.DataAccessLayer
             );
         }
 
-        public Task<DataResponse> ReportIssue(int issueId)
-        {
-            throw new NotImplementedException();
-        }
-
-        // TODO: Add error handling and constraints such as which properties may be updated
-        public async Task<DataResponse> UpdateIssue(int issueId, IEnumerable<WASPUpdate> updates)
+        public async Task<DataResponse> ReportIssue(int issueId, int reportCategoryId)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
+                async (context) =>
+                {
+                    // Get issue
+                    var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
+                    // Check if issue exist
+                    if (issue == null)
+                        return new DataResponse((int)ResponseErrors.IssueDoesNotExist);
+                    // Get report category
+                    var reportCategory = await context.ReportCategories.FirstOrDefaultAsync(x => x.Id == reportCategoryId);
+                    // Check if report category exist
+                    if (reportCategory == null)
+                        return new DataResponse((int)ResponseErrors.ReportCategoryDoesNotExist);
+                    // Get report
+                    var report = await context.Reports
+                                       .FirstOrDefaultAsync(x => x.IssueId == issueId && x.ReportCategoryId == reportCategoryId);
+                    // Check if report exist
+                    if (report == null)
+                    {
+                        // Add report
+                        await context.Reports.AddAsync(new Report()
+                        {
+                            IssueId = issueId,
+                            ReportCategoryId = reportCategoryId,
+                            TypeCounter = 1
+                        });
+                    }
+                    else
+                    {
+                        // Increase type counter to indicate another report has
+                        // been created for the given report category
+                        report.TypeCounter++;
+                    }
+                    
+                    // Save changes to the database
+                    await context.SaveChangesAsync();
+
+                    // Return success response
+                    return new DataResponse();
+                }
+            );
+        }
+
+        public async Task<DataResponse> UpdateIssue(int issueId, IEnumerable<WASPUpdate> updates)
+        {
+            // Check WASPUpdate list
+            if (!DataServiceUtil.CheckWASPUpdateList(updates.ToList(), Issue.GetPropertiesThatAreAllowedToBeUpdated()))
+                return new DataResponse((int)ResponseErrors.WASPUpdateListBadFormat);
+
+            return await DataServiceUtil.GetResponse(ContextFactory,
                async (context) =>
-               {                   
+               {
                    // Get issue
                    var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
                    // Check if issue exist
                    if (issue == null)
                        return new DataResponse(((int)ResponseErrors.IssueDoesNotExist));
-
+                   // Go through the updates
                    foreach (var update in updates)
                    {
+                       // Update property value
                        DataServiceUtil.UpdateProperty(update.Value, update.Name, issue);
-                   }
 
+                       switch (update.Name)
+                       {
+                           // If SubCategoryId has been set, also update CategoryId
+                           case nameof(Issue.SubCategoryId):
+                               // Get SubCategory
+                               var subCategory = await context.SubCategories.FirstOrDefaultAsync(x => x.Id == issue.SubCategoryId);
+                               // Check if it exist
+                               if (subCategory == null)
+                                   return new DataResponse((int)ResponseErrors.SubCategoryDoesNotExist);
+                               // Update CategoryId
+                               issue.CategoryId = subCategory.CategoryId;
+                               break;
+                       }
+                   }
+                   // Save changes to the database
+                   await context.SaveChangesAsync();
+                   // Return success response
                    return new DataResponse();
                }
             );
         }
 
-        public Task<DataResponse<Issue>> UpdateIssueStatus(int issueId)
+        public async Task<DataResponse> UpdateIssueStatus(int issueId, int issueStateId)
         {
-            throw new NotImplementedException();
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
+                   // Check if issue exist
+                   if (issue == null)
+                       return new DataResponse((int)ResponseErrors.IssueDoesNotExist);
+                   var issueState = await context.IssueStates.FirstOrDefaultAsync(x => x.Id == issueStateId);
+                   // Check if issue state exist
+                   if (issueState == null)
+                       return new DataResponse((int)ResponseErrors.IssueStateDoesNotExist);
+
+                   IssueStates issueStateValue = issue.IssueStateId.ToEnum<IssueStates>();
+                   IssueStates newIssueStateValue = issueState.Id.ToEnum<IssueStates>();
+
+                   // Get flag deciding whether the state change is approved
+                   // Created according to behaviour state diagram
+                   bool stateChangeApproved = issueStateValue switch
+                   {
+                       IssueStates.Created => newIssueStateValue switch
+                       {                           
+                           IssueStates.Approved or 
+                           IssueStates.Resolved => true,                           
+                           _ => false
+                       },
+                       IssueStates.Approved => newIssueStateValue switch
+                       {
+                           IssueStates.Resolved => true,
+                           _ => false
+                       },
+                       IssueStates.Resolved => newIssueStateValue switch
+                       {
+                           _ => false
+                       },
+                       _ => false
+                   };
+                   // Check if state change was approved
+                   if (!stateChangeApproved)
+                       return new DataResponse((int)ResponseErrors.DisallowedIssueStateChange);
+
+                   // Return success response
+                   return new DataResponse();
+               }
+           );
         }
 
-        public Task<DataResponse> VerifyIssue(int issueId)
+        public async Task<DataResponse> VerifyIssue(int issueId, int citizenId)
         {
-            throw new NotImplementedException();
+            return await DataServiceUtil.GetResponse(ContextFactory,
+                async (context) =>
+                {
+                    // Get issue
+                    var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
+                    // Check if issue exist
+                    if (issue == null)
+                        return new DataResponse((int)ResponseErrors.IssueDoesNotExist);
+                    // Check issue creator
+                    if (issue.CitizenId == citizenId)
+                        return new DataResponse((int)ResponseErrors.IssueCannotBeVerifiedByItsCreator);
+                    // Get citizen
+                    var citizen = await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId);
+                    // Check if citizen exist
+                    if (citizen == null)
+                        return new DataResponse((int)ResponseErrors.CitizenDoesNotExist);
+                    var issueVerification = await context.IssueVerifications
+                                                  .FirstOrDefaultAsync(x => x.IssueId == issueId && x.CitizenId == citizenId);                   
+                    // Check if issue verification exist
+                    if (issueVerification != null)
+                        return new DataResponse((int)ResponseErrors.IssueAlreadyVerifiedByThisCitizen);
+                    // Add issue verification
+                    await context.IssueVerifications.AddAsync(new IssueVerification()
+                    {
+                        CitizenId = citizenId,
+                        IssueId = issueId
+                    });
+                    // Save changes to the database
+                    await context.SaveChangesAsync();
+
+                    // Return success response
+                    return new DataResponse();
+                }
+            );
         }
 
         #endregion
