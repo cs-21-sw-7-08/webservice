@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WASP.Controllers;
 using WASP.Models;
 using WASP.Test.Model;
+using WASP.Enums;
 
 namespace WASP.Test.UnitTests
 {
@@ -23,16 +24,22 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Assert
+            //Act
+
+            //Block a user that is not blocked
             var result = await controller.BlockUser(testID);
             using (var context = contextFactory.CreateDbContext())
             {
+                // Return citizen with given ID
                 var citizen = await context.Citizens.FirstOrDefaultAsync(cit => cit.Id == testID);
 
-                //Act
+                //Assert
+
+                //Verify that the citizen has become blocked & the result was sucessful
                 Assert.IsTrue(citizen.IsBlocked);
                 Assert.IsTrue(result.IsSuccessful);
             }
+
         }
 
         [TestMethod]
@@ -43,17 +50,56 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Assert
+            //Act
+
+            //Unblock a user that has been blocked
             var result = await controller.UnblockUser(testID);
             using (var context = contextFactory.CreateDbContext())
             {
                 var citizen = await context.Citizens.FirstOrDefaultAsync(cit => cit.Id == testID);
 
-                //Act
+                //Assert
+
+                //Check if the user has been blocked & the result was successful.
                 Assert.IsFalse(citizen.IsBlocked);
                 Assert.IsTrue(result.IsSuccessful);
             }
+        }
 
+        [TestMethod]
+        public async Task BlockErrorUserAlreadyBlocked()
+        {
+            //Arrange
+            int testID = 4;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            //Act
+            var result = await controller.BlockUser(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                //Assert
+                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyBlocked, (int)result.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        public async Task BlockErrorUserAlreadyUnblocked()
+        {
+            //Arrange
+            int testID = 2;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            //Act
+            var result = await controller.UnblockUser(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                //Assert
+                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyUnblocked, (int)result.ErrorNo);
+            }
         }
     }
 }
