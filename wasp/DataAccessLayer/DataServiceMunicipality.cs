@@ -21,6 +21,17 @@ namespace WASP.DataAccessLayer
             return await DataServiceUtil.GetResponse(ContextFactory,
                async (context) =>
                {
+                   // Get issue
+                   var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == response.IssueId);
+                   // Check if issue exist
+                   if (issue == null)
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.IssueDoesNotExist);
+                   // Get municipality user
+                   var muniUser = await context.MunicipalityUsers.FirstOrDefaultAsync(x => x.Id == response.MunicipalityUserId);
+                   // Check if municipalityId corrospond between the issue and the municipality user
+                   if (issue.MunicipalityId != muniUser.MunicipalityId)
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId);
+
                    // Create new issue
                    MunicipalityResponse newResponse = new();
                    // Update properties
@@ -141,6 +152,11 @@ namespace WASP.DataAccessLayer
                    var user = await context.MunicipalityUsers.FirstOrDefaultAsync(x => x.Email == muniUser.Email);
                    if (user != null)
                        return new DataResponse<MunicipalityUserSignUpOutputDTO>((int)ResponseErrors.MunicipalityUserSignUpEmailIsAlreadyUsed);
+
+                   // Check if the municipalityId exist
+                   var municipality = await context.Municipalities.FirstOrDefaultAsync(x => x.Id == muniUser.MunicipalityId);
+                   if (municipality == null)
+                       return new DataResponse<MunicipalityUserSignUpOutputDTO>((int)ResponseErrors.MunicipalityDoesNotExist);
 
                    // Create new municipality user
                    MunicipalityUser newUser = new();

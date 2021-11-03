@@ -41,7 +41,48 @@ namespace WASP.Test.UnitTests
                 //Assert
                 Assert.AreEqual(testResponse.Id, response.Id);
             }
+        }
+        [TestMethod]
+        public async Task MunicipalityController_CreateResponse_IssuesDoesNotExist_ErrorNo104()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityResponseInputDTO testResponse = new()
+            {
+                Id = 50,
+                IssueId = 50,
+                MunicipalityUserId = 1,
+                Response = "test response"
+            };
+            MunicipalityController controller = new(contextFactory);
+            int errorNo = (int)ResponseErrors.IssueDoesNotExist;
 
+            //Act
+            var result = await controller.CreateResponse(testResponse);
+
+            //Assert
+            Assert.AreEqual(errorNo, result.ErrorNo);
+        }
+        [TestMethod]
+        public async Task MunicipalityController_CreateResponse_MunicipalityUserMunicipalityIdDoesNotMatchIssueId_ErrorNo303()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityResponseInputDTO testResponse = new()
+            {
+                Id = 50,
+                IssueId = 2,
+                MunicipalityUserId = 1,
+                Response = "test response"
+            };
+            MunicipalityController controller = new(contextFactory);
+            int errorNo = (int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId;
+
+            //Act
+            var result = await controller.CreateResponse(testResponse);
+
+            //Assert
+            Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
         public async Task MunicipalityController_DeleteResponse_DeleteResponse_Succesful()
@@ -180,7 +221,8 @@ namespace WASP.Test.UnitTests
                 Id = 50,
                 Email = "test@test.com",
                 Name = "test",
-                Password = "12345678"
+                Password = "12345678",
+                MunicipalityId = 1
             };
             MunicipalityController controller = new(contextFactory);
 
@@ -204,7 +246,8 @@ namespace WASP.Test.UnitTests
                 Id = 50,
                 Email = "grete@aalborg.dk",
                 Name = "test",
-                Password = "12345678"
+                Password = "12345678",
+                MunicipalityId = 1
             };
             MunicipalityController controller = new(contextFactory);
             int errorNo = (int)ResponseErrors.MunicipalityUserSignUpEmailIsAlreadyUsed;
@@ -215,6 +258,29 @@ namespace WASP.Test.UnitTests
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
             
+        }
+        [TestMethod]
+        public async Task MunicipalityController_MunicipalitySignUp_MunicipalityDoesNotExist_ErrorNo300()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityUserSignUpInputDTO testUser = new()
+            {
+                Id = 50,
+                Email = "test@test.com",
+                Name = "test",
+                Password = "12345678",
+                MunicipalityId = 50
+            };
+            MunicipalityController controller = new(contextFactory);
+            int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
+
+            //Act
+            var result = await controller.SignUp(testUser);
+
+            //Assert
+            Assert.AreEqual(errorNo, result.ErrorNo);
+
         }
     }
 }
