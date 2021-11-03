@@ -23,7 +23,7 @@ namespace WASP.Models
             SubCategory = new SubCategoryDTO(issue.SubCategory);
             Category = new CategoryDTO(issue.Category);                        
             IssueState = new IssueStateDTO(issue.IssueState);
-            MunicipalityResponses = issue.MunicipalityResponses.Select(x => new MunicipalityResponseDTO(x)).ToList();
+            MunicipalityResponses = issue.MunicipalityResponses.Select(x => new MunicipalityResponseOutputDTO(x)).ToList();
             IssueVerificationCitizenIds = issue.IssueVerifications.Select(x => x.CitizenId).ToList();
         }
 
@@ -48,7 +48,7 @@ namespace WASP.Models
         public virtual SubCategoryDTO SubCategory { get; set; }
         public virtual MunicipalityDTO Municipality { get; set; }
         public virtual IssueStateDTO IssueState { get; set; }
-        public virtual ICollection<MunicipalityResponseDTO> MunicipalityResponses { get; set; }
+        public virtual ICollection<MunicipalityResponseOutputDTO> MunicipalityResponses { get; set; }
         public virtual ICollection<int> IssueVerificationCitizenIds { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WASP.Models;
+using WASP.Models.DTOs;
 using WASP.Objects;
 
 namespace WASP.Interfaces
@@ -25,8 +26,8 @@ namespace WASP.Interfaces
         public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities();
         public Task<DataResponse<MunicipalityUser>> MunicipalitySignUp(MunicipalityUser muniUser);
         public Task<DataResponse<MunicipalityUserDTO>> MunicipalityLogIn(MunicipalityUserLoginDTO muniUser);
-        public Task<DataResponse<MunicipalityResponseDTO>> CreateResponse(MunicipalityResponseDTO response);
-        public Task<DataResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
+        public Task<DataResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response);
+        public Task<DataResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
         public Task<DataResponse> DeleteResponse(int responseId);
 
         // User Functions

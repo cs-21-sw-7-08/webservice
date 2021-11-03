@@ -8,6 +8,7 @@ using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using WASP.Utilities;
 using WASP.Objects;
+using WASP.Models.DTOs;
 
 namespace WASP.Controllers
 {
@@ -38,20 +39,20 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse> CreateResponse(MunicipalityResponseDTO response)
+        public async Task<WASPResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.CreateResponse(response),
-               (dataResponse) => new WASPResponse()
+               (dataResponse) => new WASPResponse<MunicipalityResponseOutputDTO>(dataResponse.Result)
            );
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
+        public async Task<WASPResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.UpdateResponse(responseId, updates),
-               (dataResponse) => new WASPResponse()
+               (dataResponse) => new WASPResponse<MunicipalityResponseOutputDTO>(dataResponse.Result)
            );
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Models.DTOs;
 using WASP.Objects;
 using WASP.Utilities;
 
@@ -15,7 +16,7 @@ namespace WASP.DataAccessLayer
     {
         #region Methods
 
-        public async Task<DataResponse<MunicipalityResponseDTO>> CreateResponse(MunicipalityResponseDTO response)
+        public async Task<DataResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
                async (context) =>
@@ -27,15 +28,18 @@ namespace WASP.DataAccessLayer
                    // Set date created
                    newResponse.DateCreated = DateTime.Now;
 
+                   // Add new response
+                   await context.MunicipalityResponses.AddAsync(newResponse);
+
                    // Save changes to the database
                    var changes = await context.SaveChangesAsync();
                    // Check that the number of changed entities is 1
                    // as one new Rosponse is added to the database
                    if (changes != 1)
-                       return new DataResponse<MunicipalityResponseDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
 
                    // Return success response
-                   return new DataResponse<MunicipalityResponseDTO>(new MunicipalityResponseDTO(newResponse));
+                   return new DataResponse<MunicipalityResponseOutputDTO>(new MunicipalityResponseOutputDTO(newResponse));
                }
             );
         }
@@ -68,11 +72,11 @@ namespace WASP.DataAccessLayer
         }
 
 
-        public async Task<DataResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
+        public async Task<DataResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
             // Check WASPUpdate list
             if (!DataServiceUtil.CheckWASPUpdateList(updates.ToList(), MunicipalityResponse.GetPropertiesThatAreAllowedToBeUpdated()))
-                return new DataResponse((int)ResponseErrors.WASPUpdateListBadFormat);
+                return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.WASPUpdateListBadFormat);
 
             return await DataServiceUtil.GetResponse(ContextFactory,
                async (context) =>
@@ -81,7 +85,7 @@ namespace WASP.DataAccessLayer
                    var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
                    // Check if response exist
                    if (response == null)
-                       return new DataResponse(((int)ResponseErrors.ResponseDoesNotExist));
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.ResponseDoesNotExist);
                    // Go through the updates
                    foreach (var update in updates)
                    {
@@ -93,9 +97,9 @@ namespace WASP.DataAccessLayer
                    // Check that the number of changed entities is 1
                    // as one Rosponse is changed in the database
                    if (changes != 1)
-                       return new DataResponse((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
                    // Return success response
-                   return new DataResponse();
+                   return new DataResponse<MunicipalityResponseOutputDTO>(new MunicipalityResponseOutputDTO(response));
                }
             );
         }
