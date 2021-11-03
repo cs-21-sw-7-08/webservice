@@ -100,5 +100,50 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual("This is a test", response.Response);
             }
         }
+        [TestMethod]
+        public async Task MunicipalityController_UpdateResponse_WASPUpdateListBadFormat_ResponseError50()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+            int responseId = 1;
+            List<WASPUpdate> updates = new List<WASPUpdate>()
+            {
+                new()
+                {
+                    
+                }
+            };
+            int ErrorNo = 50;
+
+            //Act
+            var result = await controller.UpdateResponse(responseId, updates);
+
+            //Assert
+            Assert.AreEqual(ErrorNo, result.ErrorNo);
+        }
+        [TestMethod]
+        public async Task MunicipalityController_UpdateResponse_ResponseDoesNotExist_ResponseError304()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+            int responseId = 50;
+            List<WASPUpdate> updates = new List<WASPUpdate>()
+            {
+                new()
+                {
+                    Name = nameof(MunicipalityResponse.Response),
+                    Value = "This is a test"
+                }
+            };
+            int ErrorNo = 304;
+
+            //Act
+            var result = await controller.UpdateResponse(responseId, updates);
+
+            //Assert
+            Assert.AreEqual(ErrorNo, result.ErrorNo);
+        }
     }
 }
