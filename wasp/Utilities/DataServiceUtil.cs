@@ -66,6 +66,8 @@ namespace WASP.Utilities
 
         /// <summary>
         /// Method used to update a property value in an update function in the DataService
+        /// 
+        /// TODO: Optimize with a update properties
         /// </summary>
         /// <typeparam name="Target">Target object's type</typeparam>
         /// <param name="sourceValue">New value for the property</param>
@@ -93,7 +95,7 @@ namespace WASP.Utilities
                         targetObjPropertyInfo.PropertyType
                     );
             // Set property
-            targetObjPropertyInfo.SetValue(targetObj, value);
+            targetObjPropertyInfo.SetValue(targetObj, value);            
         }
 
         /// <summary>

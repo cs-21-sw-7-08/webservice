@@ -17,6 +17,6 @@ namespace WASP.Models
         {
             get => new Objects.Location((Location as Point).Y, (Location as Point).X);
             set => Location = new Point(value.Longitude, value.Latitude) { SRID = 4326 };
-        }
+        }       
     }
 }
