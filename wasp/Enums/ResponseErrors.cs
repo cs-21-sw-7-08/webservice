@@ -33,6 +33,8 @@ namespace WASP.Enums
         CitizenDoesNotExist = 200,
         CitizenLoginBothEmailAndPhoneNumberCannotBeFilled = 201,
         CitizenWithTheseCredentialsHasNotBeenSignedUp = 202,
+        CitizenAlreadyBlocked = 203,
+        CitizenAlreadyUnblocked = 204,
         //Municipality-related errors
         MunicipalityDoesNotExist = 300,
         MunicipalityUserDoesNotExist = 301,
