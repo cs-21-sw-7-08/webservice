@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WASP.Controllers;
 using WASP.Models;
@@ -138,6 +139,29 @@ namespace WASP.Test.UnitTests
                 }
             };
             int ErrorNo = 304;
+
+            //Act
+            var result = await controller.UpdateResponse(responseId, updates);
+
+            //Assert
+            Assert.AreEqual(ErrorNo, result.ErrorNo);
+        }
+        [TestMethod]
+        public async Task MunicipalityController_UpdateResponse_ExceptionHandlingInGetResponse_ResponseError2()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+            int responseId = 1;
+            List<WASPUpdate> updates = new List<WASPUpdate>()
+            {
+                new()
+                {
+                    Name = nameof(MunicipalityResponse.Response),
+                    Value = JsonSerializer.Deserialize("{\"test\":\"This is a test\"}", typeof(JsonElement))
+                }
+            };
+            int ErrorNo = 2;
 
             //Act
             var result = await controller.UpdateResponse(responseId, updates);
