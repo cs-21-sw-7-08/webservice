@@ -190,6 +190,41 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
+        public async Task DeleteIssue_WithReportsVerifs()
+        {
+            //Arrange
+            int issueID = 3;
+            int citizenID = 2;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+            //Act
+
+            //Place a report and a verification on the issue
+            var verifyResult = await controller.VerifyIssue(issueID, citizenID);
+            var reportResult = await controller.ReportIssue(issueID, 1);
+            
+
+            //Delete the issue
+            var result = await controller.DeleteIssue(issueID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var delVerif = context.IssueVerifications.FirstOrDefault(verif => verif.IssueId == issueID);
+                var delReport = context.Reports.FirstOrDefault(report => report.IssueId == issueID);
+
+                //Assert
+
+                //Verify that the verification and report is now deleted
+                Assert.IsNull(delVerif);
+                Assert.IsNull(delReport);
+
+                //Verify that the function response is successful
+                Assert.IsTrue(verifyResult.Value.IsSuccessful);
+                Assert.IsTrue(reportResult.Value.IsSuccessful);
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
         public async Task VerifyingIssue()
         {
             //Arrange
@@ -323,6 +358,7 @@ namespace WASP.Test.UnitTests
             var statusResult = await controller.UpdateIssueStatus(testID, 3);
             var verifResult = await controller.VerifyIssue(testID, 3);
             var reportResult = await controller.ReportIssue(testID, 1);
+            var deleteResult = await controller.DeleteIssue(testID);
             using (var context = contextFactory.CreateDbContext())
             {
 
@@ -334,6 +370,7 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual(notExistCode, statusResult.Value.ErrorNo);
                 Assert.AreEqual(notExistCode, verifResult.Value.ErrorNo);
                 Assert.AreEqual(notExistCode, reportResult.Value.ErrorNo);
+                Assert.AreEqual(notExistCode, deleteResult.Value.ErrorNo);
             }
         }
 
@@ -433,6 +470,52 @@ namespace WASP.Test.UnitTests
 
                 //Verify that attemping a second verification returns the relevant error
                 Assert.AreEqual(creatorErrorCode, resultSecond.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        public async Task ReportIssue_CategoryDoesNotExist()
+        {
+            //Arrange
+            int issueID = 2;
+            int mockCategory = 101;
+            int categoryErrorCode = (int)ResponseErrors.ReportCategoryDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            //Act
+
+            //Report using a category ID that is not indexed
+            var result = await controller.ReportIssue(issueID, mockCategory);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+
+                //Verify that attemping a second verification returns the relevant error
+                Assert.AreEqual(categoryErrorCode, result.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        public async Task VerifyIssue_CitizenDoesNotExist()
+        {
+            //Arrange
+            int issueID = 2;
+            int mockCitizen = -5;
+            int citizenErrorCode = (int)ResponseErrors.CitizenDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            //Act
+
+            //Report using a category ID that is not indexed
+            var result = await controller.VerifyIssue(issueID, mockCitizen);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+
+                //Verify that attemping a second verification returns the relevant error
+                Assert.AreEqual(citizenErrorCode, result.Value.ErrorNo);
             }
         }
     }
