@@ -7,6 +7,8 @@ using WASP.Models;
 using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using WASP.Utilities;
+using WASP.Objects;
+using WASP.Models.DTOs;
 
 namespace WASP.Controllers
 {
@@ -37,28 +39,34 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse> CreateResponse(MunicipalityResponse response)
+        public async Task<WASPResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response)
         {
-            await DataService.CreateResponse(response);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.CreateResponse(response),
+               (dataResponse) => new WASPResponse<MunicipalityResponseOutputDTO>(dataResponse.Result)
+           );
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateResponse(MunicipalityResponse response)
+        public async Task<WASPResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
-            await DataService.UpdateResponse(response);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.UpdateResponse(responseId, updates),
+               (dataResponse) => new WASPResponse<MunicipalityResponseOutputDTO>(dataResponse.Result)
+           );
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteResponse(int response_id)
+        public async Task<WASPResponse> DeleteResponse(int responseId)
         {
-            await DataService.DeleteResponse(response_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.DeleteResponse(responseId),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateIssueStatus(int issue_id)
+        public async Task<WASPResponse> UpdateIssueStatus(int issueId)
         {
             //await DataService.UpdateIssueStatus(issue_id);
             return new WASPResponse();

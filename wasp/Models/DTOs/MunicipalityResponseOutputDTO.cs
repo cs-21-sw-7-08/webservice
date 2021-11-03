@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WASP.Models
 {
-    public class MunicipalityResponseDTO
+    public class MunicipalityResponseOutputDTO
     {
-        public MunicipalityResponseDTO(MunicipalityResponse municipalityResponse)
+        public MunicipalityResponseOutputDTO(MunicipalityResponse municipalityResponse)
         {
             Id = municipalityResponse.Id;
             IssueId = municipalityResponse.IssueId;

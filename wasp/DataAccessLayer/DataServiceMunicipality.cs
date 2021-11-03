@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Models.DTOs;
+using WASP.Objects;
+using WASP.Utilities;
 
 namespace WASP.DataAccessLayer
 {
@@ -13,19 +16,92 @@ namespace WASP.DataAccessLayer
     {
         #region Methods
 
-        public Task<DataResponse<MunicipalityResponse>> CreateResponse(MunicipalityResponse response)
+        public async Task<DataResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response)
         {
-            throw new NotImplementedException();
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Create new issue
+                   MunicipalityResponse newResponse = new();
+                   // Update properties
+                   DataServiceUtil.UpdateProperties(response, newResponse);
+                   // Set date created
+                   newResponse.DateCreated = DateTime.Now;
+
+                   // Add new response
+                   await context.MunicipalityResponses.AddAsync(newResponse);
+
+                   // Save changes to the database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one new Rosponse is added to the database
+                   if (changes != 1)
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+
+                   // Return success response
+                   return new DataResponse<MunicipalityResponseOutputDTO>(new MunicipalityResponseOutputDTO(newResponse));
+               }
+            );
         }
 
-        public Task<DataResponse> DeleteResponse(int responseId)
+        public async Task<DataResponse> DeleteResponse(int responseId)
         {
-            throw new NotImplementedException();
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Get response
+                   var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
+                   // Check if response exist
+                   if (response == null)
+                       return new DataResponse((int)ResponseErrors.ResponseDoesNotExist);
+
+                   // Remove response
+                   context.MunicipalityResponses.Remove(response);
+
+                   // Save changes in database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one Rosponse is deleted from the database
+                   if (changes != 1)
+                       return new DataResponse((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+
+                   // Return success response
+                   return new DataResponse();
+               }
+            );
         }
 
-        public Task<DataResponse<MunicipalityResponse>> UpdateResponse(MunicipalityResponse response)
+
+        public async Task<DataResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
-            throw new NotImplementedException();
+            // Check WASPUpdate list
+            if (!DataServiceUtil.CheckWASPUpdateList(updates.ToList(), MunicipalityResponse.GetPropertiesThatAreAllowedToBeUpdated()))
+                return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.WASPUpdateListBadFormat);
+
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Get response
+                   var response = await context.MunicipalityResponses.FirstOrDefaultAsync(x => x.Id == responseId);
+                   // Check if response exist
+                   if (response == null)
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.ResponseDoesNotExist);
+                   // Go through the updates
+                   foreach (var update in updates)
+                   {
+                       // Update property value
+                       DataServiceUtil.UpdateProperty(update.Value, update.Name, response);
+                   }
+                   // Save changes to the database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one Rosponse is changed in the database
+                   if (changes != 1)
+                       return new DataResponse<MunicipalityResponseOutputDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+                   // Return success response
+                   return new DataResponse<MunicipalityResponseOutputDTO>(new MunicipalityResponseOutputDTO(response));
+               }
+            );
         }
 
         public async Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities()

@@ -12,7 +12,7 @@ namespace WASP.Models
         {
             IssueVerifications = new HashSet<IssueVerification>();
             MunicipalityResponses = new HashSet<MunicipalityResponse>();
-            Reports = new HashSet<Report>();
+            Reports = new HashSet<Report>();            
         }
 
         public int Id { get; set; }
