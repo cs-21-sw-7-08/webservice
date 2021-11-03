@@ -31,7 +31,7 @@ namespace WASP.Interfaces
         public Task<DataResponse> DeleteResponse(int responseId);
 
         // User Functions
-        public Task<DataResponse<Citizen>> CitizenSignUp(Citizen citizen);
+        public Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpDTO citizen);
         public Task<DataResponse<CitizenDTO>> CitizenLogIn(CitizenLoginDTO citizen);
         public Task<DataResponse> BlockCitizen(int citizenId);
         public Task<DataResponse> UnblockCitizen(int citizenId);

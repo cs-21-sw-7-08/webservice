@@ -19,7 +19,7 @@ namespace WASP.Test.UnitTests
     public class MunicipalityControllerUnitTests
     {
         [TestMethod]
-        public async Task MunicipalityController_CreateResponse_InsertResponse_Succesful()
+        public async Task MunicipalityController_CreateResponse_InsertResponse_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -85,7 +85,7 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
-        public async Task MunicipalityController_DeleteResponse_DeleteResponse_Succesful()
+        public async Task MunicipalityController_DeleteResponse_DeleteResponse_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -118,7 +118,7 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
-        public async Task MunicipalityController_UpdateResponse_UpdateResponseString_Succesful()
+        public async Task MunicipalityController_UpdateResponse_UpdateResponseString_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -212,7 +212,7 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
-        public async Task MunicipalityController_MunicipalitySignUp_InsertUser_Succesful()
+        public async Task MunicipalityController_MunicipalitySignUp_InsertUser_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
