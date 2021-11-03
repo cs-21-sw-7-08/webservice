@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WASP.Controllers;
+using WASP.Enums;
 using WASP.Models;
 using WASP.Models.DTOs;
 using WASP.Objects;
@@ -67,13 +68,13 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
             int responseId = 50;
-            int ErrorNo = 304;
+            int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
 
             //Act
             var result = await controller.DeleteResponse(responseId);
 
             //Assert
-            Assert.AreEqual(ErrorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
         public async Task MunicipalityController_UpdateResponse_UpdateResponseString_Succesful()
@@ -115,13 +116,13 @@ namespace WASP.Test.UnitTests
                     
                 }
             };
-            int ErrorNo = 50;
+            int errorNo = (int)ResponseErrors.WASPUpdateListBadFormat;
 
             //Act
             var result = await controller.UpdateResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(ErrorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
         public async Task MunicipalityController_UpdateResponse_ResponseDoesNotExist_ResponseError304()
@@ -138,13 +139,13 @@ namespace WASP.Test.UnitTests
                     Value = "This is a test"
                 }
             };
-            int ErrorNo = 304;
+            int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
 
             //Act
             var result = await controller.UpdateResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(ErrorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.ErrorNo);
         }
         [TestMethod]
         public async Task MunicipalityController_UpdateResponse_ExceptionHandlingInGetResponse_ResponseError2()
@@ -161,13 +162,59 @@ namespace WASP.Test.UnitTests
                     Value = JsonSerializer.Deserialize("{\"test\":\"This is a test\"}", typeof(JsonElement))
                 }
             };
-            int ErrorNo = 2;
+            int errorNo = (int)ResponseErrors.AnExceptionOccurredInTheDAL;
 
             //Act
             var result = await controller.UpdateResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(ErrorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.ErrorNo);
+        }
+        [TestMethod]
+        public async Task MunicipalityController_MunicipalitySignUp_InsertUser_Succesful()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityUserSignUpInputDTO testUser = new()
+            {
+                Id = 50,
+                Email = "test@test.com",
+                Name = "test",
+                Password = "12345678"
+            };
+            MunicipalityController controller = new(contextFactory);
+
+            //Act
+            var result = await controller.SignUp(testUser);
+
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Result.Id);
+                //Assert
+                Assert.AreEqual(testUser.Id, user.Id);
+            }
+        }
+        [TestMethod]
+        public async Task MunicipalityController_MunicipalitySignUp_UsingAnAlreadyUsedEmail_ErrorNo305()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityUserSignUpInputDTO testUser = new()
+            {
+                Id = 50,
+                Email = "grete@aalborg.dk",
+                Name = "test",
+                Password = "12345678"
+            };
+            MunicipalityController controller = new(contextFactory);
+            int errorNo = (int)ResponseErrors.MunicipalityUserSignUpEmailIsAlreadyUsed;
+
+            //Act
+            var result = await controller.SignUp(testUser);
+
+            //Assert
+            Assert.AreEqual(errorNo, result.ErrorNo);
+            
         }
     }
 }

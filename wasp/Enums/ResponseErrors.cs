@@ -39,5 +39,6 @@ namespace WASP.Enums
         MunicipalityUserEmailAndOrPasswordNotMatched = 302,
         MunicipalityUserMunicipalityIdDoesNotMatchIssueId = 303,
         ResponseDoesNotExist = 304,
+        MunicipalityUserSignUpEmailIsAlreadyUsed = 305,
     }
 }
