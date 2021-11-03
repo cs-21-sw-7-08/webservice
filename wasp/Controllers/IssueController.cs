@@ -68,6 +68,15 @@ namespace WASP.Controllers
             );
         }
 
+        [HttpPut]
+        public async Task<ActionResult<WASPResponse>> UpdateIssueStatus(int issueId, int issueStateID)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UpdateIssueStatus(issueId, issueStateID),
+                (dataResponse) => new WASPResponse()
+            );
+        }
+
         [HttpDelete]
         public async Task<ActionResult<WASPResponse>> DeleteIssue(int issueId)
         {
@@ -94,5 +103,6 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse()
             );
         }
+
     }
 }
