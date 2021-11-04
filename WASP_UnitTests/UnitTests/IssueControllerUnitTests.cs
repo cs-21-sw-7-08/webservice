@@ -137,7 +137,7 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.CreateIssue))]
-        public async Task CreateAnIssue_Successful()
+        public async Task CreateIssue_Successful()
         {
             // Arrange
 
@@ -350,8 +350,33 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
-        [TestCategory(nameof(IssueController))]
-        public async Task IssueError_IssueDoesNotExist()
+        [TestCategory(nameof(IssueController.GetIssueDetails))]
+        public async Task GetIssueDetails_IssueDoesNotExist_Error()
+        {
+            // Arrange
+            int testID = 999;
+            int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act
+
+            // Attempt to return issue using a non-existant ID
+            var getResult = await controller.GetIssueDetails(testID);
+
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Assert
+
+                // Verify that the function returns the relevant error code.
+                Assert.AreEqual(notExistCode, getResult.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.UpdateIssue))]
+        public async Task UpdateIssue_IssueDoesNotExist_Error()
         {
             // Arrange
             int testID = 999;
@@ -369,24 +394,110 @@ namespace WASP.Test.UnitTests
 
             // Act
 
-            // Attempt to return issues using a non-existant ID
-            var getResult = await controller.GetIssueDetails(testID);
+            // Attempt to update issue using a non-existant ID
             var updateResult = await controller.UpdateIssue(testID, update);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Assert
+
+                // Verify that the function returns the relevant error code.
+                Assert.AreEqual(notExistCode, updateResult.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.UpdateIssueStatus))]
+        public async Task UpdateIssueStatus_IssueDoesNotExist_Error()
+        {
+            // Arrange
+            int testID = 999;
+            int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act
+
+            // Attempt to update issue state using a non-existant ID
             var statusResult = await controller.UpdateIssueStatus(testID, 3);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Assert
+
+                // Verify that the function returns the relevant error code.
+                Assert.AreEqual(notExistCode, statusResult.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.VerifyIssue))]
+        public async Task VerifyIssue_IssueDoesNotExist_Error()
+        {
+            // Arrange
+            int testID = 999;
+            int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act
+
+            // Attempt to verify issue using a non-existant ID
             var verifResult = await controller.VerifyIssue(testID, 3);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Assert
+
+                // Verify that the function returns the relevant error code.
+                Assert.AreEqual(notExistCode, verifResult.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.ReportIssue))]
+        public async Task ReportIssue_IssueDoesNotExist_Error()
+        {
+            // Arrange
+            int testID = 999;
+            int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act
+
+            // Attempt to report issue using a non-existant ID
             var reportResult = await controller.ReportIssue(testID, 1);
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Assert
+
+                // Verify that the function returns the relevant error code.
+                Assert.AreEqual(notExistCode, reportResult.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.DeleteIssue))]
+        public async Task DeleteIssue_IssueDoesNotExist_Error()
+        {
+            // Arrange
+            int testID = 999;
+            int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+           
+            // Act
+
+            // Attempt to delete issue using a non-existant ID
             var deleteResult = await controller.DeleteIssue(testID);
             using (var context = contextFactory.CreateDbContext())
             {
 
                 // Assert
 
-                // Verify that the functions returns the relevant error code.
-                Assert.AreEqual(notExistCode, getResult.Value.ErrorNo);
-                Assert.AreEqual(notExistCode, updateResult.Value.ErrorNo);
-                Assert.AreEqual(notExistCode, statusResult.Value.ErrorNo);
-                Assert.AreEqual(notExistCode, verifResult.Value.ErrorNo);
-                Assert.AreEqual(notExistCode, reportResult.Value.ErrorNo);
+                // Verify that the function returns the relevant error code.
                 Assert.AreEqual(notExistCode, deleteResult.Value.ErrorNo);
             }
         }
@@ -423,7 +534,7 @@ namespace WASP.Test.UnitTests
             int categoryErrorCode = (int)ResponseErrors.SubCategoryDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
-            
+
             // Create a IssueDTO with a subcategory that does not exist.
             IssueCreateDTO mockIssueDTO = new()
             {
@@ -514,13 +625,13 @@ namespace WASP.Test.UnitTests
 
 
         [TestMethod]
-        [TestCategory(nameof(IssueController.UpdateIssue))]
+        [TestCategory(nameof(IssueController.UpdateIssueStatus))]
         public async Task UpdateIssueStatus_DisallowedIssueStateChange_Error()
         {
             // Arrange
             int issueID1 = 1;
             int issueID2 = 2;
-            int issueID3 = 3; 
+            int issueID3 = 3;
             int disallowedCode = (int)ResponseErrors.DisallowedIssueStateChange;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
