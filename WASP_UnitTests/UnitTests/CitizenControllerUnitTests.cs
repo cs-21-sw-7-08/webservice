@@ -181,7 +181,7 @@ namespace WASP.Test.UnitTests
             }
         }
         [TestMethod]
-        public async Task CitizenController_CitizenSignUpPhoneNo_CitizenSignUpPhoneNoIsAlreadyUsed_ErrorNo203()
+        public async Task CitizenController_CitizenSignUpPhoneNo_CitizenSignUpPhoneNoIsAlreadyUsed_ErrorNo205()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -201,7 +201,7 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(result.ErrorNo, errorNo);
         }
         [TestMethod]
-        public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpEmailIsAlreadyUsed_ErrorNo204()
+        public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpEmailIsAlreadyUsed_ErrorNo206()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -221,7 +221,7 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(result.ErrorNo, errorNo);
         }
         [TestMethod]
-        public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoFilledOut_ErrorNo205()
+        public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoFilledOut_ErrorNo207()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -242,7 +242,7 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(result.ErrorNo, errorNo);
         }
         [TestMethod]
-        public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoNull_ErrorNo205()
+        public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoNull_ErrorNo207()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
