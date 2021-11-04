@@ -282,5 +282,48 @@ namespace WASP.Test.UnitTests
             Assert.AreEqual(errorNo, result.ErrorNo);
 
         }
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.LogIn))]
+        public async Task MunicipalityController_LogIn_LogIn_Error302()
+        {
+            //Arrange
+            MunicipalityUserLoginDTO testMuni = new MunicipalityUserLoginDTO();
+            testMuni.Email = "gretethebadass@aalborg.dk";
+            testMuni.Password = "12345678";
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testMuni);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.MunicipalityUserEmailAndOrPasswordNotMatched);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.LogIn))]
+        public async Task MunicipalityController_LogIn_LogIn_Successful()
+        {
+            //Arrange
+            MunicipalityUserLoginDTO testMuni = new MunicipalityUserLoginDTO();
+            testMuni.Email = "grete@aalborg.dk";
+            testMuni.Password = "12345678";
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testMuni);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.IsSuccessful);
+            }
+
+        }
     }
 }
