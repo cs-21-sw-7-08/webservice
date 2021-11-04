@@ -157,6 +157,7 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual(testCitizen.Id, response.Id);
             }
         }
+
         [TestMethod]
         public async Task CitizenController_CitizenSignUpPhoneNo_InsertCitizen_Successful()
         {
@@ -180,6 +181,7 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual(testCitizen.Id, response.Id);
             }
         }
+
         [TestMethod]
         public async Task CitizenController_CitizenSignUpPhoneNo_CitizenSignUpPhoneNoIsAlreadyUsed_ErrorNo205()
         {
@@ -200,6 +202,7 @@ namespace WASP.Test.UnitTests
             //Assert
             Assert.AreEqual(result.ErrorNo, errorNo);
         }
+
         [TestMethod]
         public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpEmailIsAlreadyUsed_ErrorNo206()
         {
@@ -220,6 +223,7 @@ namespace WASP.Test.UnitTests
             //Assert
             Assert.AreEqual(result.ErrorNo, errorNo);
         }
+
         [TestMethod]
         public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoFilledOut_ErrorNo207()
         {
@@ -237,10 +241,10 @@ namespace WASP.Test.UnitTests
 
             //Act
             var result = await controller.SignUp(testCitizen);
-
             //Assert
             Assert.AreEqual(result.ErrorNo, errorNo);
         }
+
         [TestMethod]
         public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoNull_ErrorNo207()
         {
@@ -259,6 +263,136 @@ namespace WASP.Test.UnitTests
 
             //Assert
             Assert.AreEqual(result.ErrorNo, errorNo);
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithEmail_Successful()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.Email = "email@email.dk";
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.IsSuccessful);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithEmail_ErrorNo202()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.Email = "email@emailyolo.dk";
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithPhoneNo_Successful()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.PhoneNo = "12345678";
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.IsSuccessful);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithPhoneNo_ErrorNo202()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.PhoneNo = "12345679";
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithBothFilled_ErrorNo201()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.PhoneNo = "12345678";
+            testID.Email = "email@email.dk";
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithNullValues_ErrorNo201()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+            }
+
         }
     }
 }
