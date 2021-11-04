@@ -373,6 +373,9 @@ namespace WASP.Test.UnitTests
             }
 
         }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
         public async Task CitizenController_LogIn_LogInWithNullValues_ErrorNo201()
         {
             //Arrange
