@@ -133,6 +133,136 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)unblockResult.ErrorNo);
             }
         }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithEmail_Successful()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.Email = "email@email.dk";
+            Citizen citizen = null;
 
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.IsSuccessful);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithEmail_ErrorNo202()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.Email = "email@emailyolo.dk";
+            Citizen citizen = null;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithPhoneNo_Successful()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.PhoneNo = "12345678";
+            Citizen citizen = null;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.IsSuccessful);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithPhoneNo_ErrorNo202()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.PhoneNo = "12345679";
+            Citizen citizen = null;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.LogIn))]
+        public async Task CitizenController_LogIn_LogInWithBothFilled_ErrorNo201()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+            testID.PhoneNo = "12345678";
+            testID.Email = "email@email.dk";
+            Citizen citizen = null;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+            }
+
+        }
+        public async Task CitizenController_LogIn_LogInWithNullValues_ErrorNo201()
+        {
+            //Arrange
+            CitizenLoginDTO testID = new CitizenLoginDTO();
+
+            Citizen citizen = null;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogIn(testID);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.ErrorNo == (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+            }
+
+        }
     }
 }

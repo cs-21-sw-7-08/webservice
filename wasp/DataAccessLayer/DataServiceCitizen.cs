@@ -94,7 +94,7 @@ namespace WASP.DataAccessLayer
                 {
                     return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
                 }
-                // TODO: ADD ERROR
+                //If the email or phoneNo has not been signed up yet
                 if(citizen == null)
                     return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
                 //Returns success response
