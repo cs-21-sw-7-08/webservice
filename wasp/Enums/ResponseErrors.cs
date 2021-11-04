@@ -35,11 +35,15 @@ namespace WASP.Enums
         CitizenWithTheseCredentialsHasNotBeenSignedUp = 202,
         CitizenAlreadyBlocked = 203,
         CitizenAlreadyUnblocked = 204,
+        CitizenSignUpPhoneNoIsAlreadyUsed = 205,
+        CitizenSignUpEmailIsAlreadyUsed = 206,
+        CitizenSignUpInvalidParameters = 207,
         //Municipality-related errors
         MunicipalityDoesNotExist = 300,
         MunicipalityUserDoesNotExist = 301,
         MunicipalityUserEmailAndOrPasswordNotMatched = 302,
-        MunicipalityUserMunicipalityIdDoesNotMatchIssueId = 303,
+        MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId = 303,
         ResponseDoesNotExist = 304,
+        MunicipalityUserSignUpEmailIsAlreadyUsed = 305,
     }
 }

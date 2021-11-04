@@ -143,21 +143,24 @@ namespace WASP.Test.Model
                     Id = 1,
                     Email = "grete@aalborg.dk",
                     Password = "12345678",
-                    Name = "Grete"
+                    Name = "Grete",
+                    MunicipalityId = 1
                 },
                 new MunicipalityUser()
                 {
                     Id = 2,
                     Email = "bente@aalborg.dk",
                     Password = "12345678",
-                    Name = "Bente"
+                    Name = "Bente",
+                    MunicipalityId = 1
                 },
                 new MunicipalityUser()
                 {
                     Id = 3,
                     Email = "annette@aalborg.dk",
                     Password = "12345678",
-                    Name = "Annette"
+                    Name = "Annette",
+                    MunicipalityId = 1
                 }
             );
             // Issues
