@@ -36,7 +36,7 @@ namespace WASP.DataAccessLayer
                 if (citizen.IsBlocked == false)
                     citizen.IsBlocked = true;
                 else
-                    return new DataResponse(400, "User is already blocked");
+                    return new DataResponse((int)ResponseErrors.CitizenAlreadyBlocked);
                 // Save the changes
                 await context.SaveChangesAsync();
                 // Return success response
@@ -66,7 +66,7 @@ namespace WASP.DataAccessLayer
                     citizen.IsBlocked = false;
                 else
                     //TODO: Add errorcode in ErrorResponse enum
-                    return new DataResponse(400, "User is not blocked");
+                    return new DataResponse((int)ResponseErrors.CitizenAlreadyUnblocked);
                 await context.SaveChangesAsync();
                 return new DataResponse();
             }

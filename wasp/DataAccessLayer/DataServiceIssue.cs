@@ -146,15 +146,11 @@ namespace WASP.DataAccessLayer
                 {
                     // Get issues
                     var list = await context.Issues
-                    .AsNoTracking()
-                    .Select(issue => new IssuesOverviewDTO(issue)
-                    {
-                        DateCreated = issue.DateCreated,
-                        MunicipalityId = issue.MunicipalityId,
-                        IssueStateId = issue.IssueStateId,
-                        CategoryId = issue.CategoryId,
-                        SubCategoryId = issue.SubCategoryId
-                    })
+                    .AsNoTracking()                    
+                    .Include(issue => issue.IssueState)
+                    .Include(issue => issue.Category)
+                    .Include(issue => issue.SubCategory)
+                    .Include(issue => issue.Municipality)
                     // Filter -> FromTime
                     .Where(issue =>
                         filter.FromTime == null ||
@@ -185,6 +181,7 @@ namespace WASP.DataAccessLayer
                         filter.CategoryId == null ||
                         (filter.CategoryId != null && issue.CategoryId == filter.CategoryId)
                     )
+                    .Select(issue => new IssuesOverviewDTO(issue))
                     .ToListAsync();
                     // Return success response
                     return new DataResponse<IEnumerable<IssuesOverviewDTO>>(list.AsEnumerable());
@@ -320,6 +317,11 @@ namespace WASP.DataAccessLayer
                    // Check if state change was approved
                    if (!stateChangeApproved)
                        return new DataResponse((int)ResponseErrors.DisallowedIssueStateChange);
+
+                   // Set new issue state ID
+                   issue.IssueStateId = issueState.Id;
+                   // Save changes
+                   await context.SaveChangesAsync();
 
                    // Return success response
                    return new DataResponse();
