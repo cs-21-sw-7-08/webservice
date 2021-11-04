@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Models.DTOs;
+using WASP.Utilities;
 
 namespace WASP.DataAccessLayer
 {
@@ -102,9 +104,51 @@ namespace WASP.DataAccessLayer
             }
         }
 
-        public Task<DataResponse<Citizen>> CitizenSignUp(Citizen citizen)
+
+        public async Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpDTO citizen)
         {
-            throw new NotImplementedException();
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   //In case of PhoneNo given then check no citizen with the phoneNo already exist
+                   if (citizen.Email == null && citizen.PhoneNo != null)
+                   {
+                       var phoneNo = await context.Citizens.FirstOrDefaultAsync(x => x.PhoneNo == citizen.PhoneNo);
+                       if (phoneNo != null)
+                           return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenSignUpPhoneNoIsAlreadyUsed);
+                   }
+                   //In case of Email given then check no citizen with the email already exist
+                   else if (citizen.Email != null && citizen.PhoneNo == null)
+                   {
+                       var email = await context.Citizens.FirstOrDefaultAsync(x => x.Email == citizen.Email);
+                       if (email != null)
+                           return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenSignUpEmailIsAlreadyUsed);
+                   }
+                   //In case of invalid parameters, such as both phoneNo and Email not being null
+                   else
+                       return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenSignUpInvalidParameters);
+
+                   // Create new Citizen
+                   Citizen newCitizen = new();
+                   // Update properties
+                   DataServiceUtil.UpdateProperties(citizen, newCitizen);
+                   // Set isBlocked
+                   newCitizen.IsBlocked = false;
+
+                   // Add new citizen
+                   await context.Citizens.AddAsync(newCitizen);
+
+                   // Save changes to the database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   // as one new municipality user is added to the database
+                   if (changes != 1)
+                       return new DataResponse<CitizenDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+
+                   // Return success response
+                   return new DataResponse<CitizenDTO>(new CitizenDTO(newCitizen));
+               }
+            );
         }
         /// <summary>
         /// Removes a citizen from the database. Takes a <paramref name="citizenId"/>, and deletes the citizen with matching ID.

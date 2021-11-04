@@ -7,6 +7,8 @@ using WASP.Models;
 using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using WASP.Utilities;
+using WASP.Models.DTOs;
+using WASP.Objects;
 
 namespace WASP.Controllers
 {
@@ -20,11 +22,12 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse> SignUp(Citizen citizen)
+        public async Task<WASPResponse<CitizenDTO>> SignUp(CitizenSignUpDTO citizen)
         {
-            await DataService.CitizenSignUp(citizen);
-            return new WASPResponse();
-
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.CitizenSignUp(citizen),
+                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result)
+            );
         }
 
         [HttpPost]
