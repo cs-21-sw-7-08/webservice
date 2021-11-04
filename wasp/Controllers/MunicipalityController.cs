@@ -23,10 +23,12 @@ namespace WASP.Controllers
 
 
         [HttpPost]
-        public async Task<WASPResponse> SignUp(MunicipalityUser munUser)
+        public async Task<WASPResponse<MunicipalityUserSignUpOutputDTO>> SignUp(MunicipalityUserSignUpInputDTO munUser)
         {
-            await DataService.MunicipalitySignUp(munUser);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.MunicipalitySignUp(munUser),
+                (dataResponse) => new WASPResponse<MunicipalityUserSignUpOutputDTO>(dataResponse.Result)
+            );
         }
 
         [HttpPost]
