@@ -25,7 +25,7 @@ namespace WASP.DataAccessLayer
                     Issue newIssue = new();
 
                     var subCategory = await context.SubCategories.FirstOrDefaultAsync(x => x.Id == issue.SubCategoryId);
-                    // Check if subcategory with the given ID exist
+                    // Check if subcategory with the given Id exist
                     if (subCategory == null)
                         return new DataResponse(((int)ResponseErrors.SubCategoryDoesNotExist));
 
@@ -33,9 +33,9 @@ namespace WASP.DataAccessLayer
                     DataServiceUtil.UpdateProperties(issue, newIssue);
                     // Set date created
                     newIssue.DateCreated = DateTime.Now;
-                    // Set category ID                
+                    // Set category Id               
                     newIssue.CategoryId = subCategory.CategoryId;
-                    // Set state ID
+                    // Set state Id
                     newIssue.IssueStateId = 1;
 
                     // Add new issue
@@ -318,7 +318,7 @@ namespace WASP.DataAccessLayer
                    if (!stateChangeApproved)
                        return new DataResponse((int)ResponseErrors.DisallowedIssueStateChange);
 
-                   // Set new issue state ID
+                   // Set new issue state Id
                    issue.IssueStateId = issueState.Id;
                    // Save changes
                    await context.SaveChangesAsync();

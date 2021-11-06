@@ -7,6 +7,11 @@ namespace WASP.Models
 {
     public class MunicipalityUserDTO
     {
+        public MunicipalityUserDTO()
+        {
+                
+        }
+
         public MunicipalityUserDTO(MunicipalityUser municipalityUser)
         {
             Id = municipalityUser.Id;

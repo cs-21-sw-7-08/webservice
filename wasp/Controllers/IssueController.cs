@@ -69,10 +69,10 @@ namespace WASP.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse>> UpdateIssueStatus(int issueId, int issueStateID)
+        public async Task<ActionResult<WASPResponse>> UpdateIssueStatus(int issueId, int issueStateId)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.UpdateIssueStatus(issueId, issueStateID),
+                async () => await DataService.UpdateIssueStatus(issueId, issueStateId),
                 (dataResponse) => new WASPResponse()
             );
         }

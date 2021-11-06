@@ -19,21 +19,21 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.GetIssueDetails))]
-        public async Task GetIssueDetails_Successful()
+        public async Task IssueController_GetIssueDetails_Successful()
         {
             // Arrange
-            int issueID = 2;
+            int issueId = 2;
             MockHiveContextFactory contextFactory = new();
             IssueController controller = new(contextFactory);
 
             // Act
-            var response = await controller.GetIssueDetails(issueID);
+            var response = await controller.GetIssueDetails(issueId);
             using (var context = contextFactory.CreateDbContext())
             {
-                // Get an issue with a given ID from the context
-                var expectedIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueID);
+                // Get an issue with a given Id from the context
+                var expectedIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueId);
 
-                // Obtain an issue with a given ID using the controller function
+                // Obtain an issue with a given Id using the controller function
                 var result = response.Value.Result;
 
                 // Assert
@@ -50,7 +50,7 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.GetListOfIssues))]
-        public async Task GetListOfIssues_Successful()
+        public async Task IssueController_GetListOfIssues_Successful()
         {
             // Arrange
             MockHiveContextFactory contextFactory = new();
@@ -67,14 +67,14 @@ namespace WASP.Test.UnitTests
                 // Assert
 
                 // Verify that the length of the list is equal to the context issue-list length
-                Assert.IsTrue(expectedList == result.Value.Result.Count());
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
 
         [TestMethod]
         [TestCategory(nameof(IssueController.GetListOfCategories))]
-        public async Task GetListOfCategories_Successful()
+        public async Task IssueController_GetListOfCategories_Successful()
         {
             // Arrange
             MockHiveContextFactory contextFactory = new();
@@ -91,19 +91,19 @@ namespace WASP.Test.UnitTests
                 // Assert
 
                 // Verify that the length of the list is equal to the context issue-list length
-                Assert.IsTrue(expectedList == result.Value.Result.Count());
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssue))]
-        public async Task UpdateIssue_Successful()
+        public async Task IssueController_UpdateIssue_Successful()
         {
             // Arrange
             MockHiveContextFactory contextFactory = new();
             IssueController controller = new(contextFactory);
-            int issueID = 1;
+            int issueId = 1;
             IEnumerable<WASPUpdate> update = new List<WASPUpdate>()
                 {
                     new()
@@ -121,10 +121,10 @@ namespace WASP.Test.UnitTests
             // Act
 
             // Attempt to update an issue property with a new one
-            var result = await controller.UpdateIssue(issueID, update);
+            var result = await controller.UpdateIssue(issueId, update);
 
             // Obtain the issue after it's property is updated.
-            var newIssue = await controller.GetIssueDetails(issueID);
+            var newIssue = await controller.GetIssueDetails(issueId);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -137,7 +137,7 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.CreateIssue))]
-        public async Task CreateIssue_Successful()
+        public async Task IssueController_CreateIssue_Successful()
         {
             // Arrange
 
@@ -159,9 +159,9 @@ namespace WASP.Test.UnitTests
 
             using (var context = contextFactory.CreateDbContext())
             {
-                int issueID = context.Issues.Count();
+                int issueId = context.Issues.Count();
                 // Obtain the newly created issue
-                var freshIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueID);
+                var freshIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueId);
 
                 // Assert
 
@@ -173,24 +173,24 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.DeleteIssue))]
-        public async Task DeleteIssue_Successful()
+        public async Task IssueController_DeleteIssue_Successful()
         {
             // Arrange
-            int issueID = 3;
+            int issueId = 3;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
             // Ensure issue exists before it is deleted
-            var retrivedDTO = await controller.GetIssueDetails(issueID);
+            var retrivedDTO = await controller.GetIssueDetails(issueId);
             var retrivedIssue = retrivedDTO.Value.Result;
 
-            // Attempt to return an issue using a non-existant ID
-            var result = await controller.DeleteIssue(issueID);
+            // Attempt to return an issue using a non-existant Id
+            var result = await controller.DeleteIssue(issueId);
             using (var context = contextFactory.CreateDbContext())
             {
-                var retrieveAttempt = context.Issues.FirstOrDefault(issue => issue.Id == issueID);
+                var retrieveAttempt = context.Issues.FirstOrDefault(issue => issue.Id == issueId);
                 // Assert
 
                 // Verify that the attempt to find issue does not find the issue
@@ -202,26 +202,26 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.DeleteIssue))]
-        public async Task DeleteIssue_ContainingReportsVerifs()
+        public async Task IssueController_DeleteIssue_ContainingReportsVerify_Successful()
         {
             // Arrange
-            int issueID = 3;
-            int citizenID = 2;
+            int issueId = 3;
+            int citizenId = 2;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
             // Act
 
             // Place a report and a verification on the issue
-            var verifyResult = await controller.VerifyIssue(issueID, citizenID);
-            var reportResult = await controller.ReportIssue(issueID, 1);
+            var verifyResult = await controller.VerifyIssue(issueId, citizenId);
+            var reportResult = await controller.ReportIssue(issueId, 1);
 
 
             // Delete the issue
-            var result = await controller.DeleteIssue(issueID);
+            var result = await controller.DeleteIssue(issueId);
             using (var context = contextFactory.CreateDbContext())
             {
-                var delVerif = context.IssueVerifications.FirstOrDefault(verif => verif.IssueId == issueID);
-                var delReport = context.Reports.FirstOrDefault(report => report.IssueId == issueID);
+                var delVerif = context.IssueVerifications.FirstOrDefault(verif => verif.IssueId == issueId);
+                var delReport = context.Reports.FirstOrDefault(report => report.IssueId == issueId);
 
                 // Assert
 
@@ -238,21 +238,21 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.VerifyIssue))]
-        public async Task VerifyIssue_Successful()
+        public async Task IssueController_VerifyIssue_Successful()
         {
             // Arrange
-            int issueID = 1;
-            int citizenID = 3;
+            int issueId = 1;
+            int citizenId = 3;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
-            var beforeVerifs = await controller.GetIssueDetails(issueID);
-            var result = await controller.VerifyIssue(issueID, citizenID);
+            var beforeVerifs = await controller.GetIssueDetails(issueId);
+            var result = await controller.VerifyIssue(issueId, citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                IssueVerification verif = context.IssueVerifications.FirstOrDefault(cit => cit.CitizenId == citizenID);
+                IssueVerification verif = context.IssueVerifications.FirstOrDefault(cit => cit.CitizenId == citizenId);
 
                 // Assert
 
@@ -264,19 +264,19 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.ReportIssue))]
-        public async Task ReportIssue_Successful()
+        public async Task IssueController_ReportIssue_Successful()
         {
             // Arrange
-            int issueID = 2;
-            int reportCategoryID = 1;
+            int issueId = 2;
+            int reportCategoryId = 1;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
-            var result = await controller.ReportIssue(issueID, reportCategoryID);
+            var result = await controller.ReportIssue(issueId, reportCategoryId);
             using (var context = contextFactory.CreateDbContext())
             {
-                Report report = context.Reports.FirstOrDefault(issue => issue.IssueId == issueID);
+                Report report = context.Reports.FirstOrDefault(issue => issue.IssueId == issueId);
 
                 // Assert
 
@@ -289,22 +289,22 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.ReportIssue))]
-        public async Task ReportIssue_IncreaseTypeCounter()
+        public async Task IssueController_ReportIssue_IncreaseTypeCounter_Successful()
         {
             // Arrange
-            int issueID = 3;
-            int reportCategoryID = 1;
+            int issueId = 3;
+            int reportCategoryId = 1;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
             // Perform two reports of the same category on the same issue
-            var result1 = await controller.ReportIssue(issueID, reportCategoryID);
-            var result2 = await controller.ReportIssue(issueID, reportCategoryID);
+            var result1 = await controller.ReportIssue(issueId, reportCategoryId);
+            var result2 = await controller.ReportIssue(issueId, reportCategoryId);
             using (var context = contextFactory.CreateDbContext())
             {
-                Report report = context.Reports.FirstOrDefault(issue => issue.IssueId == issueID);
+                Report report = context.Reports.FirstOrDefault(issue => issue.IssueId == issueId);
 
                 // Assert
 
@@ -320,24 +320,24 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssueStatus))]
-        public async Task UpdateIssueStatus_Successful()
+        public async Task IssueController_UpdateIssueStatus_Successful()
         {
             // Arrange
-            int issueID1 = 1;
-            int issueID2 = 2;
+            int issueId1 = 1;
+            int issueId2 = 2;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
             // Update an issue's status to the next status (Created -> Approved & Approved -> Resolved) 
-            var result1 = await controller.UpdateIssueStatus(issueID1, 2);
-            var result2 = await controller.UpdateIssueStatus(issueID2, 3);
+            var result1 = await controller.UpdateIssueStatus(issueId1, 2);
+            var result2 = await controller.UpdateIssueStatus(issueId2, 3);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Get the state of the issue just updated.
-                int stateIss1 = context.Issues.FirstOrDefault(issue => issue.Id == issueID1).IssueStateId;
-                int stateIss2 = context.Issues.FirstOrDefault(issue => issue.Id == issueID2).IssueStateId;
+                int stateIss1 = context.Issues.FirstOrDefault(issue => issue.Id == issueId1).IssueStateId;
+                int stateIss2 = context.Issues.FirstOrDefault(issue => issue.Id == issueId2).IssueStateId;
 
                 // Assert
 
@@ -351,18 +351,18 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.GetIssueDetails))]
-        public async Task GetIssueDetails_IssueDoesNotExist_Error()
+        public async Task IssueController_GetIssueDetails_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int testID = 999;
+            int testId = 999;
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
-            // Attempt to return issue using a non-existant ID
-            var getResult = await controller.GetIssueDetails(testID);
+            // Attempt to return issue using a non-existant Id
+            var getResult = await controller.GetIssueDetails(testId);
 
             using (var context = contextFactory.CreateDbContext())
             {
@@ -376,10 +376,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssue))]
-        public async Task UpdateIssue_IssueDoesNotExist_Error()
+        public async Task IssueController_UpdateIssue_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int testID = 999;
+            int testId = 999;
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -394,8 +394,8 @@ namespace WASP.Test.UnitTests
 
             // Act
 
-            // Attempt to update issue using a non-existant ID
-            var updateResult = await controller.UpdateIssue(testID, update);
+            // Attempt to update issue using a non-existant Id
+            var updateResult = await controller.UpdateIssue(testId, update);
             using (var context = contextFactory.CreateDbContext())
             {
 
@@ -408,18 +408,18 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssueStatus))]
-        public async Task UpdateIssueStatus_IssueDoesNotExist_Error()
+        public async Task IssueController_UpdateIssueStatus_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int testID = 999;
+            int testId = 999;
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
-            // Attempt to update issue state using a non-existant ID
-            var statusResult = await controller.UpdateIssueStatus(testID, 3);
+            // Attempt to update issue state using a non-existant Id
+            var statusResult = await controller.UpdateIssueStatus(testId, 3);
             using (var context = contextFactory.CreateDbContext())
             {
 
@@ -432,18 +432,18 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.VerifyIssue))]
-        public async Task VerifyIssue_IssueDoesNotExist_Error()
+        public async Task IssueController_VerifyIssue_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int testID = 999;
+            int testId = 999;
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
-            // Attempt to verify issue using a non-existant ID
-            var verifResult = await controller.VerifyIssue(testID, 3);
+            // Attempt to verify issue using a non-existant Id
+            var verifResult = await controller.VerifyIssue(testId, 3);
             using (var context = contextFactory.CreateDbContext())
             {
 
@@ -456,18 +456,18 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.ReportIssue))]
-        public async Task ReportIssue_IssueDoesNotExist_Error()
+        public async Task IssueController_ReportIssue_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int testID = 999;
+            int testId = 999;
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
             // Act
 
-            // Attempt to report issue using a non-existant ID
-            var reportResult = await controller.ReportIssue(testID, 1);
+            // Attempt to report issue using a non-existant Id
+            var reportResult = await controller.ReportIssue(testId, 1);
             using (var context = contextFactory.CreateDbContext())
             {
 
@@ -480,18 +480,18 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.DeleteIssue))]
-        public async Task DeleteIssue_IssueDoesNotExist_Error()
+        public async Task IssueController_DeleteIssue_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int testID = 999;
+            int testId = 999;
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
            
             // Act
 
-            // Attempt to delete issue using a non-existant ID
-            var deleteResult = await controller.DeleteIssue(testID);
+            // Attempt to delete issue using a non-existant Id
+            var deleteResult = await controller.DeleteIssue(testId);
             using (var context = contextFactory.CreateDbContext())
             {
 
@@ -504,10 +504,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssueStatus))]
-        public async Task UpdateIssueStatus_IssueStatusDoesNotExist_Error()
+        public async Task IssueController_UpdateIssueStatus_IssueStatusDoesNotExist_ErrorNo104()
         {
             // Arrange
-            int issueID = 1;
+            int issueId = 1;
             int notExistCode = (int)ResponseErrors.IssueStateDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -515,7 +515,7 @@ namespace WASP.Test.UnitTests
             // Act
 
             // Attempt to update an issue's status to one that does not exist
-            var result = await controller.UpdateIssueStatus(issueID, 69);
+            var result = await controller.UpdateIssueStatus(issueId, 69);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -527,7 +527,7 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.CreateIssue))]
-        public async Task CreateIssue_NoSuchSubCategory_Error()
+        public async Task IssueController_CreateIssue_NoSuchSubCategory_ErrorNo101()
         {
             // Arrange
             int mockSubCategory = 123;
@@ -547,7 +547,7 @@ namespace WASP.Test.UnitTests
 
             // Act
 
-            // Update the issue with an invalid Subcategory ID
+            // Update the issue with an invalid Subcategory Id
             var result = await controller.CreateIssue(mockIssueDTO);
             using (var context = contextFactory.CreateDbContext())
             {
@@ -560,10 +560,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssue))]
-        public async Task UpdateIssue_NoSuchSubCategory_Error()
+        public async Task IssueController_UpdateIssue_NoSuchSubCategory_ErrorNo101()
         {
             // Arrange
-            int issueID = 2;
+            int issueId = 2;
             int mockSubCategory = 123;
             int categoryErrorCode = (int)ResponseErrors.SubCategoryDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
@@ -580,8 +580,8 @@ namespace WASP.Test.UnitTests
 
             // Act
 
-            //Update the issue with an invalid Subcategory ID
-            var result = await controller.UpdateIssue(issueID, mockUpdate);
+            //Update the issue with an invalid Subcategory Id
+            var result = await controller.UpdateIssue(issueId, mockUpdate);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -593,10 +593,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssue))]
-        public async Task UpdateIssue_WASPUpdateBadFormat_Error()
+        public async Task IssueController_UpdateIssue_WASPUpdateBadFormat_ErrorNo50()
         {
             // Arrange
-            int issueID = 3;
+            int issueId = 3;
             int WASPErrorCode = (int)ResponseErrors.WASPUpdateListBadFormat;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -613,7 +613,7 @@ namespace WASP.Test.UnitTests
             // Act
 
             //Update an issue with this (invalid) property change
-            var result = await controller.UpdateIssue(issueID, mockUpdate);
+            var result = await controller.UpdateIssue(issueId, mockUpdate);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -623,15 +623,14 @@ namespace WASP.Test.UnitTests
             }
         }
 
-
         [TestMethod]
         [TestCategory(nameof(IssueController.UpdateIssueStatus))]
-        public async Task UpdateIssueStatus_DisallowedIssueStateChange_Error()
+        public async Task IssueController_UpdateIssueStatus_DisallowedIssueStateChange_ErrorNo105()
         {
             // Arrange
-            int issueID1 = 1;
-            int issueID2 = 2;
-            int issueID3 = 3;
+            int issueId1 = 1;
+            int issueId2 = 2;
+            int issueId3 = 3;
             int disallowedCode = (int)ResponseErrors.DisallowedIssueStateChange;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -639,9 +638,9 @@ namespace WASP.Test.UnitTests
             // Act
 
             //Attempt a status update that does not follow the normal convention (i.e going reverse or the same value)
-            var result1 = await controller.UpdateIssueStatus(issueID1, 1);
-            var result2 = await controller.UpdateIssueStatus(issueID2, 1);
-            var result3 = await controller.UpdateIssueStatus(issueID3, 2);
+            var result1 = await controller.UpdateIssueStatus(issueId1, 1);
+            var result2 = await controller.UpdateIssueStatus(issueId2, 1);
+            var result3 = await controller.UpdateIssueStatus(issueId3, 2);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -655,11 +654,11 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.VerifyIssue))]
-        public async Task VerifyIssue_IssueCannotBeVerifiedByItsCreator_Error()
+        public async Task IssueController_VerifyIssue_IssueCannotBeVerifiedByItsCreator_ErrorNo108()
         {
             // Arrange
-            int issueID = 2;
-            int citizenID = 2;
+            int issueId = 2;
+            int citizenId = 2;
             int creatorErrorCode = (int)ResponseErrors.IssueCannotBeVerifiedByItsCreator;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -667,7 +666,7 @@ namespace WASP.Test.UnitTests
             // Act
 
             //Attempt to update an issue's status to one that does not exist
-            var result = await controller.VerifyIssue(issueID, citizenID);
+            var result = await controller.VerifyIssue(issueId, citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -679,11 +678,11 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.VerifyIssue))]
-        public async Task VerifyIssue_IssueAlreadyVerifiedByThisCitizen()
+        public async Task IssueController_VerifyIssue_IssueAlreadyVerifiedByThisCitizen_ErrorNo106()
         {
             // Arrange
-            int issueID = 3;
-            int citizenID = 4;
+            int issueId = 3;
+            int citizenId = 4;
             int creatorErrorCode = (int)ResponseErrors.IssueAlreadyVerifiedByThisCitizen;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -691,10 +690,10 @@ namespace WASP.Test.UnitTests
             // Act
 
             //Verify an issue once
-            var resultFirst = await controller.VerifyIssue(issueID, citizenID);
+            var resultFirst = await controller.VerifyIssue(issueId, citizenId);
 
-            //Attempt a verify again by the same civilian ID
-            var resultSecond = await controller.VerifyIssue(issueID, citizenID);
+            //Attempt a verify again by the same civilian Id
+            var resultSecond = await controller.VerifyIssue(issueId, citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -709,10 +708,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.VerifyIssue))]
-        public async Task VerifyIssue_CitizenDoesNotExist()
+        public async Task IssueController_VerifyIssue_CitizenDoesNotExist_ErrorNo200()
         {
             // Arrange
-            int issueID = 2;
+            int issueId = 2;
             int mockCitizen = -5;
             int citizenErrorCode = (int)ResponseErrors.CitizenDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
@@ -720,8 +719,8 @@ namespace WASP.Test.UnitTests
 
             // Act
 
-            //Report using a category ID that is not indexed
-            var result = await controller.VerifyIssue(issueID, mockCitizen);
+            //Report using a category Id that is not indexed
+            var result = await controller.VerifyIssue(issueId, mockCitizen);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -733,10 +732,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(IssueController.ReportIssue))]
-        public async Task ReportIssue_ReportCategoryDoesNotExist()
+        public async Task IssueController_ReportIssue_ReportCategoryDoesNotExist_ErrorNo107()
         {
             // Arrange
-            int issueID = 2;
+            int issueId = 2;
             int mockCategory = 101;
             int categoryErrorCode = (int)ResponseErrors.ReportCategoryDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
@@ -744,8 +743,8 @@ namespace WASP.Test.UnitTests
 
             // Act
 
-            //Report using a category ID that is not indexed
-            var result = await controller.ReportIssue(issueID, mockCategory);
+            //Report using a category Id that is not indexed
+            var result = await controller.ReportIssue(issueId, mockCategory);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert

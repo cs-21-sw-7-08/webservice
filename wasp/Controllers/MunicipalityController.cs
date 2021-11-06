@@ -23,7 +23,7 @@ namespace WASP.Controllers
 
 
         [HttpPost]
-        public async Task<WASPResponse<MunicipalityUserSignUpOutputDTO>> SignUp(MunicipalityUserSignUpInputDTO munUser)
+        public async Task<WASPResponse<MunicipalityUserSignUpOutputDTO>> SignUpMunicipality(MunicipalityUserSignUpInputDTO munUser)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.MunicipalitySignUp(munUser),
@@ -32,7 +32,7 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse<MunicipalityUserDTO>> LogIn(MunicipalityUserLoginDTO munUser)
+        public async Task<WASPResponse<MunicipalityUserDTO>> LogInMunicipality(MunicipalityUserLoginDTO munUser)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.MunicipalityLogIn(munUser),
