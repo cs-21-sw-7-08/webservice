@@ -26,7 +26,6 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
-                Id = 50,
                 IssueId = 1,
                 MunicipalityUserId = 1,
                 Response = "test response"
@@ -40,7 +39,9 @@ namespace WASP.Test.UnitTests
             {
                 var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Result.Id);
                 //Assert
-                Assert.AreEqual(testResponse.Id, response.Id);
+                Assert.AreEqual(testResponse.IssueId, response.IssueId);
+                Assert.AreEqual(testResponse.MunicipalityUserId, response.MunicipalityUserId);
+                Assert.AreEqual(testResponse.Response, response.Response);
             }
         }
 
@@ -52,7 +53,6 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
-                Id = 50,
                 IssueId = 50,
                 MunicipalityUserId = 1,
                 Response = "test response"
@@ -75,7 +75,6 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
-                Id = 50,
                 IssueId = 2,
                 MunicipalityUserId = 1,
                 Response = "test response"
@@ -236,7 +235,6 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
-                Id = 50,
                 Email = "test@test.com",
                 Name = "test",
                 Password = "12345678",
@@ -251,7 +249,7 @@ namespace WASP.Test.UnitTests
             {
                 var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Result.Id);
                 //Assert
-                Assert.AreEqual(testUser.Id, user.Id);
+                Assert.AreEqual(testUser.Email, user.Email);
             }
         }
 
@@ -263,7 +261,6 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
-                Id = 50,
                 Email = "grete@aalborg.dk",
                 Name = "test",
                 Password = "12345678",
@@ -288,7 +285,6 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
-                Id = 50,
                 Email = "test@test.com",
                 Name = "test",
                 Password = "12345678",
