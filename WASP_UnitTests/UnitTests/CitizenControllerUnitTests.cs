@@ -461,6 +461,7 @@ namespace WASP.Test.UnitTests
         public async Task CitizenController_IsBlockedCitizen_CitizenDoesNotExist_ErrorNo200()
         {
             //Arrange
+            //This Id should not exist
             int citizenId = 999999;
 
             var contextFactory = new MockHiveContextFactory();
