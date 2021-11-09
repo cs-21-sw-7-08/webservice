@@ -179,7 +179,21 @@ namespace WASP.DataAccessLayer
                }
                );
         }
-
+        public async Task<DataResponse<bool>> IsBlockedCitizen(int citizenId)
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   // Get Citizen
+                   Citizen citizen = await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId);
+                   // Check if citizen exists; return errorResponse if null
+                   if (citizen == null)
+                       return new DataResponse<bool>((int)ResponseErrors.CitizenDoesNotExist);
+                   //Return true or false to blocked
+                   return new DataResponse<bool>( citizen.IsBlocked);
+               }
+               );
+        }
         #endregion
     }
 }

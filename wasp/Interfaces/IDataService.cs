@@ -81,12 +81,24 @@ namespace WASP.Interfaces
         public Task<DataResponse<IEnumerable<MunicipalityDTO>>> GetMunicipalities();
         /// <summary>
         /// Takes a MunicipalityUserSignupInputDTO and returns a MunicipalityUserSignupInputDTO. This function creates a new municipality account in the system.
-        /// The MunicipalityUserSignupInputDTO
+        /// The MunicipalityUserSignupInputDTO needs an Email, Password, Name and a valid Int MunicipalityId. During creation the account will be given a Id.
         /// </summary>
         /// <param name="muniUser"></param>
         /// <returns></returns>
         public Task<DataResponse<MunicipalityUserSignUpOutputDTO>> MunicipalitySignUp(MunicipalityUserSignUpInputDTO muniUser);
+        /// <summary>
+        /// Takes a MunicipalityUserLogin DTO and returns a MunicipalityUserDTO. This function is used when a municipality user login.
+        /// The MunicipalityUserLogin needs a email and a password. Neither is case sensitive. 
+        /// </summary>
+        /// <param name="muniUser"></param>
+        /// <returns></returns>
         public Task<DataResponse<MunicipalityUserDTO>> MunicipalityLogIn(MunicipalityUserLoginDTO muniUser);
+        /// <summary>
+        /// Takes a MunicipalityResponseInputDTO and returns a MunicipalityResponseOutputDTO. This function creates a Municipality Response on a specified Issue
+        /// The MunicipalityResponseInputDTO needs a int IssueId, a MunicipalityUserId and a Response message. 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         public Task<DataResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response);
         public Task<DataResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
         public Task<DataResponse> DeleteResponse(int responseId);
@@ -97,5 +109,6 @@ namespace WASP.Interfaces
         public Task<DataResponse> BlockCitizen(int citizenId);
         public Task<DataResponse> UnblockCitizen(int citizenId);
         public Task<DataResponse> DeleteCitizen(int citizenId);
+        public Task<DataResponse<bool>> IsBlockedCitizen(int citizenId);
     }
 }

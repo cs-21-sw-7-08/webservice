@@ -170,6 +170,42 @@ namespace WASP.Test.UnitTests
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
+        [TestMethod]
+        [TestCategory(nameof(IssueController.CreateIssue))]
+        public async Task IssueController_CreateIssue_CitizenIsBlocked_ErrorNo208()
+        {
+            // Arrange
+
+            IssueCreateDTO mockIssueDTO = new()
+            {
+                CitizenId = 4,
+                IsBlocked = true,
+                Description = "Der er graffiti på min væg",
+                MunicipalityId = 1,
+                SubCategoryId = 2,
+                LocationPlaceHolder = new Location(57.012218, 9.994330)
+            };
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+            int ErrorNo = (int)ResponseErrors.CitizenIsBlocked;
+
+            // Act
+
+            // Create the issue to the context
+            var result = await controller.CreateIssue(mockIssueDTO);
+
+            using (var context = contextFactory.CreateDbContext())
+            {
+                int issueId = context.Issues.Count();
+                // Obtain the newly created issue
+                var freshIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueId);
+
+                // Assert
+
+                // Verify that the obtained issue is the same as the one created
+                Assert.AreEqual(ErrorNo, result.Value.ErrorNo);
+            }
+        }
 
         [TestMethod]
         [TestCategory(nameof(IssueController.DeleteIssue))]

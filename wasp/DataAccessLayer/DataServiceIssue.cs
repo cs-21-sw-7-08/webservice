@@ -21,6 +21,10 @@ namespace WASP.DataAccessLayer
             return await DataServiceUtil.GetResponse(ContextFactory,
                 async (context) =>
                 {
+                    if(issue.IsBlocked == true)
+                    {
+                        return new DataResponse(((int)ResponseErrors.CitizenIsBlocked));
+                    }
                     // Create new issue
                     Issue newIssue = new();
 

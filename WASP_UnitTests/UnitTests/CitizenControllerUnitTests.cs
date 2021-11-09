@@ -412,5 +412,69 @@ namespace WASP.Test.UnitTests
             }
 
         }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.IsBlockedCitizen))]
+        public async Task CitizenController_IsBlockedCitizen_true()
+        {
+            //Arrange
+            int citizenId = 4;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var response = await controller.IsBlockedCitizen(citizenId);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.AreEqual((await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId)).IsBlocked, response.Result);
+                Assert.IsTrue(response.IsSuccessful);
+                Assert.AreEqual(response.Result, true);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.IsBlockedCitizen))]
+        public async Task CitizenController_IsBlockedCitizen_false()
+        {
+            //Arrange
+            int citizenId = 3;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var response = await controller.IsBlockedCitizen(citizenId);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.AreEqual((await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId)).IsBlocked, response.Result);
+                Assert.IsTrue(response.IsSuccessful);
+                Assert.AreEqual(response.Result, false);
+            }
+
+        }
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.IsBlockedCitizen))]
+        public async Task CitizenController_IsBlockedCitizen_CitizenDoesNotExist_ErrorNo200()
+        {
+            //Arrange
+            int citizenId = 999999;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+            int ErrorNo = (int)ResponseErrors.CitizenDoesNotExist;
+
+            //Act
+            var response = await controller.IsBlockedCitizen(citizenId);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.AreEqual(ErrorNo, response.ErrorNo);
+            }
+
+        }
     }
 }

@@ -65,6 +65,14 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse());
 
         }
+        [HttpGet]
+        public async Task<WASPResponse<bool>> IsBlockedCitizen(int citizen_id)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.IsBlockedCitizen(citizen_id),
+                (dataResponse) => new WASPResponse<bool>(dataResponse.Result));
+
+        }
 
     }
 }

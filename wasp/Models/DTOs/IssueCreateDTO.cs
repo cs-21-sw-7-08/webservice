@@ -10,6 +10,7 @@ namespace WASP.Models
     public class IssueCreateDTO
     {        
         public int CitizenId { get; set; }
+        public bool IsBlocked { get; set; }
         public int MunicipalityId { get; set; }                
         public int SubCategoryId { get; set; }
         public string Description { get; set; }        

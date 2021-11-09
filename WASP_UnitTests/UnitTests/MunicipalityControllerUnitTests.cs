@@ -19,7 +19,7 @@ namespace WASP.Test.UnitTests
     public class MunicipalityControllerUnitTests
     {
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.CreateResponse))]
+        [TestCategory(nameof(MunicipalityController.CreateMunicipalityResponse))]
         public async Task MunicipalityController_CreateResponse_InsertResponse_Successful()
         {
             //Arrange
@@ -33,7 +33,7 @@ namespace WASP.Test.UnitTests
             MunicipalityController controller = new(contextFactory);
 
             //Act
-            var result = await controller.CreateResponse(testResponse);
+            var result = await controller.CreateMunicipalityResponse(testResponse);
             
             using (var context = contextFactory.CreateDbContext())
             {
@@ -46,7 +46,7 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.CreateResponse))]
+        [TestCategory(nameof(MunicipalityController.CreateMunicipalityResponse))]
         public async Task MunicipalityController_CreateResponse_IssuesDoesNotExist_ErrorNo104()
         {
             //Arrange
@@ -61,14 +61,14 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.IssueDoesNotExist;
 
             //Act
-            var result = await controller.CreateResponse(testResponse);
+            var result = await controller.CreateMunicipalityResponse(testResponse);
 
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.CreateResponse))]
+        [TestCategory(nameof(MunicipalityController.CreateMunicipalityResponse))]
         public async Task MunicipalityController_CreateResponse_MunicipalityUserMunicipalityIdDoesNotMatchIssueId_ErrorNo303()
         {
             //Arrange
@@ -83,14 +83,14 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId;
 
             //Act
-            var result = await controller.CreateResponse(testResponse);
+            var result = await controller.CreateMunicipalityResponse(testResponse);
 
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.DeleteResponse))]
+        [TestCategory(nameof(MunicipalityController.DeleteMunicipalityResponse))]
         public async Task MunicipalityController_DeleteResponse_Successful()
         {
             //Arrange
@@ -99,7 +99,7 @@ namespace WASP.Test.UnitTests
             int responseId = 1;
 
             //Act
-            var result = await controller.DeleteResponse(responseId);
+            var result = await controller.DeleteMunicipalityResponse(responseId);
 
             using (var context = contextFactory.CreateDbContext())
             {
@@ -110,7 +110,7 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.DeleteResponse))]
+        [TestCategory(nameof(MunicipalityController.DeleteMunicipalityResponse))]
         public async Task MunicipalityController_DeleteResponse_ResponseDoesNotExist_ErrorNo304()
         {
             //Arrange
@@ -120,14 +120,14 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
 
             //Act
-            var result = await controller.DeleteResponse(responseId);
+            var result = await controller.DeleteMunicipalityResponse(responseId);
 
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.UpdateResponse))]
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
         public async Task MunicipalityController_UpdateResponse_UpdateResponseString_Successful()
         {
             //Arrange
@@ -144,7 +144,7 @@ namespace WASP.Test.UnitTests
             };
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             using (var context = contextFactory.CreateDbContext())
             {
@@ -155,7 +155,7 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.UpdateResponse))]
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
         public async Task MunicipalityController_UpdateResponse_WASPUpdateListBadFormat_ErrorNo50()
         {
             //Arrange
@@ -172,14 +172,14 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.WASPUpdateListBadFormat;
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.UpdateResponse))]
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
         public async Task MunicipalityController_UpdateResponse_ResponseDoesNotExist_ErrorNo304()
         {
             //Arrange
@@ -197,14 +197,14 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
         }
 
         [TestMethod]
-        [TestCategory(nameof(MunicipalityController.UpdateResponse))]
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
         public async Task MunicipalityController_UpdateResponse_ExceptionHandlingInGetResponse_ErrorNo2()
         {
             //Arrange
@@ -222,7 +222,7 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.AnExceptionOccurredInTheDAL;
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
             Assert.AreEqual(errorNo, result.ErrorNo);
