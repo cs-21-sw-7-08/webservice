@@ -765,6 +765,29 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual(citizenErrorCode, result.Value.ErrorNo);
             }
         }
+        [TestMethod]
+        [TestCategory(nameof(IssueController.VerifyIssue))]
+        public async Task IssueController_VerifyIssue_CitizenIsBlocked_ErrorNo208()
+        {
+            // Arrange
+            int issueId = 2;
+            int citizenId = 5;
+            int citizenErrorCode = (int)ResponseErrors.CitizenIsBlocked;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act
+
+            //Report using a category Id that is not indexed
+            var result = await controller.VerifyIssue(issueId, citizenId);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Assert
+
+                //Verify that attemping a second verification returns the relevant error
+                Assert.AreEqual(citizenErrorCode, result.Value.ErrorNo);
+            }
+        }
 
         [TestMethod]
         [TestCategory(nameof(IssueController.ReportIssue))]

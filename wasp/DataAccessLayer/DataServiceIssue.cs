@@ -155,7 +155,9 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
+                    .Include(Issue => Issue.Citizen)
                     // Filter -> FromTime
+                    .Where(issue => issue.Citizen.IsBlocked == false)
                     .Where(issue =>
                         filter.FromTime == null ||
                         (filter.FromTime != null && DateTime.Compare(filter.FromTime.Value, issue.DateCreated) <= 0)
@@ -248,7 +250,11 @@ namespace WASP.DataAccessLayer
                async (context) =>
                {
                    // Get issue
-                   var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
+                   var issue = await context.Issues.Include(issue => issue.Citizen)
+                   //Checks that citizen is not blocked
+                   .Where(issue => issue.Citizen.IsBlocked == false)
+                   //Get issue
+                   .FirstOrDefaultAsync(x => x.Id == issueId);
                    // Check if issue exist
                    if (issue == null)
                        return new DataResponse(((int)ResponseErrors.IssueDoesNotExist));
@@ -356,6 +362,9 @@ namespace WASP.DataAccessLayer
                     // Check if issue verification exist
                     if (issueVerification != null)
                         return new DataResponse((int)ResponseErrors.IssueAlreadyVerifiedByThisCitizen);
+                    //Check if citizen is blocked
+                    if (citizen.IsBlocked)
+                        return new DataResponse((int)ResponseErrors.CitizenIsBlocked);
                     // Add issue verification
                     await context.IssueVerifications.AddAsync(new IssueVerification()
                     {

@@ -57,7 +57,15 @@ namespace WASP.Test.Model
                     Email = "mikkel@email.dk",
                     PhoneNo = null,
                     Name = "Mikkel",
-                    IsBlocked = true
+                    IsBlocked = false
+                },
+                new Citizen()
+                {
+                    Id = 5,
+                    Email = "yolo@email.dk",
+                    PhoneNo = null,
+                    Name = "Fredinand",
+                    IsBlocked = true,
                 }
             );
             // Categories

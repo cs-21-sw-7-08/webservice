@@ -39,7 +39,7 @@ namespace WASP.Test.UnitTests
 
                 //Verify that the citizen has become blocked & the result was sucessful
                 Assert.IsTrue(citizen.IsBlocked);
-                Assert.IsTrue(result.IsSuccessful);
+                Assert.IsTrue(result.Value.IsSuccessful);
             }
 
         }
@@ -49,7 +49,7 @@ namespace WASP.Test.UnitTests
         public async Task CitizenController_UnblockCitizen_Successful()
         {
             //Arrange
-            int testId = 4;
+            int testId = 5;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
@@ -65,7 +65,7 @@ namespace WASP.Test.UnitTests
 
                 //Check if the user has been blocked & the result was successful.
                 Assert.IsFalse(citizen.IsBlocked);
-                Assert.IsTrue(result.IsSuccessful);
+                Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
 
@@ -74,7 +74,7 @@ namespace WASP.Test.UnitTests
         public async Task CitizenController_BlockCitizen_CitizenAlreadyBlocked_ErrorNo203()
         {
             //Arrange
-            int testId = 4;
+            int testId = 5;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
@@ -88,7 +88,7 @@ namespace WASP.Test.UnitTests
                 //Assert
 
                 //Verify that the function return the relevant error code
-                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyBlocked, (int)result.ErrorNo);
+                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyBlocked, (int)result.Value.ErrorNo);
             }
         }
 
@@ -111,7 +111,7 @@ namespace WASP.Test.UnitTests
                 //Assert
 
                 //Verify that the function return the relevant error code
-                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyUnblocked, (int)result.ErrorNo);
+                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyUnblocked, (int)result.Value.ErrorNo);
             }
         }
 
@@ -131,7 +131,7 @@ namespace WASP.Test.UnitTests
             {
                 //Assert
                 //Verify that the functions return the relevant error codes
-                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)blockResult.ErrorNo);
+                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)blockResult.Value.ErrorNo);
             }
         }
 
@@ -152,7 +152,7 @@ namespace WASP.Test.UnitTests
 
                 //Assert
                 //Verify that the functions return the relevant error codes
-                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)unblockResult.ErrorNo);
+                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)unblockResult.Value.ErrorNo);
             }
         }
 
@@ -175,7 +175,7 @@ namespace WASP.Test.UnitTests
 
             using (var context = contextFactory.CreateDbContext())
             {
-                var response = context.Citizens.FirstOrDefault(x => x.Id == result.Result.Id);
+                var response = context.Citizens.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
                 Assert.AreEqual(testCitizen.Id, response.Id);
             }
@@ -199,7 +199,7 @@ namespace WASP.Test.UnitTests
 
             using (var context = contextFactory.CreateDbContext())
             {
-                var response = context.Citizens.FirstOrDefault(x => x.Id == result.Result.Id);
+                var response = context.Citizens.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
                 Assert.AreEqual(testCitizen.Id, response.Id);
             }
@@ -222,7 +222,7 @@ namespace WASP.Test.UnitTests
             //Act
             var result = await controller.SignUpCitizen(testCitizen);
             //Assert
-            Assert.AreEqual(result.ErrorNo, errorNo);
+            Assert.AreEqual(result.Value.ErrorNo, errorNo);
         }
 
         [TestMethod]
@@ -242,7 +242,7 @@ namespace WASP.Test.UnitTests
             //Act
             var result = await controller.SignUpCitizen(testCitizen);
             //Assert
-            Assert.AreEqual(result.ErrorNo, errorNo);
+            Assert.AreEqual(result.Value.ErrorNo, errorNo);
         }
 
         [TestMethod]
@@ -263,7 +263,7 @@ namespace WASP.Test.UnitTests
             //Act
             var result = await controller.SignUpCitizen(testCitizen);
             //Assert
-            Assert.AreEqual(result.ErrorNo, errorNo);
+            Assert.AreEqual(result.Value.ErrorNo, errorNo);
         }
 
         [TestMethod]
@@ -282,7 +282,7 @@ namespace WASP.Test.UnitTests
             //Act
             var result = await controller.SignUpCitizen(testCitizen);
             //Assert
-            Assert.AreEqual(result.ErrorNo, errorNo);
+            Assert.AreEqual(result.Value.ErrorNo, errorNo);
         }
 
         [TestMethod]
@@ -301,7 +301,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.IsTrue(result.IsSuccessful);
+                Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
 
@@ -321,7 +321,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.ErrorNo, (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
             }
         }
 
@@ -342,7 +342,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.IsTrue(result.IsSuccessful);
+                Assert.IsTrue(result.Value.IsSuccessful);
             }
 
         }
@@ -364,7 +364,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.ErrorNo, (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
+                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
             }
 
         }
@@ -387,7 +387,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.ErrorNo, (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
             }
 
         }
@@ -408,7 +408,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.ErrorNo, (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
             }
 
         }
@@ -417,7 +417,7 @@ namespace WASP.Test.UnitTests
         public async Task CitizenController_IsBlockedCitizen_true()
         {
             //Arrange
-            int citizenId = 4;
+            int citizenId = 5;
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);

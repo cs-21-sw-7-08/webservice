@@ -37,7 +37,7 @@ namespace WASP.Test.UnitTests
             
             using (var context = contextFactory.CreateDbContext())
             {
-                var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Result.Id);
+                var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
                 Assert.AreEqual(testResponse.IssueId, response.IssueId);
                 Assert.AreEqual(testResponse.MunicipalityUserId, response.MunicipalityUserId);
@@ -64,7 +64,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.CreateMunicipalityResponse(testResponse);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.CreateMunicipalityResponse(testResponse);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.DeleteMunicipalityResponse(responseId);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
@@ -175,7 +175,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
@@ -200,7 +200,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
@@ -225,7 +225,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
         [TestMethod]
         [TestCategory(nameof(MunicipalityController.SignUpMunicipality))]
@@ -247,7 +247,7 @@ namespace WASP.Test.UnitTests
 
             using (var context = contextFactory.CreateDbContext())
             {
-                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Result.Id);
+                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
                 Assert.AreEqual(testUser.Email, user.Email);
             }
@@ -273,7 +273,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.SignUpMunicipality(testUser);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
             
         }
 
@@ -297,7 +297,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.SignUpMunicipality(testUser);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
 
         }
 
@@ -317,7 +317,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.ErrorNo, (int)ResponseErrors.MunicipalityUserEmailAndOrPasswordNotMatched);
+                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.MunicipalityUserEmailAndOrPasswordNotMatched);
             }
 
         }
@@ -339,7 +339,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.IsTrue(result.IsSuccessful);
+                Assert.IsTrue(result.Value.IsSuccessful);
             }
 
         }
