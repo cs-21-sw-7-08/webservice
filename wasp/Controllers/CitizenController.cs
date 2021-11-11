@@ -22,7 +22,7 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse<CitizenDTO>> SignUpCitizen(CitizenSignUpDTO citizen)
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> SignUpCitizen(CitizenSignUpDTO citizen)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CitizenSignUp(citizen),
@@ -31,7 +31,7 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse<CitizenDTO>> LogInCitizen(CitizenLoginDTO citizen)
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> LogInCitizen(CitizenLoginDTO citizen)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CitizenLogIn(citizen),
@@ -40,7 +40,7 @@ namespace WASP.Controllers
         }
 
         [HttpPut]
-        public async Task<WASPResponse> BlockCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> BlockCitizen(int citizen_id)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.BlockCitizen(citizen_id),
@@ -49,7 +49,7 @@ namespace WASP.Controllers
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UnblockCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> UnblockCitizen(int citizen_id)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.UnblockCitizen(citizen_id),
@@ -58,7 +58,7 @@ namespace WASP.Controllers
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> DeleteCitizen(int citizen_id)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.DeleteCitizen(citizen_id),

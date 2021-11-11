@@ -23,7 +23,7 @@ namespace WASP.Controllers
 
 
         [HttpPost]
-        public async Task<WASPResponse<MunicipalityUserSignUpOutputDTO>> SignUpMunicipality(MunicipalityUserSignUpInputDTO munUser)
+        public async Task<ActionResult<WASPResponse<MunicipalityUserSignUpOutputDTO>>> SignUpMunicipality(MunicipalityUserSignUpInputDTO munUser)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.MunicipalitySignUp(munUser),
@@ -32,7 +32,7 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse<MunicipalityUserDTO>> LogInMunicipality(MunicipalityUserLoginDTO munUser)
+        public async Task<ActionResult<WASPResponse<MunicipalityUserDTO>>> LogInMunicipality(MunicipalityUserLoginDTO munUser)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.MunicipalityLogIn(munUser),
@@ -41,7 +41,7 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse<MunicipalityResponseOutputDTO>> CreateMunicipalityResponse(MunicipalityResponseInputDTO response)
+        public async Task<ActionResult<WASPResponse<MunicipalityResponseOutputDTO>>> CreateMunicipalityResponse(MunicipalityResponseInputDTO response)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.CreateResponse(response),
@@ -50,7 +50,7 @@ namespace WASP.Controllers
         }
 
         [HttpPut]
-        public async Task<WASPResponse<MunicipalityResponseOutputDTO>> UpdateMunicipalityResponse(int responseId, IEnumerable<WASPUpdate> updates)
+        public async Task<ActionResult<WASPResponse<MunicipalityResponseOutputDTO>>> UpdateMunicipalityResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.UpdateResponse(responseId, updates),
@@ -59,7 +59,7 @@ namespace WASP.Controllers
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteMunicipalityResponse(int responseId)
+        public async Task<ActionResult<WASPResponse>> DeleteMunicipalityResponse(int responseId)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.DeleteResponse(responseId),
