@@ -75,6 +75,8 @@ namespace WASP.Models
 
                 entity.Property(e => e.Location).IsRequired();
 
+                entity.Property(e => e.Address).IsUnicode(false);
+
                 entity.Property(e => e.Picture1).IsUnicode(false);
 
                 entity.Property(e => e.Picture2).IsUnicode(false);

@@ -13,7 +13,8 @@ namespace WASP.Models
         public bool IsBlocked { get; set; }
         public int MunicipalityId { get; set; }                
         public int SubCategoryId { get; set; }
-        public string Description { get; set; }        
+        public string Description { get; set; }    
+        public string Address { get; set; }
         [JsonIgnore]
         public Geometry Location { get; set; }
         public string Picture1 { get; set; }

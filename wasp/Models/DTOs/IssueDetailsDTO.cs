@@ -16,6 +16,7 @@ namespace WASP.Models
             CitizenId = issue.CitizenId;
             DateCreated = issue.DateCreated;
             Location = issue.Location;
+            Address = issue.Address;
             Picture1 = issue.Picture1;
             Picture2 = issue.Picture2;
             Picture3 = issue.Picture3;
@@ -33,6 +34,7 @@ namespace WASP.Models
         public DateTime DateCreated { get; set; }
         [JsonIgnore]
         public Geometry Location { get; set; }
+        public string Address { get; set; }
         public string Picture1 { get; set; }
         public string Picture2 { get; set; }
         public string Picture3 { get; set; }
