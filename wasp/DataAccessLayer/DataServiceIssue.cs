@@ -156,8 +156,12 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
                     .Include(Issue => Issue.Citizen)
+                    // Filter -> IsBlocked
+                    .Where(issue =>
+                        filter.IsBlocked == null ||
+                        (filter.IsBlocked != null && issue.Citizen.IsBlocked == filter.IsBlocked)
+                    )
                     // Filter -> FromTime
-                    .Where(issue => issue.Citizen.IsBlocked == false)
                     .Where(issue =>
                         filter.FromTime == null ||
                         (filter.FromTime != null && DateTime.Compare(filter.FromTime.Value, issue.DateCreated) <= 0)
@@ -310,15 +314,21 @@ namespace WASP.DataAccessLayer
                        IssueStates.Created => newIssueStateValue switch
                        {                           
                            IssueStates.Approved or 
-                           IssueStates.Resolved => true,                           
+                           IssueStates.Resolved or
+                           IssueStates.NotResolved => true,                           
                            _ => false
                        },
                        IssueStates.Approved => newIssueStateValue switch
                        {
-                           IssueStates.Resolved => true,
+                           IssueStates.Resolved or 
+                           IssueStates.NotResolved => true,
                            _ => false
                        },
                        IssueStates.Resolved => newIssueStateValue switch
+                       {
+                           _ => false
+                       },
+                       IssueStates.NotResolved => newIssueStateValue switch
                        {
                            _ => false
                        },

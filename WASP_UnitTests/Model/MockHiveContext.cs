@@ -216,6 +216,19 @@ namespace WASP.Test.Model
                     DateCreated = DateTime.Parse("2021-10-21 13:44:15"),
                     LocationPlaceHolder = new Objects.Location(56.456943, 10.029387),
                     Address = "Hobrovej 126, 9530 Støvring, Danmark"
+                },
+                new Issue()
+                {
+                    Id = 4,
+                    CitizenId = 3,
+                    MunicipalityId = 3,
+                    IssueStateId = 4,
+                    CategoryId = 2,
+                    SubCategoryId = 3,
+                    Description = "Jeg hader træer på vejen",
+                    DateCreated = DateTime.Parse("2021-10-21 13:44:15"),
+                    LocationPlaceHolder = new Objects.Location(56.456943, 10.029387),
+                    Address = "Hobrovej 126, 9530 Støvring, Danmark"
                 }
             );
             // MunicipalityResponses

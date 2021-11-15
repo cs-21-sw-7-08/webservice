@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using WASP.Enums;
+using System;
 
 namespace WASP.Test.UnitTests
 {
@@ -63,6 +64,245 @@ namespace WASP.Test.UnitTests
 
                 // Return the length of the issue-list in the context
                 var expectedList = context.Issues.Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterBlockedCIssues()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    IsBlocked = false
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => Issue.Citizen.IsBlocked == false)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterUnblockedIssues()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    IsBlocked = true
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => Issue.Citizen.IsBlocked == true)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterIssueStates()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    IssueStateId = 2
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => Issue.IssueStateId == 2)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterCategoryId()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    CategoryId = 2
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => Issue.CategoryId == 2)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterSubcategoryId()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    SubCategoryId = 3
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => Issue.SubCategoryId == 3)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterFromTime()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    FromTime = DateTime.Parse("2021-9-21 13:44:15")
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => DateTime.Compare(DateTime.Parse("2021-9-21 13:44:15"), Issue.DateCreated) <= 0)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterToTime()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    ToTime = DateTime.Parse("2021-12-21 13:44:15")
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => DateTime.Compare(DateTime.Parse("2021-12-21 13:44:15"), Issue.DateCreated) > 0)
+                    .Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfIssues))]
+        public async Task IssueController_GetListOfIssues_FilterMunicipalityId()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfIssues(
+                new IssuesOverviewFilter()
+                {
+                    MunicipalityId = 1
+                });
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Issues
+                    .Where(Issue => Issue.MunicipalityId == 1)
+                    .Count();
 
                 // Assert
 
