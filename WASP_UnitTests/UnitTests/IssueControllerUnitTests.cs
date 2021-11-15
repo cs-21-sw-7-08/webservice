@@ -387,7 +387,10 @@ namespace WASP.Test.UnitTests
                 Description = "Der er graffiti på min væg",
                 MunicipalityId = 1,
                 SubCategoryId = 2,
-                LocationPlaceHolder = new Location(57.012218, 9.994330)
+                LocationPlaceHolder = new Location(57.012218, 9.994330),
+                Address = "Alfred Nobels Vej 27, 9200 Aalborg, Danmark"
+
+
             };
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -423,7 +426,8 @@ namespace WASP.Test.UnitTests
                 Description = "Der er graffiti på min væg",
                 MunicipalityId = 1,
                 SubCategoryId = 2,
-                LocationPlaceHolder = new Location(57.012218, 9.994330)
+                LocationPlaceHolder = new Location(57.012218, 9.994330),
+                Address = "Alfred Nobels Vej 27, 9200 Aalborg, Danmark"
             };
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -907,6 +911,7 @@ namespace WASP.Test.UnitTests
             int issueId1 = 1;
             int issueId2 = 2;
             int issueId3 = 3;
+            int issueId4 = 4;
             int disallowedCode = (int)ResponseErrors.DisallowedIssueStateChange;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
@@ -917,6 +922,7 @@ namespace WASP.Test.UnitTests
             var result1 = await controller.UpdateIssueStatus(issueId1, 1);
             var result2 = await controller.UpdateIssueStatus(issueId2, 1);
             var result3 = await controller.UpdateIssueStatus(issueId3, 2);
+            var result4 = await controller.UpdateIssueStatus(issueId4, 2);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
@@ -925,6 +931,7 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual(disallowedCode, result1.Value.ErrorNo);
                 Assert.AreEqual(disallowedCode, result2.Value.ErrorNo);
                 Assert.AreEqual(disallowedCode, result3.Value.ErrorNo);
+                Assert.AreEqual(disallowedCode, result4.Value.ErrorNo);
             }
         }
 
