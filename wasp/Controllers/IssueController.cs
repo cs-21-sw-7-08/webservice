@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WASP.DataAccessLayer;
 using WASP.Enums;
 using WASP.Models;
+using WASP.Models.DTOs;
 using WASP.Objects;
 using WASP.Utilities;
 
@@ -101,6 +102,15 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.ReportIssue(issueId, reportCategoryId),
                 (dataResponse) => new WASPResponse()
+            );
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<ReportCategoryDTO>>>> GetListOfReportCategories()
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetReportCategories(),
+                (dataResponse) => new WASPResponse<IEnumerable<ReportCategoryDTO>>(dataResponse.Result)
             );
         }
 

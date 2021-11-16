@@ -477,5 +477,49 @@ namespace WASP.Test.UnitTests
             }
 
         }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.DeleteCitizen))]
+        public async Task CitizenController_DeleteCitizen_Successful()
+        {
+            //Arrange
+            int citizenId = 4;
+
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.DeleteCitizen(citizenId);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.DeleteCitizen))]
+        public async Task CitizenController_DeleteCitizen_citizenIdInvalid_ErrorNo200()
+        {
+            //Arrange
+            int citizenId = 99998;
+
+            
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+            var ErrorNo = (int)ResponseErrors.CitizenDoesNotExist;
+
+
+            //Act
+            var result = await controller.DeleteCitizen(citizenId);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.AreEqual(result.Value.ErrorNo,ErrorNo);
+            }
+
+        }
     }
 }

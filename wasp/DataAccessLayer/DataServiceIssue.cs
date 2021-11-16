@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Models.DTOs;
 using WASP.Objects;
 using WASP.Utilities;
 
@@ -387,6 +388,19 @@ namespace WASP.DataAccessLayer
                     // Return success response
                     return new DataResponse();
                 }
+            );
+        }
+        public async Task<DataResponse<IEnumerable<ReportCategoryDTO>>> GetReportCategories()
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   var reportCategories = await context.ReportCategories
+                       .AsNoTracking()
+                       .Select(reportCategory => new ReportCategoryDTO(reportCategory))
+                       .ToListAsync();
+                   return new DataResponse<IEnumerable<ReportCategoryDTO>>(reportCategories);
+               }
             );
         }
 

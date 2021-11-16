@@ -72,6 +72,11 @@ namespace WASP.Interfaces
         /// <param name="issueStateId"></param>
         /// <returns></returns>
         public Task<DataResponse> UpdateIssueStatus(int issueId, int issueStateId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Task<DataResponse<IEnumerable<ReportCategoryDTO>>> GetReportCategories();
 
         // Municipality Functions
         /// <summary>

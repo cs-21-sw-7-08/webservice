@@ -66,5 +66,14 @@ namespace WASP.Controllers
                (dataResponse) => new WASPResponse()
            );
         }
+
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<MunicipalityDTO>>>> GetListOfMunicipalities()
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetMunicipalities(),
+                (dataResponse) => new WASPResponse<IEnumerable<MunicipalityDTO>>(dataResponse.Result)
+            );
+        }
     }
 }

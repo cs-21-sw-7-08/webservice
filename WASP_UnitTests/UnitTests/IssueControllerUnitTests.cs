@@ -1059,5 +1059,29 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual(categoryErrorCode, result.Value.ErrorNo);
             }
         }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfReportCategories))]
+        public async Task MunicipalityController_GetListOfReportCategories_Successful()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            IssueController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfReportCategories();
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.ReportCategories.Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
     }
 }

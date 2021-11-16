@@ -343,5 +343,29 @@ namespace WASP.Test.UnitTests
             }
 
         }
+
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.GetListOfMunicipalities))]
+        public async Task MunicipalityController_GetListOfMunicipalities_Successful()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            MunicipalityController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfMunicipalities();
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Municipalities.Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
     }
 }
