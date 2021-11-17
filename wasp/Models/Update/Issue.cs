@@ -12,6 +12,7 @@ namespace WASP.Models
             return new List<string>()
             {
                 nameof(Location),
+                nameof(Address),
                 nameof(MunicipalityId),                
                 nameof(SubCategoryId),
                 nameof(Description),

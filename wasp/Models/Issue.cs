@@ -24,6 +24,7 @@ namespace WASP.Models
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
         public Geometry Location { get; set; }
+        public string Address { get; set; }
         public string Picture1 { get; set; }
         public string Picture2 { get; set; }
         public string Picture3 { get; set; }

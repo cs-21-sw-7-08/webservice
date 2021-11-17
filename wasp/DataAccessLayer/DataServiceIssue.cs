@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
+using WASP.Models.DTOs;
 using WASP.Objects;
 using WASP.Utilities;
 
@@ -21,11 +22,15 @@ namespace WASP.DataAccessLayer
             return await DataServiceUtil.GetResponse(ContextFactory,
                 async (context) =>
                 {
+                    if(issue.IsBlocked == true)
+                    {
+                        return new DataResponse(((int)ResponseErrors.CitizenIsBlocked));
+                    }
                     // Create new issue
                     Issue newIssue = new();
 
                     var subCategory = await context.SubCategories.FirstOrDefaultAsync(x => x.Id == issue.SubCategoryId);
-                    // Check if subcategory with the given ID exist
+                    // Check if subcategory with the given Id exist
                     if (subCategory == null)
                         return new DataResponse(((int)ResponseErrors.SubCategoryDoesNotExist));
 
@@ -33,9 +38,9 @@ namespace WASP.DataAccessLayer
                     DataServiceUtil.UpdateProperties(issue, newIssue);
                     // Set date created
                     newIssue.DateCreated = DateTime.Now;
-                    // Set category ID                
+                    // Set category Id               
                     newIssue.CategoryId = subCategory.CategoryId;
-                    // Set state ID
+                    // Set state Id
                     newIssue.IssueStateId = 1;
 
                     // Add new issue
@@ -151,6 +156,12 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
+                    .Include(Issue => Issue.Citizen)
+                    // Filter -> IsBlocked
+                    .Where(issue =>
+                        filter.IsBlocked == null ||
+                        (filter.IsBlocked != null && issue.Citizen.IsBlocked == filter.IsBlocked)
+                    )
                     // Filter -> FromTime
                     .Where(issue =>
                         filter.FromTime == null ||
@@ -244,7 +255,11 @@ namespace WASP.DataAccessLayer
                async (context) =>
                {
                    // Get issue
-                   var issue = await context.Issues.FirstOrDefaultAsync(x => x.Id == issueId);
+                   var issue = await context.Issues.Include(issue => issue.Citizen)
+                   //Checks that citizen is not blocked
+                   .Where(issue => issue.Citizen.IsBlocked == false)
+                   //Get issue
+                   .FirstOrDefaultAsync(x => x.Id == issueId);
                    // Check if issue exist
                    if (issue == null)
                        return new DataResponse(((int)ResponseErrors.IssueDoesNotExist));
@@ -300,15 +315,21 @@ namespace WASP.DataAccessLayer
                        IssueStates.Created => newIssueStateValue switch
                        {                           
                            IssueStates.Approved or 
-                           IssueStates.Resolved => true,                           
+                           IssueStates.Resolved or
+                           IssueStates.NotResolved => true,                           
                            _ => false
                        },
                        IssueStates.Approved => newIssueStateValue switch
                        {
-                           IssueStates.Resolved => true,
+                           IssueStates.Resolved or 
+                           IssueStates.NotResolved => true,
                            _ => false
                        },
                        IssueStates.Resolved => newIssueStateValue switch
+                       {
+                           _ => false
+                       },
+                       IssueStates.NotResolved => newIssueStateValue switch
                        {
                            _ => false
                        },
@@ -318,7 +339,7 @@ namespace WASP.DataAccessLayer
                    if (!stateChangeApproved)
                        return new DataResponse((int)ResponseErrors.DisallowedIssueStateChange);
 
-                   // Set new issue state ID
+                   // Set new issue state Id
                    issue.IssueStateId = issueState.Id;
                    // Save changes
                    await context.SaveChangesAsync();
@@ -352,6 +373,9 @@ namespace WASP.DataAccessLayer
                     // Check if issue verification exist
                     if (issueVerification != null)
                         return new DataResponse((int)ResponseErrors.IssueAlreadyVerifiedByThisCitizen);
+                    //Check if citizen is blocked
+                    if (citizen.IsBlocked)
+                        return new DataResponse((int)ResponseErrors.CitizenIsBlocked);
                     // Add issue verification
                     await context.IssueVerifications.AddAsync(new IssueVerification()
                     {
@@ -364,6 +388,19 @@ namespace WASP.DataAccessLayer
                     // Return success response
                     return new DataResponse();
                 }
+            );
+        }
+        public async Task<DataResponse<IEnumerable<ReportCategoryDTO>>> GetReportCategories()
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   var reportCategories = await context.ReportCategories
+                       .AsNoTracking()
+                       .Select(reportCategory => new ReportCategoryDTO(reportCategory))
+                       .ToListAsync();
+                   return new DataResponse<IEnumerable<ReportCategoryDTO>>(reportCategories);
+               }
             );
         }
 

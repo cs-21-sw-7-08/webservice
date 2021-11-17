@@ -11,7 +11,6 @@ namespace WASP.Models.DTOs
         {
 
         }
-        public int Id { get; set; }
         public int IssueId { get; set; }
         public int MunicipalityUserId { get; set; }
         public string Response { get; set; }

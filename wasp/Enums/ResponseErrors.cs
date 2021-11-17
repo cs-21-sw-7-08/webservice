@@ -38,6 +38,7 @@ namespace WASP.Enums
         CitizenSignUpPhoneNoIsAlreadyUsed = 205,
         CitizenSignUpEmailIsAlreadyUsed = 206,
         CitizenSignUpInvalidParameters = 207,
+        CitizenIsBlocked = 208,
         //Municipality-related errors
         MunicipalityDoesNotExist = 300,
         MunicipalityUserDoesNotExist = 301,

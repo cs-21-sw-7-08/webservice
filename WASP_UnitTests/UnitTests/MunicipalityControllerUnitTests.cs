@@ -19,13 +19,13 @@ namespace WASP.Test.UnitTests
     public class MunicipalityControllerUnitTests
     {
         [TestMethod]
+        [TestCategory(nameof(MunicipalityController.CreateMunicipalityResponse))]
         public async Task MunicipalityController_CreateResponse_InsertResponse_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
-                Id = 50,
                 IssueId = 1,
                 MunicipalityUserId = 1,
                 Response = "test response"
@@ -33,23 +33,26 @@ namespace WASP.Test.UnitTests
             MunicipalityController controller = new(contextFactory);
 
             //Act
-            var result = await controller.CreateResponse(testResponse);
+            var result = await controller.CreateMunicipalityResponse(testResponse);
             
             using (var context = contextFactory.CreateDbContext())
             {
-                var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Result.Id);
+                var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
-                Assert.AreEqual(testResponse.Id, response.Id);
+                Assert.AreEqual(testResponse.IssueId, response.IssueId);
+                Assert.AreEqual(testResponse.MunicipalityUserId, response.MunicipalityUserId);
+                Assert.AreEqual(testResponse.Response, response.Response);
             }
         }
+
         [TestMethod]
+        [TestCategory(nameof(MunicipalityController.CreateMunicipalityResponse))]
         public async Task MunicipalityController_CreateResponse_IssuesDoesNotExist_ErrorNo104()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
-                Id = 50,
                 IssueId = 50,
                 MunicipalityUserId = 1,
                 Response = "test response"
@@ -58,19 +61,20 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.IssueDoesNotExist;
 
             //Act
-            var result = await controller.CreateResponse(testResponse);
+            var result = await controller.CreateMunicipalityResponse(testResponse);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
+
         [TestMethod]
+        [TestCategory(nameof(MunicipalityController.CreateMunicipalityResponse))]
         public async Task MunicipalityController_CreateResponse_MunicipalityUserMunicipalityIdDoesNotMatchIssueId_ErrorNo303()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
-                Id = 50,
                 IssueId = 2,
                 MunicipalityUserId = 1,
                 Response = "test response"
@@ -79,13 +83,15 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId;
 
             //Act
-            var result = await controller.CreateResponse(testResponse);
+            var result = await controller.CreateMunicipalityResponse(testResponse);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
+
         [TestMethod]
-        public async Task MunicipalityController_DeleteResponse_DeleteResponse_Successful()
+        [TestCategory(nameof(MunicipalityController.DeleteMunicipalityResponse))]
+        public async Task MunicipalityController_DeleteResponse_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -93,7 +99,7 @@ namespace WASP.Test.UnitTests
             int responseId = 1;
 
             //Act
-            var result = await controller.DeleteResponse(responseId);
+            var result = await controller.DeleteMunicipalityResponse(responseId);
 
             using (var context = contextFactory.CreateDbContext())
             {
@@ -102,8 +108,10 @@ namespace WASP.Test.UnitTests
                 Assert.IsNull(response);
             }
         }
+
         [TestMethod]
-        public async Task MunicipalityController_DeleteResponse_ResponseDoesNotExist_ResponseError304()
+        [TestCategory(nameof(MunicipalityController.DeleteMunicipalityResponse))]
+        public async Task MunicipalityController_DeleteResponse_ResponseDoesNotExist_ErrorNo304()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -112,12 +120,14 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
 
             //Act
-            var result = await controller.DeleteResponse(responseId);
+            var result = await controller.DeleteMunicipalityResponse(responseId);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
+
         [TestMethod]
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
         public async Task MunicipalityController_UpdateResponse_UpdateResponseString_Successful()
         {
             //Arrange
@@ -134,7 +144,7 @@ namespace WASP.Test.UnitTests
             };
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             using (var context = contextFactory.CreateDbContext())
             {
@@ -143,8 +153,10 @@ namespace WASP.Test.UnitTests
                 Assert.AreEqual("This is a test", response.Response);
             }
         }
+
         [TestMethod]
-        public async Task MunicipalityController_UpdateResponse_WASPUpdateListBadFormat_ResponseError50()
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
+        public async Task MunicipalityController_UpdateResponse_WASPUpdateListBadFormat_ErrorNo50()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -160,13 +172,15 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.WASPUpdateListBadFormat;
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
+
         [TestMethod]
-        public async Task MunicipalityController_UpdateResponse_ResponseDoesNotExist_ResponseError304()
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
+        public async Task MunicipalityController_UpdateResponse_ResponseDoesNotExist_ErrorNo304()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -183,13 +197,15 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
+
         [TestMethod]
-        public async Task MunicipalityController_UpdateResponse_ExceptionHandlingInGetResponse_ResponseError2()
+        [TestCategory(nameof(MunicipalityController.UpdateMunicipalityResponse))]
+        public async Task MunicipalityController_UpdateResponse_ExceptionHandlingInGetResponse_ErrorNo2()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
@@ -206,19 +222,19 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.AnExceptionOccurredInTheDAL;
 
             //Act
-            var result = await controller.UpdateResponse(responseId, updates);
+            var result = await controller.UpdateMunicipalityResponse(responseId, updates);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
         [TestMethod]
-        public async Task MunicipalityController_MunicipalitySignUp_InsertUser_Successful()
+        [TestCategory(nameof(MunicipalityController.SignUpMunicipality))]
+        public async Task MunicipalityController_SignUpMunicipality_InsertUser_Successful()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
-                Id = 50,
                 Email = "test@test.com",
                 Name = "test",
                 Password = "12345678",
@@ -227,23 +243,24 @@ namespace WASP.Test.UnitTests
             MunicipalityController controller = new(contextFactory);
 
             //Act
-            var result = await controller.SignUp(testUser);
+            var result = await controller.SignUpMunicipality(testUser);
 
             using (var context = contextFactory.CreateDbContext())
             {
-                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Result.Id);
+                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
-                Assert.AreEqual(testUser.Id, user.Id);
+                Assert.AreEqual(testUser.Email, user.Email);
             }
         }
+
         [TestMethod]
-        public async Task MunicipalityController_MunicipalitySignUp_UsingAnAlreadyUsedEmail_ErrorNo305()
+        [TestCategory(nameof(MunicipalityController.SignUpMunicipality))]
+        public async Task MunicipalityController_SignUpMunicipality_MunicipalityUserSignUpEmailIsAlreadyUsed_ErrorNo305()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
-                Id = 50,
                 Email = "grete@aalborg.dk",
                 Name = "test",
                 Password = "12345678",
@@ -253,20 +270,21 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.MunicipalityUserSignUpEmailIsAlreadyUsed;
 
             //Act
-            var result = await controller.SignUp(testUser);
+            var result = await controller.SignUpMunicipality(testUser);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
             
         }
+
         [TestMethod]
-        public async Task MunicipalityController_MunicipalitySignUp_MunicipalityDoesNotExist_ErrorNo300()
+        [TestCategory(nameof(MunicipalityController.SignUpMunicipality))]
+        public async Task MunicipalityController_SignUpMunicipality_MunicipalityDoesNotExist_ErrorNo300()
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
-                Id = 50,
                 Email = "test@test.com",
                 Name = "test",
                 Password = "12345678",
@@ -276,11 +294,78 @@ namespace WASP.Test.UnitTests
             int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
 
             //Act
-            var result = await controller.SignUp(testUser);
+            var result = await controller.SignUpMunicipality(testUser);
 
             //Assert
-            Assert.AreEqual(errorNo, result.ErrorNo);
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
 
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.LogInMunicipality))]
+        public async Task MunicipalityController_LogInMunicipality_MunicipalityUserEmailAndOrPasswordNotMatched_Error302()
+        {
+            //Arrange
+            MunicipalityUserLoginDTO testMuni = new MunicipalityUserLoginDTO();
+            testMuni.Email = "gretethebadass@aalborg.dk";
+            testMuni.Password = "12345678";
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);            
+
+            //Act
+            var result = await controller.LogInMunicipality(testMuni);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.MunicipalityUserEmailAndOrPasswordNotMatched);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.LogInMunicipality))]
+        public async Task MunicipalityController_LogInMunicipality_Successful()
+        {
+            //Arrange
+            MunicipalityUserLoginDTO testMuni = new MunicipalityUserLoginDTO();
+            testMuni.Email = "grete@aalborg.dk";
+            testMuni.Password = "12345678";
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogInMunicipality(testMuni);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.GetListOfMunicipalities))]
+        public async Task MunicipalityController_GetListOfMunicipalities_Successful()
+        {
+            // Arrange
+            MockHiveContextFactory contextFactory = new();
+            MunicipalityController controller = new(contextFactory);
+
+            // Act
+            var result = await controller.GetListOfMunicipalities();
+            using (var context = contextFactory.CreateDbContext())
+            {
+
+                // Return the length of the issue-list in the context
+                var expectedList = context.Municipalities.Count();
+
+                // Assert
+
+                // Verify that the length of the list is equal to the context issue-list length
+                Assert.AreEqual(expectedList, result.Value.Result.Count());
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
         }
     }
 }

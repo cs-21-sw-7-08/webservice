@@ -57,7 +57,15 @@ namespace WASP.Test.Model
                     Email = "mikkel@email.dk",
                     PhoneNo = null,
                     Name = "Mikkel",
-                    IsBlocked = true
+                    IsBlocked = false
+                },
+                new Citizen()
+                {
+                    Id = 5,
+                    Email = "yolo@email.dk",
+                    PhoneNo = null,
+                    Name = "Fredinand",
+                    IsBlocked = true,
                 }
             );
             // Categories
@@ -116,6 +124,11 @@ namespace WASP.Test.Model
                 {
                     Id = 3,
                     Name = "Resolved"
+                },
+                new IssueState()
+                {
+                    Id = 4,
+                    Name = "Ikke Løst"
                 }
             );
             // Municipalities
@@ -175,7 +188,8 @@ namespace WASP.Test.Model
                     SubCategoryId = 1,
                     Description = "Jeg hader huller i fortorvet",
                     DateCreated = DateTime.Parse("2021-10-21 13:44:15"),
-                    LocationPlaceHolder = new Objects.Location(57.012218, 9.994330)
+                    LocationPlaceHolder = new Objects.Location(57.012218, 9.994330),
+                    Address = "Alfred Nobels Vej 27, 9200 Aalborg, Danmark"
                 },
                 new Issue()
                 {
@@ -187,7 +201,8 @@ namespace WASP.Test.Model
                     SubCategoryId = 2,
                     Description = "Jeg hader glatte fortorv",
                     DateCreated = DateTime.Parse("2021-10-21 13:44:15"),
-                    LocationPlaceHolder = new Objects.Location(56.952687, 9.241946)
+                    LocationPlaceHolder = new Objects.Location(56.952687, 9.241946),
+                    Address = "Sjægten 1, 9670 Løgstør, Danmark"
                 },
                 new Issue()
                 {
@@ -199,7 +214,21 @@ namespace WASP.Test.Model
                     SubCategoryId = 3,
                     Description = "Jeg hader træer på vejen",
                     DateCreated = DateTime.Parse("2021-10-21 13:44:15"),
-                    LocationPlaceHolder = new Objects.Location(56.456943, 10.029387)
+                    LocationPlaceHolder = new Objects.Location(56.456943, 10.029387),
+                    Address = "Hobrovej 126, 9530 Støvring, Danmark"
+                },
+                new Issue()
+                {
+                    Id = 4,
+                    CitizenId = 3,
+                    MunicipalityId = 3,
+                    IssueStateId = 4,
+                    CategoryId = 2,
+                    SubCategoryId = 3,
+                    Description = "Jeg hader træer på vejen",
+                    DateCreated = DateTime.Parse("2021-10-21 13:44:15"),
+                    LocationPlaceHolder = new Objects.Location(56.456943, 10.029387),
+                    Address = "Hobrovej 126, 9530 Støvring, Danmark"
                 }
             );
             // MunicipalityResponses

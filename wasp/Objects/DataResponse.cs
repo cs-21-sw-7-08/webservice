@@ -25,6 +25,7 @@ namespace WASP.Models
 
     public class DataResponse<ResultType> : DataResponse
     {
+        private CitizenDTO result;
 
         public ResultType Result { get; set; }
 
@@ -38,6 +39,5 @@ namespace WASP.Models
         {
             Result = default;
         }
-
     }
 }

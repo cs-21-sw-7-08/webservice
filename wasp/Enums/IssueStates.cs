@@ -9,6 +9,7 @@ namespace WASP.Enums
     {
         Created = 1,
         Approved = 2,
-        Resolved = 3
+        Resolved = 3,
+        NotResolved = 4
     }
 }

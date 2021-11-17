@@ -13,5 +13,6 @@ namespace WASP.Objects
         public int? IssueStateId { get; set; }
         public int? CategoryId { get; set; }
         public int? SubCategoryId { get; set; }
+        public bool? IsBlocked { get; set; }
     }
 }
