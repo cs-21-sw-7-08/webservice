@@ -506,7 +506,6 @@ namespace WASP.Test.UnitTests
             //Arrange
             int citizenId = 99998;
 
-            
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
             var ErrorNo = (int)ResponseErrors.CitizenDoesNotExist;
@@ -517,7 +516,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.Value.ErrorNo,ErrorNo);
+                Assert.AreEqual(result.Value.ErrorNo, ErrorNo);
             }
 
         }
