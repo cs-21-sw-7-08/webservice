@@ -14,6 +14,7 @@ namespace WASP.Models
             MunicipalityUserId = municipalityResponse.MunicipalityUserId;
             Response = municipalityResponse.Response;
             DateCreated = municipalityResponse.DateCreated;
+            DateEdited = municipalityResponse.DateEdited;
         }
 
         public int Id { get; set; }
@@ -21,5 +22,6 @@ namespace WASP.Models
         public int MunicipalityUserId { get; set; }
         public string Response { get; set; }
         public DateTime DateCreated { get; set; }
+        public DateTime? DateEdited { get; set; }
     }
 }

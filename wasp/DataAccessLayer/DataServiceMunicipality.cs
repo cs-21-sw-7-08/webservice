@@ -103,6 +103,8 @@ namespace WASP.DataAccessLayer
                        // Update property value
                        DataServiceUtil.UpdateProperty(update.Value, update.Name, response);
                    }
+                   // Set DateEdited to the current time
+                   response.DateEdited = DateTime.Now;
                    // Save changes to the database
                    var changes = await context.SaveChangesAsync();
                    // Check that the number of changed entities is 1

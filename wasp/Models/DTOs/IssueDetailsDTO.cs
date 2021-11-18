@@ -15,6 +15,7 @@ namespace WASP.Models
             Description = issue.Description;
             CitizenId = issue.CitizenId;
             DateCreated = issue.DateCreated;
+            DateEdited = issue.DateEdited;
             Location = issue.Location;
             Address = issue.Address;
             Picture1 = issue.Picture1;
@@ -32,6 +33,7 @@ namespace WASP.Models
         public int CitizenId { get; set; }                        
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
+        public DateTime? DateEdited { get; set; }
         [JsonIgnore]
         public Geometry Location { get; set; }
         public string Address { get; set; }

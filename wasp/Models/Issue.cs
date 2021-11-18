@@ -23,6 +23,7 @@ namespace WASP.Models
         public int SubCategoryId { get; set; }
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
+        public DateTime? DateEdited { get; set; }
         public Geometry Location { get; set; }
         public string Address { get; set; }
         public string Picture1 { get; set; }
