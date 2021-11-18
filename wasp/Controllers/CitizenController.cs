@@ -22,7 +22,7 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WASPResponse<CitizenDTO>>> SignUpCitizen(CitizenSignUpDTO citizen)
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> SignUpCitizen(CitizenSignUpInputDTO citizen)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CitizenSignUp(citizen),

@@ -16,11 +16,11 @@ using WASP.Utilities;
 namespace WASP.Test.UnitTests
 {
     [TestClass]
-    public class SystemUnitTests
+    public class GeneralUnitTests
     {
         [TestMethod]
-        [TestCategory("System")]
-        public void System_WASPUpdate_Equals_True()
+        [TestCategory("General")]
+        public void General_WASPUpdate_Equals_True()
         {
             // Arrange
             WASPUpdate mockUpdate1 = new()
@@ -41,8 +41,8 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
-        [TestCategory("System")]
-        public void System_WASPUpdate_Equals_False()
+        [TestCategory("General")]
+        public void General_WASPUpdate_Equals_False()
         {
             // Arrange
             WASPUpdate mockUpdate1 = new()

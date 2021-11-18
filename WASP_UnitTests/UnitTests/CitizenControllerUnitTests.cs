@@ -162,9 +162,8 @@ namespace WASP.Test.UnitTests
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
-            CitizenSignUpDTO testCitizen = new()
+            CitizenSignUpInputDTO testCitizen = new()
             {
-                Id = 50,
                 Email = "test@test.com",
                 Name = "test"
             };
@@ -177,7 +176,8 @@ namespace WASP.Test.UnitTests
             {
                 var response = context.Citizens.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
-                Assert.AreEqual(testCitizen.Id, response.Id);
+                Assert.IsInstanceOfType(result.Value.Result, typeof(CitizenDTO));
+                Assert.AreEqual(testCitizen.Name, response.Name);
             }
         }
 
@@ -187,9 +187,8 @@ namespace WASP.Test.UnitTests
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
-            CitizenSignUpDTO testCitizen = new()
+            CitizenSignUpInputDTO testCitizen = new()
             {
-                Id = 50,
                 PhoneNo = "12345679",
                 Name = "test"
             };
@@ -201,7 +200,8 @@ namespace WASP.Test.UnitTests
             {
                 var response = context.Citizens.FirstOrDefault(x => x.Id == result.Value.Result.Id);
                 //Assert
-                Assert.AreEqual(testCitizen.Id, response.Id);
+                Assert.IsInstanceOfType(result.Value.Result, typeof(CitizenDTO));
+                Assert.AreEqual(testCitizen.Name, response.Name);
             }
         }
 
@@ -211,9 +211,8 @@ namespace WASP.Test.UnitTests
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
-            CitizenSignUpDTO testCitizen = new()
+            CitizenSignUpInputDTO testCitizen = new()
             {
-                Id = 50,
                 PhoneNo = "12345678",
                 Name = "test"
             };
@@ -231,9 +230,8 @@ namespace WASP.Test.UnitTests
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
-            CitizenSignUpDTO testCitizen = new()
+            CitizenSignUpInputDTO testCitizen = new()
             {
-                Id = 50,
                 Email = "email@email.dk",
                 Name = "test"
             };
@@ -251,9 +249,8 @@ namespace WASP.Test.UnitTests
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
-            CitizenSignUpDTO testCitizen = new()
+            CitizenSignUpInputDTO testCitizen = new()
             {
-                Id = 50,
                 Email = "email@email.dk",
                 PhoneNo = "12345679",
                 Name = "test"
@@ -272,9 +269,8 @@ namespace WASP.Test.UnitTests
         {
             //Arrange
             var contextFactory = new MockHiveContextFactory();
-            CitizenSignUpDTO testCitizen = new()
+            CitizenSignUpInputDTO testCitizen = new()
             {
-                Id = 50,
                 Name = "test"
             };
             CitizenController controller = new(contextFactory);

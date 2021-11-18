@@ -135,7 +135,7 @@ namespace WASP.Interfaces
         /// </summary>
         /// <param name="citizen">A set of properties used when creating a new citizen user. It contains an email or a phone number, a name and a Id</param>
         /// <returns></returns>
-        public Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpDTO citizen);
+        public Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpInputDTO citizen);
         /// <summary>
         /// Takes a CitizenLoginDTO and return a CitizenDTO. This function is used when a citizen login using the information given in the CitizenLoginDTO,
         /// which is a email or a phone number. It then returns the information of the loggedin citizen.

@@ -5,16 +5,17 @@ using System.Threading.Tasks;
 
 namespace WASP.Models.DTOs
 {
-    public class CitizenSignUpDTO
+    public class CitizenSignUpOutputDTO
     {
-        public CitizenSignUpDTO()
+        public CitizenSignUpOutputDTO()
         {
             
         }
+        public CitizenSignUpOutputDTO(Citizen citizen)
+        {
+            Id = citizen.Id;
+        }
 
         public int Id { get; set; }
-        public string Email { get; set; }
-        public string PhoneNo { get; set; }
-        public string Name { get; set; }
     }
 }

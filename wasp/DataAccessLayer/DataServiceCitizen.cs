@@ -111,7 +111,7 @@ namespace WASP.DataAccessLayer
         }
 
 
-        public async Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpDTO citizen)
+        public async Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpInputDTO citizen)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
                async (context) =>
