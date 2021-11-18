@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WASP.Models;
+using System.Runtime.InteropServices;
 
 namespace WASP
 {
@@ -31,7 +32,9 @@ namespace WASP
             // Add DB context
             services.AddDbContextFactory<HiveContext>(
                 options => {
-                    options.UseSqlServer(Configuration.GetConnectionString("HiveConnection"), x => x.UseNetTopologySuite());
+                    options.UseSqlServer(Configuration.GetConnectionString(
+                        RuntimeInformation.IsOSPlatform(OSPlatform.Windows)?"HiveConnection":"HiveConnectionLinux"), //might become a problem with macOS
+                        x => x.UseNetTopologySuite());
                     options.UseLoggerFactory(_myLoggerFactory);
                 }
             );            
