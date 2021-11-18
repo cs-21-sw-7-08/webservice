@@ -21,6 +21,7 @@ namespace WASP.Models
             Description = issue.Description;
             CitizenId = issue.CitizenId;
             DateCreated = issue.DateCreated;
+            DateEdited = issue.DateEdited;
             Location = issue.Location;            
             Municipality = new MunicipalityDTO(issue.Municipality);
             SubCategory = new SubCategoryDTO(issue.SubCategory);
@@ -32,6 +33,7 @@ namespace WASP.Models
         public int CitizenId { get; set; }
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
+        public DateTime? DateEdited { get; set; }
         [JsonIgnore]
         public Geometry Location { get; set; }        
 

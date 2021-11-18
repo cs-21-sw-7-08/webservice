@@ -34,7 +34,7 @@ namespace WASP.Test.UnitTests
 
             //Act
             var result = await controller.CreateMunicipalityResponse(testResponse);
-            
+
             using (var context = contextFactory.CreateDbContext())
             {
                 var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Value.Result.Id);
@@ -166,7 +166,7 @@ namespace WASP.Test.UnitTests
             {
                 new()
                 {
-                    
+
                 }
             };
             int errorNo = (int)ResponseErrors.WASPUpdateListBadFormat;
@@ -274,7 +274,7 @@ namespace WASP.Test.UnitTests
 
             //Assert
             Assert.AreEqual(errorNo, result.Value.ErrorNo);
-            
+
         }
 
         [TestMethod]
@@ -310,7 +310,7 @@ namespace WASP.Test.UnitTests
             testMuni.Email = "gretethebadass@aalborg.dk";
             testMuni.Password = "12345678";
             var contextFactory = new MockHiveContextFactory();
-            MunicipalityController controller = new(contextFactory);            
+            MunicipalityController controller = new(contextFactory);
 
             //Act
             var result = await controller.LogInMunicipality(testMuni);
@@ -342,6 +342,32 @@ namespace WASP.Test.UnitTests
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
 
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(MunicipalityController.LogInMunicipality))]
+        public async Task MunicipalityController_LogInMunicipality_Successful_LoginDTOConstructor()
+        {
+            //Arrange
+            MunicipalityUser testUser = new MunicipalityUser()
+            {
+                Name = "Annette",
+                MunicipalityId = 1,
+                Email = "annette@aalborg.dk",
+                Password = "12345678",
+            };
+            MunicipalityUserLoginDTO muniDTO = new MunicipalityUserLoginDTO(testUser);
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
+
+
+            //Act
+            var result = await controller.LogInMunicipality(muniDTO);
+            using (var context = contextFactory.CreateDbContext())
+            {
+                //Assert
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
         }
 
         [TestMethod]
