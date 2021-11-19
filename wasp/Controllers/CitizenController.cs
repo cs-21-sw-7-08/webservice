@@ -26,8 +26,7 @@ namespace WASP.Controllers
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CitizenSignUp(citizen),
-                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result)
-            );
+                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
         }
 
         [HttpPost]
@@ -36,6 +35,14 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CitizenLogIn(citizen),
                 (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<WASPResponse>> UpdateCitizen(int citizen_id, IEnumerable<WASPUpdate> updates)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UpdateCitizen(citizen_id, updates),
+                (dataResponse) => new WASPResponse());
 
         }
 
@@ -45,7 +52,6 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.BlockCitizen(citizen_id),
                 (dataResponse) => new WASPResponse());
-
         }
 
         [HttpPut]
@@ -54,7 +60,6 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.UnblockCitizen(citizen_id),
                 (dataResponse) => new WASPResponse());
-
         }
 
         [HttpDelete]
@@ -63,7 +68,6 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.DeleteCitizen(citizen_id),
                 (dataResponse) => new WASPResponse());
-
         }
         [HttpGet]
         public async Task<WASPResponse<bool>> IsBlockedCitizen(int citizen_id)
@@ -71,7 +75,6 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.IsBlockedCitizen(citizen_id),
                 (dataResponse) => new WASPResponse<bool>(dataResponse.Result));
-
         }
 
     }

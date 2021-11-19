@@ -7,6 +7,7 @@ using WASP.Enums;
 using WASP.Interfaces;
 using WASP.Models;
 using WASP.Models.DTOs;
+using WASP.Objects;
 using WASP.Utilities;
 
 namespace WASP.DataAccessLayer
@@ -14,15 +15,7 @@ namespace WASP.DataAccessLayer
     public partial class DataService : IDataService
     {
         #region Methods
-        /// <summary>
-        /// Blocks a given citizen. Takes a <paramref name="citizenId"/> and sets their isBlocked status to true
-        /// <para>If their status is already blocked, returns an errorcode</para>
-        /// </summary>
-        /// <returns>
-        /// DataResponse with result and potential error code
-        /// </returns>
-        /// <param name="citizenId"></param>
-        /// <returns></returns>
+
         public async Task<DataResponse> BlockCitizen(int citizenId)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
@@ -45,15 +38,7 @@ namespace WASP.DataAccessLayer
                }
                );
         }
-        /// <summary>
-        /// Removes the blocked status from a given citizen. Takes a <paramref name="citizenId"/> and sets their isBlocked status to False
-        /// <para>If their status is already unblocked, returns an errorcode</para>
-        /// </summary>
-        /// <returns>
-        /// DataResponse with result and potential error code
-        /// </returns>
-        /// <param name="citizenId"></param>
-        /// <returns></returns>
+
         public async Task<DataResponse> UnblockCitizen(int citizenId)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
@@ -110,7 +95,6 @@ namespace WASP.DataAccessLayer
                );
         }
 
-
         public async Task<DataResponse<CitizenDTO>> CitizenSignUp(CitizenSignUpInputDTO citizen)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
@@ -147,7 +131,6 @@ namespace WASP.DataAccessLayer
                    // Save changes to the database
                    var changes = await context.SaveChangesAsync();
                    // Check that the number of changed entities is 1
-                   // as one new municipality user is added to the database
                    if (changes != 1)
                        return new DataResponse<CitizenDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
 
@@ -156,11 +139,39 @@ namespace WASP.DataAccessLayer
                }
             );
         }
-        /// <summary>
-        /// Removes a citizen from the database. Takes a <paramref name="citizenId"/>, and deletes the citizen with matching Id.
-        /// </summary>
-        /// <param name="citizenId"></param>
-        /// <returns></returns>
+
+        public async Task<DataResponse> UpdateCitizen(int citizenId, IEnumerable<WASPUpdate> citUpdate)
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+                async (context) =>
+                {
+                    // Check WASPUpdate list for permissable changes
+                    if (!DataServiceUtil.CheckWASPUpdateList(citUpdate.ToList(), Citizen.GetPropertiesThatAreAllowedToBeUpdated()))
+                        return new DataResponse((int)ResponseErrors.WASPUpdateListBadFormat);
+
+                    //Find the citizen with the given Id
+                    Citizen citizen = await context.Citizens.FirstOrDefaultAsync(cit => cit.Id == citizenId);
+                    if (citizen == null)
+                        return new DataResponse((int)ResponseErrors.CitizenDoesNotExist);
+
+                    // Update all WASPUpdate properties in the citizen
+                    foreach (WASPUpdate property in citUpdate)
+                    {
+                        DataServiceUtil.UpdateProperty(property.Value, property.Name, citizen);
+                    }
+
+                    // Save changes to the database
+                    var changes = await context.SaveChangesAsync();
+                    // Check that the number of changed entities is 1
+                    if (changes != 1)
+                        return new DataResponse<CitizenDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+
+                    // Return success response
+                    return new DataResponse<CitizenDTO>(new CitizenDTO(citizen));
+                }
+            );
+        }
+
         public async Task<DataResponse> DeleteCitizen(int citizenId)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,
@@ -190,7 +201,7 @@ namespace WASP.DataAccessLayer
                    if (citizen == null)
                        return new DataResponse<bool>((int)ResponseErrors.CitizenDoesNotExist);
                    //Return true or false to blocked
-                   return new DataResponse<bool>( citizen.IsBlocked);
+                   return new DataResponse<bool>(citizen.IsBlocked);
                }
                );
         }

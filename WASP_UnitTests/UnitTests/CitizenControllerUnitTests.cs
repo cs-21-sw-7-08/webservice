@@ -10,6 +10,7 @@ using WASP.Models;
 using WASP.Models.DTOs;
 using WASP.Test.Model;
 using WASP.Enums;
+using WASP.Objects;
 
 namespace WASP.Test.UnitTests
 {
@@ -279,6 +280,114 @@ namespace WASP.Test.UnitTests
             var result = await controller.SignUpCitizen(testCitizen);
             //Assert
             Assert.AreEqual(result.Value.ErrorNo, errorNo);
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.UpdateCitizen))]
+        public async Task CitizenController_UpdateCitizen_Succesful()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            int citizenId = 4;
+            IEnumerable<WASPUpdate> citizenUpdate = new List<WASPUpdate>()
+            {
+                new()
+                {
+                    Name = "Name",
+                    Value = "Gert"
+                },
+                new()
+                {
+                    Name = "Email",
+                    Value = "donaldo21@yahoo.com"
+                }
+            };
+
+            //Act 
+            // Attempt to update an issue property with a new one
+            var result = await controller.UpdateCitizen(citizenId, citizenUpdate);
+
+            // Obtain the issue after it's property is updated.
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Assert
+                Citizen newCitizen = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
+                // Check if the description has been updated after using UpdateIssue
+                Assert.AreEqual(citizenUpdate.ElementAt(0).Value, newCitizen.Name);
+                Assert.AreEqual(citizenUpdate.ElementAt(1).Value, newCitizen.Email);
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.UpdateCitizen))]
+        public async Task CitizenController_UpdateCitizen_CitizenDoesNotExist_Error200()
+        {
+            //Arrange
+            int errorNum = 200;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            int citizenId = 555;
+            IEnumerable<WASPUpdate> citizenUpdate = new List<WASPUpdate>()
+            {
+                new()
+                {
+                    Name = "Name",
+                    Value = "Pierre"
+                },
+                new()
+                {
+                    Name = "Email",
+                    Value = "magiker100@gmail.com"
+                }
+            };
+
+            //Act 
+            // Attempt to update an issue property with a new one
+            var result = await controller.UpdateCitizen(citizenId, citizenUpdate);
+
+            // Obtain the issue after it's property is updated.
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Assert
+                Assert.AreEqual(result.Value.ErrorNo, errorNum);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.UpdateCitizen))]
+        public async Task CitizenController_UpdateCitizen_ErrorWASPUpdateListBadFormat_Error50()
+        {
+            //Arrange
+            int errorNum = 50;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            int citizenId = 4;
+            IEnumerable<WASPUpdate> citizenUpdate = new List<WASPUpdate>()
+            {
+                new()
+                {
+                    Name = "Address",
+                    Value = "Humlevej 33"
+                },
+            };
+
+            //Act 
+            // Attempt to update an issue property with a new one
+            var result = await controller.UpdateCitizen(citizenId, citizenUpdate);
+
+            // Obtain the issue after it's property is updated.
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Assert
+                Citizen newCitizen = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
+                // Check if the description has been updated after using UpdateIssue
+                Assert.AreEqual(result.Value.ErrorNo, errorNum);
+            }
         }
 
         [TestMethod]

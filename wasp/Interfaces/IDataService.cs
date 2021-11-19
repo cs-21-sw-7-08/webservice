@@ -145,22 +145,37 @@ namespace WASP.Interfaces
         /// <returns></returns>
         public Task<DataResponse<CitizenDTO>> CitizenLogIn(CitizenLoginDTO citizen);
         /// <summary>
-        /// Takes a int citizen identifier and returns a data response. This function blocks the given citizen.
-        /// 
+        /// Updates a given citizen's personal information. Given a <paramref name="citizenId"/>,
+        /// reads all property changes in <paramref name="citUpdate"/> and applies those changes to the citizen of <paramref name="citizenId"/>.
         /// </summary>
-        /// <param name="citizenId">Int identifier for citizen.</param>
+        /// <param name="citizenId">Id of citizen that will be updated</param>
+        /// <param name="citizenUpdate">WASPUpdate containing changes</param>
+        /// <returns>DataResponse with result an potential error code</returns>
+        public Task<DataResponse> UpdateCitizen(int citizenId, IEnumerable<WASPUpdate> citizenUpdate);
+        /// <summary>
+        /// Blocks a given citizen. Takes a <paramref name="citizenId"/> and sets their isBlocked status to true
+        /// <para>If their status is already blocked, returns an errorcode</para>
+        /// </summary>
+        /// <returns>
+        /// DataResponse with result and potential error code
+        /// </returns>
+        /// <param name="citizenId"></param>
         /// <returns></returns>
         public Task<DataResponse> BlockCitizen(int citizenId);
         /// <summary>
-        /// Takes a int citizenId and returns a data response. This function unblocks a given citizen.
+        /// Removes the blocked status from a given citizen. Takes a <paramref name="citizenId"/> and sets their isBlocked status to False
+        /// <para>If their status is already unblocked, returns an errorcode</para>
         /// </summary>
-        /// <param name="citizenId">A int Identifier for citizen.</param>
+        /// <returns>
+        /// DataResponse with result and potential error code
+        /// </returns>
+        /// <param name="citizenId">Id of the citizen that will be unblocked</param>
         /// <returns></returns>
         public Task<DataResponse> UnblockCitizen(int citizenId);
         /// <summary>
-        /// Takes a int citizenId and returns a data response. This function deletes a given citizen.
+        /// Removes a citizen from the database. Takes a <paramref name="citizenId"/>, and deletes the citizen with matching Id.
         /// </summary>
-        /// <param name="citizenId">A int identifier for citizen.</param>
+        /// <param name="citizenId"></param>
         /// <returns></returns>
         public Task<DataResponse> DeleteCitizen(int citizenId);
         /// <summary>
