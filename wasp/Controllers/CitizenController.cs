@@ -37,6 +37,15 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
         }
 
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> GetCitizen(int citizen_id)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetCitizen(citizen_id),
+                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
+
+        }
+
         [HttpPut]
         public async Task<ActionResult<WASPResponse>> UpdateCitizen(int citizen_id, IEnumerable<WASPUpdate> updates)
         {

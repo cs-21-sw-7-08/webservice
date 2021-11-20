@@ -140,6 +140,31 @@ namespace WASP.DataAccessLayer
             );
         }
 
+        public async Task<DataResponse<CitizenDTO>> GetCitizen(int citizenID)
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+                async (context) =>
+                {
+					// Query for citizen ID and return with relevant information.
+                    var citizen = await context.Citizens
+                    .AsNoTracking()
+                    .Include(citizen => citizen.Name)
+                    .Include(citizen => citizen.Email)
+                    .Include(citizen => citizen.PhoneNo)
+                    .Select(citizen => new CitizenDTO(citizen)
+                    {
+                        Id = citizen.Id
+                    })
+					.FirstOrDefaultAsync(x => x.Id == citizenID);
+                    // Return error if citizen cannot be found
+                    if (citizen == null)
+                        return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenDoesNotExist);
+                    // Otherwise return the DTO with citizen-info
+                    return new DataResponse<CitizenDTO>(citizen);
+                }
+            );
+        }
+
         public async Task<DataResponse> UpdateCitizen(int citizenId, IEnumerable<WASPUpdate> citUpdate)
         {
             return await DataServiceUtil.GetResponse(ContextFactory,

@@ -283,6 +283,56 @@ namespace WASP.Test.UnitTests
         }
 
         [TestMethod]
+        [TestCategory(nameof(CitizenController.GetCitizen))]
+        public async Task CitizenController_GetCitizen_Succesful()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            int citizenId = 3;
+            
+            //Act 
+            // Attempt to update an issue property with a new one
+            var result = await controller.GetCitizen(citizenId);
+
+            // Obtain the issue after it's property is updated.
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Assert
+                Citizen contextCit = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
+                // Check if the description has been updated after using UpdateIssue
+                Assert.AreEqual(contextCit.Name, result.Value.Result.Name);
+                Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.GetCitizen))]
+        public async Task CitizenController_GetCitizen_ErrorCitizenNotFound_Error200()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+            int ErrorNum = (int)ResponseErrors.CitizenDoesNotExist;
+            int citizenId = -9;
+
+            //Act 
+            // Attempt to update an issue property with a new one
+            var result = await controller.GetCitizen(citizenId);
+
+            // Obtain the issue after it's property is updated.
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Assert
+                Citizen contextCit = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
+                // Check if the description has been updated after using UpdateIssue
+                Assert.AreEqual(ErrorNum, result.Value.ErrorNo);
+                Assert.IsFalse(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
         [TestCategory(nameof(CitizenController.UpdateCitizen))]
         public async Task CitizenController_UpdateCitizen_Succesful()
         {
@@ -323,10 +373,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.UpdateCitizen))]
-        public async Task CitizenController_UpdateCitizen_CitizenDoesNotExist_Error200()
+        public async Task CitizenController_UpdateCitizen_CitizenDoesNotExist()
         {
             //Arrange
-            int errorNum = 200;
+            int errorNum = (int)ResponseErrors.CitizenDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
@@ -359,10 +409,10 @@ namespace WASP.Test.UnitTests
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.UpdateCitizen))]
-        public async Task CitizenController_UpdateCitizen_ErrorWASPUpdateListBadFormat_Error50()
+        public async Task CitizenController_UpdateCitizen_ErrorWASPUpdateListBadFormat()
         {
             //Arrange
-            int errorNum = 50;
+            int errorNum = (int)ResponseErrors.WASPUpdateListBadFormat;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 

@@ -145,6 +145,12 @@ namespace WASP.Interfaces
         /// <returns></returns>
         public Task<DataResponse<CitizenDTO>> CitizenLogIn(CitizenLoginDTO citizen);
         /// <summary>
+        /// Retrieves and returns a citizen DTO using a given citizen user's ID, <paramref name="citizenId"/>.
+        /// </summary>
+        /// <param name="citizenId"></param>
+        /// <returns>CitizenDTO object matching that of the input ID.</returns>
+        public Task<DataResponse<CitizenDTO>> GetCitizen(int citizenId);
+        /// <summary>
         /// Updates a given citizen's personal information. Given a <paramref name="citizenId"/>,
         /// reads all property changes in <paramref name="citUpdate"/> and applies those changes to the citizen of <paramref name="citizenId"/>.
         /// </summary>
