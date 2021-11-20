@@ -324,13 +324,11 @@ namespace WASP.Test.UnitTests
             var result = await controller.GetListOfCategories();
             using (var context = contextFactory.CreateDbContext())
             {
-
-                // Return the length of the issue-list in the context
+                // find the amount of categories in the context
                 var expectedList = context.Categories.Count();
 
                 // Assert
-
-                // Verify that the length of the list is equal to the context issue-list length
+                // Verify that the number of categories found is equal to the expected result
                 Assert.AreEqual(expectedList, result.Value.Result.Count());
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
