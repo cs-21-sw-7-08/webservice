@@ -382,7 +382,6 @@ namespace WASP.Test.UnitTests
         public async Task IssueController_CreateIssue_Successful()
         {
             // Arrange
-
             IssueCreateDTO mockIssueDTO = new()
             {
                 CitizenId = 4,
@@ -391,15 +390,11 @@ namespace WASP.Test.UnitTests
                 SubCategoryId = 2,
                 LocationPlaceHolder = new Location(57.012218, 9.994330),
                 Address = "Alfred Nobels Vej 27, 9200 Aalborg, Danmark"
-
-
             };
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
-            // Act
-
-            // Create the issue to the context
+            // Act            
             var result = await controller.CreateIssue(mockIssueDTO);
 
             using (var context = contextFactory.CreateDbContext())
@@ -408,9 +403,7 @@ namespace WASP.Test.UnitTests
                 // Obtain the newly created issue
                 var freshIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueId);
 
-                // Assert
-
-                // Verify that the obtained issue is the same as the one created
+                // Assert                
                 Assert.AreEqual(mockIssueDTO.Description, freshIssue.Description);
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
@@ -420,11 +413,9 @@ namespace WASP.Test.UnitTests
         public async Task IssueController_CreateIssue_CitizenIsBlocked_ErrorNo208()
         {
             // Arrange
-
             IssueCreateDTO mockIssueDTO = new()
             {
-                CitizenId = 4,
-                IsBlocked = true,
+                CitizenId = 5,
                 Description = "Der er graffiti på min væg",
                 MunicipalityId = 1,
                 SubCategoryId = 2,
@@ -436,21 +427,34 @@ namespace WASP.Test.UnitTests
             int ErrorNo = (int)ResponseErrors.CitizenIsBlocked;
 
             // Act
-
-            // Create the issue to the context
             var result = await controller.CreateIssue(mockIssueDTO);
 
-            using (var context = contextFactory.CreateDbContext())
+            // Assert                
+            Assert.AreEqual(ErrorNo, result.Value.ErrorNo);
+        }
+        [TestMethod]
+        [TestCategory(nameof(IssueController.CreateIssue))]
+        public async Task IssueController_CreateIssue_CitizenDoesNotExist_ErrorNo200()
+        {
+            // Arrange
+            IssueCreateDTO mockIssueDTO = new()
             {
-                int issueId = context.Issues.Count();
-                // Obtain the newly created issue
-                var freshIssue = context.Issues.FirstOrDefault(issue => issue.Id == issueId);
+                CitizenId = 50,
+                Description = "Der er graffiti på min væg",
+                MunicipalityId = 1,
+                SubCategoryId = 2,
+                LocationPlaceHolder = new Location(57.012218, 9.994330),
+                Address = "Alfred Nobels Vej 27, 9200 Aalborg, Danmark"
+            };
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+            int ErrorNo = (int)ResponseErrors.CitizenDoesNotExist;
 
-                // Assert
+            // Act            
+            var result = await controller.CreateIssue(mockIssueDTO);
 
-                // Verify that the obtained issue is the same as the one created
-                Assert.AreEqual(ErrorNo, result.Value.ErrorNo);
-            }
+            // Assert
+            Assert.AreEqual(ErrorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]

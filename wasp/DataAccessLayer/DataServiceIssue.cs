@@ -22,10 +22,13 @@ namespace WASP.DataAccessLayer
             return await DataServiceUtil.GetResponse(ContextFactory,
                 async (context) =>
                 {
-                    if(issue.IsBlocked == true)
-                    {
-                        return new DataResponse(((int)ResponseErrors.CitizenIsBlocked));
-                    }
+                    Citizen citizen = await context.Citizens.FirstOrDefaultAsync(x => x.Id == issue.CitizenId);
+                    // Check if citizen with the given ID exist
+                    if (citizen == null)
+                        return new DataResponse((int)ResponseErrors.CitizenDoesNotExist);
+                    // Check if citizen is blocked
+                    if (citizen.IsBlocked)
+                        return new DataResponse((int)ResponseErrors.CitizenIsBlocked);
                     // Create new issue
                     Issue newIssue = new();
 
@@ -286,6 +289,8 @@ namespace WASP.DataAccessLayer
                                break;
                        }
                    }
+                   // Update date edited
+                   issue.DateEdited = DateTime.Now;
                    // Save changes to the database
                    await context.SaveChangesAsync();
                    // Return success response
@@ -341,7 +346,7 @@ namespace WASP.DataAccessLayer
                    // Check if state change was approved
                    if (!stateChangeApproved)
                        return new DataResponse((int)ResponseErrors.DisallowedIssueStateChange);
-
+                   
                    // Set new issue state Id
                    issue.IssueStateId = issueState.Id;
                    // Save changes
