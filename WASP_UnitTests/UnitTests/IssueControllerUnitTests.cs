@@ -334,6 +334,7 @@ namespace WASP.Test.UnitTests
                 // Verify that the length of the list is equal to the context issue-list length
                 Assert.AreEqual(expectedList, result.Value.Result.Count());
                 Assert.IsTrue(result.Value.IsSuccessful);
+                Assert.IsInstanceOfType(result.Value.Result, typeof(IEnumerable<CategoryListDTO>));
             }
         }
 
