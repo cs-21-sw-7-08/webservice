@@ -25,8 +25,6 @@ namespace WASP.Models
 
     public class DataResponse<ResultType> : DataResponse
     {
-        private CitizenDTO result;
-
         public ResultType Result { get; set; }
 
         public DataResponse(ResultType result)
