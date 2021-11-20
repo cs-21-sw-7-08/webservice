@@ -123,18 +123,16 @@ namespace WASP.DataAccessLayer
                 {
                     // Get issue
                     var issue = await context.Issues
-                    .AsNoTracking()
+                    .AsNoTracking()                    
                     .Include(issue => issue.MunicipalityResponses)
                     .Include(issue => issue.IssueState)
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
                     .Include(issue => issue.IssueVerifications)
-                    .Select(issue => new IssueDetailsDTO(issue)
-                    {
-                        Id = issue.Id
-                    })
-                    .FirstOrDefaultAsync(x => x.Id == issueId);
+                    .Where(issue => issue.Id == issueId)
+                    .Select(issue => new IssueDetailsDTO(issue))
+                    .FirstOrDefaultAsync();
                     // Make error checks
                     if (issue == null)
                         return new DataResponse<IssueDetailsDTO>((int)ResponseErrors.IssueDoesNotExist);
@@ -157,6 +155,11 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
                     .Include(Issue => Issue.Citizen)
+                    // Filter -> Citizen
+                    .Where(issue =>
+                        filter.CitizenIds == null ||
+                        (filter.CitizenIds != null && filter.CitizenIds.Contains(issue.CitizenId))
+                    )
                     // Filter -> IsBlocked
                     .Where(issue =>
                         filter.IsBlocked == null ||
@@ -174,23 +177,23 @@ namespace WASP.DataAccessLayer
                     )
                     // Filter -> IssueState
                     .Where(issue =>
-                        filter.IssueStateId == null ||
-                        (filter.IssueStateId != null && issue.IssueStateId == filter.IssueStateId)
+                        filter.IssueStateIds == null ||
+                        (filter.IssueStateIds != null && filter.IssueStateIds.Contains(issue.IssueStateId))
                     )
                     // Filter ->  Municipality
                     .Where(issue =>
-                        filter.MunicipalityId == null ||
-                        (filter.MunicipalityId != null && issue.MunicipalityId == filter.MunicipalityId)
+                        filter.MunicipalityIds == null ||
+                        (filter.MunicipalityIds != null && filter.MunicipalityIds.Contains(issue.MunicipalityId))
                     )
                     // Filter -> SubCategory
                     .Where(issue =>
-                        filter.SubCategoryId == null ||
-                        (filter.SubCategoryId != null && issue.SubCategoryId == filter.SubCategoryId)
+                        filter.SubCategoryIds == null ||
+                        (filter.SubCategoryIds != null && filter.SubCategoryIds.Contains(issue.SubCategoryId))
                     )
                     // Filter -> Category
                     .Where(issue =>
-                        filter.CategoryId == null ||
-                        (filter.CategoryId != null && issue.CategoryId == filter.CategoryId)
+                        filter.CategoryIds == null ||
+                        (filter.CategoryIds != null && filter.CategoryIds.Contains(issue.CategoryId))
                     )
                     .Select(issue => new IssuesOverviewDTO(issue))
                     .ToListAsync();

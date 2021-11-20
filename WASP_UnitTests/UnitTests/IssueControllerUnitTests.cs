@@ -96,7 +96,8 @@ namespace WASP.Test.UnitTests
                     .Count();
 
                 // Assert
-
+                // Check type of result
+                Assert.IsInstanceOfType(result.Value.Result, typeof(IEnumerable<IssuesOverviewDTO>));
                 // Verify that the length of the list is equal to the context issue-list length
                 Assert.AreEqual(expectedList, result.Value.Result.Count());
                 Assert.IsTrue(result.Value.IsSuccessful);
@@ -145,7 +146,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.GetListOfIssues(
                 new IssuesOverviewFilter()
                 {
-                    IssueStateId = 2
+                    IssueStateIds = new List<int>() { 2 }
                 });
             using (var context = contextFactory.CreateDbContext())
             {
@@ -174,7 +175,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.GetListOfIssues(
                 new IssuesOverviewFilter()
                 {
-                    CategoryId = 2
+                    CategoryIds = new List<int>() { 2 }
                 });
             using (var context = contextFactory.CreateDbContext())
             {
@@ -204,7 +205,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.GetListOfIssues(
                 new IssuesOverviewFilter()
                 {
-                    SubCategoryId = 3
+                    SubCategoryIds = new List<int>() { 3 }
                 });
             using (var context = contextFactory.CreateDbContext())
             {
@@ -294,7 +295,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.GetListOfIssues(
                 new IssuesOverviewFilter()
                 {
-                    MunicipalityId = 1
+                    MunicipalityIds = new List<int>() { 1 }
                 });
             using (var context = contextFactory.CreateDbContext())
             {
@@ -767,7 +768,7 @@ namespace WASP.Test.UnitTests
             int notExistCode = (int)ResponseErrors.IssueDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
-           
+
             // Act
 
             // Attempt to delete issue using a non-existant Id
