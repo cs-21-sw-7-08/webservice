@@ -152,7 +152,7 @@ namespace WASP.DataAccessLayer
             return await DataServiceUtil.GetResponse(ContextFactory,
                 async (context) =>
                 {
-					// Query for citizen ID and return with relevant information.
+                    // Query for citizen ID and return with relevant information.
                     var citizen = await context.Citizens
                     .Include(x => x.Municipality)
                     .Where(x => x.Id == citizenID)
@@ -189,13 +189,10 @@ namespace WASP.DataAccessLayer
                     }
 
                     // Save changes to the database
-                    var changes = await context.SaveChangesAsync();
-                    // Check that the number of changed entities is 1
-                    if (changes != 1)
-                        return new DataResponse<CitizenDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+                    await context.SaveChangesAsync();
 
                     // Return success response
-                    return new DataResponse<CitizenDTO>(new CitizenDTO(citizen));
+                    return new DataResponse();
                 }
             );
         }
@@ -210,8 +207,38 @@ namespace WASP.DataAccessLayer
                    // Check if citizen exists; return errorResponse if null
                    if (citizen == null)
                        return new DataResponse((int)ResponseErrors.CitizenDoesNotExist);
+                   // Get issues
+                   var issues = await context.Issues
+                                       .Where(x => x.CitizenId == citizenId)
+                                       .ToListAsync();
+                   var issueIds = issues.Select(x => x.Id);
+                   // Get verifications
+                   var verifications = await context.IssueVerifications
+                                            .Where(x => x.CitizenId == citizenId || issueIds.Any(id => id == x.IssueId))
+                                            .ToListAsync();
+                   // Remove any verifications
+                   if (verifications.Count > 0)
+                       context.IssueVerifications.RemoveRange(verifications);
+                   // Get municipality responses
+                   var responses = await context.MunicipalityResponses
+                                       .Where(x => issueIds.Any(id => id == x.IssueId))
+                                       .ToListAsync();
+                   // Remove any responses
+                   if (responses.Count > 0)
+                       context.MunicipalityResponses.RemoveRange(responses);
+                   // Get report
+                   var reports = await context.Reports
+                                       .Where(x => issueIds.Any(id => id == x.IssueId))
+                                       .ToListAsync();
+                   // Remove any reports
+                   if (reports.Count > 0)
+                       context.Reports.RemoveRange(reports);
+                   // Remove any issues
+                   if (issues.Count > 0)
+                       context.Issues.RemoveRange(issues);
                    // Remove the citizen from context
                    context.Remove(citizen);
+
                    // Save changes
                    await context.SaveChangesAsync();
                    return new DataResponse();

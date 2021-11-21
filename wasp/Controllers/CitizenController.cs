@@ -52,7 +52,6 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.UpdateCitizen(citizenId, updates),
                 (dataResponse) => new WASPResponse());
-
         }
 
         [HttpPut]
