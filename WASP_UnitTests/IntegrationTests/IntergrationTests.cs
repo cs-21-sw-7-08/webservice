@@ -84,7 +84,8 @@ namespace WASP.Test.IntegrationTests
                 {
                     Email = "test@test.com",
                     PhoneNo = null,
-                    Name = "test"
+                    Name = "test",
+                    MunicipalityId = 1
                 };
 
                 JsonContent jsonContent = JsonContent.Create(citizen);
@@ -93,7 +94,7 @@ namespace WASP.Test.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(System.Net.HttpStatusCode.OK, responseMessage.StatusCode);
-                Assert.AreEqual("{\"Result\":{\"Id\":12,\"Email\":\"test@test.com\",\"Name\":\"test\",\"IsBlocked\":false},\"IsSuccessful\":true,\"ErrorNo\":0}",
+                Assert.AreEqual("{\"Result\":{\"Id\":12,\"Email\":\"test@test.com\",\"Name\":\"test\",\"IsBlocked\":false,\"Municipality\":{\"Id\":1,\"Name\":\"Aalborg\"}},\"IsSuccessful\":true,\"ErrorNo\":0}",
                                 content);
             }
         }
@@ -110,7 +111,8 @@ namespace WASP.Test.IntegrationTests
                 {
                     Email = "email@email.dk",
                     PhoneNo = null,
-                    Name = "test"
+                    Name = "test",
+                    MunicipalityId = 2
                 };
 
                 JsonContent jsonContent = JsonContent.Create(citizen);
