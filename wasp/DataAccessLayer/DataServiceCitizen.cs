@@ -147,15 +147,10 @@ namespace WASP.DataAccessLayer
                 {
 					// Query for citizen ID and return with relevant information.
                     var citizen = await context.Citizens
-                    .AsNoTracking()
-                    .Include(citizen => citizen.Name)
-                    .Include(citizen => citizen.Email)
-                    .Include(citizen => citizen.PhoneNo)
-                    .Select(citizen => new CitizenDTO(citizen)
-                    {
-                        Id = citizen.Id
-                    })
-					.FirstOrDefaultAsync(x => x.Id == citizenID);
+                    .Where(x => x.Id == citizenID)
+                    .Select(x => new CitizenDTO(x))
+                    .FirstOrDefaultAsync();
+
                     // Return error if citizen cannot be found
                     if (citizen == null)
                         return new DataResponse<CitizenDTO>((int)ResponseErrors.CitizenDoesNotExist);
