@@ -38,51 +38,51 @@ namespace WASP.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<WASPResponse<CitizenDTO>>> GetCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> GetCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.GetCitizen(citizen_id),
+                async () => await DataService.GetCitizen(citizenId),
                 (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
 
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse>> UpdateCitizen(int citizen_id, IEnumerable<WASPUpdate> updates)
+        public async Task<ActionResult<WASPResponse>> UpdateCitizen(int citizenId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.UpdateCitizen(citizen_id, updates),
+                async () => await DataService.UpdateCitizen(citizenId, updates),
                 (dataResponse) => new WASPResponse());
 
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse>> BlockCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> BlockCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.BlockCitizen(citizen_id),
+                async () => await DataService.BlockCitizen(citizenId),
                 (dataResponse) => new WASPResponse());
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse>> UnblockCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> UnblockCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.UnblockCitizen(citizen_id),
+                async () => await DataService.UnblockCitizen(citizenId),
                 (dataResponse) => new WASPResponse());
         }
 
         [HttpDelete]
-        public async Task<ActionResult<WASPResponse>> DeleteCitizen(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> DeleteCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.DeleteCitizen(citizen_id),
+                async () => await DataService.DeleteCitizen(citizenId),
                 (dataResponse) => new WASPResponse());
         }
         [HttpGet]
-        public async Task<WASPResponse<bool>> IsBlockedCitizen(int citizen_id)
+        public async Task<WASPResponse<bool>> IsBlockedCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.IsBlockedCitizen(citizen_id),
+                async () => await DataService.IsBlockedCitizen(citizenId),
                 (dataResponse) => new WASPResponse<bool>(dataResponse.Result));
         }
 

@@ -9,11 +9,11 @@ namespace WASP.Models
     {
         public CitizenDTO(Citizen citizen)
         {
+            Id = citizen.Id;
             Email = citizen.Email;
             PhoneNo = citizen.PhoneNo;
             Name = citizen.Name;
             IsBlocked = citizen.IsBlocked;
-
         }
 
         public int Id { get; set; }

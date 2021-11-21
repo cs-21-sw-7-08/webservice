@@ -80,7 +80,7 @@ namespace WASP.Test.IntegrationTests
             using (var client = server.CreateClient())
             {
                 // Act
-                var citizen = new CitizenSignUpDTO
+                var citizen = new CitizenSignUpInputDTO
                 {
                     Email = "test@test.com",
                     PhoneNo = null,
@@ -106,7 +106,7 @@ namespace WASP.Test.IntegrationTests
             using (var client = server.CreateClient())
             {
                 // Act
-                var citizen = new CitizenSignUpDTO
+                var citizen = new CitizenSignUpInputDTO
                 {
                     Email = "email@email.dk",
                     PhoneNo = null,
