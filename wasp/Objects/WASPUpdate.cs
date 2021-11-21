@@ -16,5 +16,10 @@ namespace WASP.Objects
                 return false;
             return Name == waspUpdate.Name;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
