@@ -94,6 +94,11 @@ namespace WASP.Utilities
                         sourceValue.ToString(),
                         targetObjPropertyInfo.PropertyType
                     );
+            if (sourceValue is string)
+            {
+                if (targetObjPropertyInfo.PropertyType == typeof(int))
+                    value = int.Parse(sourceValue.ToString());
+            }
             // Set property
             targetObjPropertyInfo.SetValue(targetObj, value);            
         }

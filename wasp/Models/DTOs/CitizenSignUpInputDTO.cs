@@ -15,5 +15,6 @@ namespace WASP.Models.DTOs
         public string Email { get; set; }
         public string PhoneNo { get; set; }
         public string Name { get; set; }
+        public int MunicipalityId { get; set; }
     }
 }

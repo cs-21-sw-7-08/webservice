@@ -33,7 +33,8 @@ namespace WASP.Test.Model
                     Email = "email@email.dk",
                     PhoneNo = null,
                     Name = "Hans",
-                    IsBlocked = false
+                    IsBlocked = false,
+                    MunicipalityId = 1
                 },
                 new Citizen()
                 {
@@ -41,7 +42,8 @@ namespace WASP.Test.Model
                     Email = null,
                     PhoneNo = "12345678",
                     Name = "Birte",
-                    IsBlocked = false
+                    IsBlocked = false,
+                    MunicipalityId = 2
                 },
                 new Citizen()
                 {
@@ -49,7 +51,8 @@ namespace WASP.Test.Model
                     Email = "anders@email.dk",
                     PhoneNo = null,
                     Name = "Anders",
-                    IsBlocked = false
+                    IsBlocked = false,
+                    MunicipalityId = 2
                 },
                 new Citizen()
                 {
@@ -57,7 +60,8 @@ namespace WASP.Test.Model
                     Email = "mikkel@email.dk",
                     PhoneNo = null,
                     Name = "Mikkel",
-                    IsBlocked = false
+                    IsBlocked = false,
+                    MunicipalityId = 1
                 },
                 new Citizen()
                 {
@@ -66,6 +70,7 @@ namespace WASP.Test.Model
                     PhoneNo = null,
                     Name = "Fredinand",
                     IsBlocked = true,
+                    MunicipalityId = 1
                 }
             );
             // Categories

@@ -72,6 +72,7 @@ namespace WASP.DataAccessLayer
                    {
                        citizen = await context.Citizens
                            .AsNoTracking()
+                           .Include(x => x.Municipality)
                            .FirstOrDefaultAsync(x => x.PhoneNo == citizenLogin.PhoneNo);
                    }
                    //case if Email is given
@@ -79,6 +80,7 @@ namespace WASP.DataAccessLayer
                    {
                        citizen = await context.Citizens
                            .AsNoTracking()
+                           .Include(x => x.Municipality)
                            .FirstOrDefaultAsync(x => x.Email.ToLower() == citizenLogin.Email.ToLower());
                    }
                    //if both email and phone number is null or if they are both not null an error is thrown
@@ -100,6 +102,11 @@ namespace WASP.DataAccessLayer
             return await DataServiceUtil.GetResponse(ContextFactory,
                async (context) =>
                {
+                   Municipality municipality = await context.Municipalities.FirstOrDefaultAsync(x => x.Id == citizen.MunicipalityId);
+                   // Check if municipality exist
+                   if (municipality == null)
+                       return new DataResponse<CitizenDTO>((int)ResponseErrors.MunicipalityDoesNotExist);
+
                    //In case of PhoneNo given then check no citizen with the phoneNo already exist
                    if (citizen.Email == null && citizen.PhoneNo != null)
                    {
@@ -147,6 +154,7 @@ namespace WASP.DataAccessLayer
                 {
 					// Query for citizen ID and return with relevant information.
                     var citizen = await context.Citizens
+                    .Include(x => x.Municipality)
                     .Where(x => x.Id == citizenID)
                     .Select(x => new CitizenDTO(x))
                     .FirstOrDefaultAsync();

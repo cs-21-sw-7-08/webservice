@@ -14,6 +14,7 @@ namespace WASP.Models
             PhoneNo = citizen.PhoneNo;
             Name = citizen.Name;
             IsBlocked = citizen.IsBlocked;
+            Municipality = new MunicipalityDTO(citizen.Municipality);
         }
 
         public int Id { get; set; }
@@ -21,5 +22,6 @@ namespace WASP.Models
         public string PhoneNo { get; set; }
         public string Name { get; set; }
         public bool IsBlocked { get; set; }
+        public MunicipalityDTO Municipality { get; set; }
     }
 }

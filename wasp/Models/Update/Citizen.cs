@@ -12,8 +12,7 @@ namespace WASP.Models
             return new List<string>()
             {
                 nameof(Name),
-                nameof(Email),
-                nameof(PhoneNo)
+                nameof(MunicipalityId)
             };
         }
     }

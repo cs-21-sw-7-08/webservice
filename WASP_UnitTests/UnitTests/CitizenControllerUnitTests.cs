@@ -166,7 +166,8 @@ namespace WASP.Test.UnitTests
             CitizenSignUpInputDTO testCitizen = new()
             {
                 Email = "test@test.com",
-                Name = "test"
+                Name = "test",
+                MunicipalityId = 2
             };
             CitizenController controller = new(contextFactory);
 
@@ -191,7 +192,8 @@ namespace WASP.Test.UnitTests
             CitizenSignUpInputDTO testCitizen = new()
             {
                 PhoneNo = "12345679",
-                Name = "test"
+                Name = "test",
+                MunicipalityId = 1
             };
             CitizenController controller = new(contextFactory);
             //Act
@@ -215,7 +217,8 @@ namespace WASP.Test.UnitTests
             CitizenSignUpInputDTO testCitizen = new()
             {
                 PhoneNo = "12345678",
-                Name = "test"
+                Name = "test",
+                MunicipalityId = 1
             };
             CitizenController controller = new(contextFactory);
             int errorNo = (int)ResponseErrors.CitizenSignUpPhoneNoIsAlreadyUsed;
@@ -234,7 +237,8 @@ namespace WASP.Test.UnitTests
             CitizenSignUpInputDTO testCitizen = new()
             {
                 Email = "email@email.dk",
-                Name = "test"
+                Name = "test",
+                MunicipalityId = 1
             };
             CitizenController controller = new(contextFactory);
             int errorNo = (int)ResponseErrors.CitizenSignUpEmailIsAlreadyUsed;
@@ -254,7 +258,8 @@ namespace WASP.Test.UnitTests
             {
                 Email = "email@email.dk",
                 PhoneNo = "12345679",
-                Name = "test"
+                Name = "test",
+                MunicipalityId = 1
             };
             CitizenController controller = new(contextFactory);
             int errorNo = (int)ResponseErrors.CitizenSignUpInvalidParameters;
@@ -272,10 +277,31 @@ namespace WASP.Test.UnitTests
             var contextFactory = new MockHiveContextFactory();
             CitizenSignUpInputDTO testCitizen = new()
             {
-                Name = "test"
+                Name = "test",
+                MunicipalityId = 1
             };
             CitizenController controller = new(contextFactory);
             int errorNo = (int)ResponseErrors.CitizenSignUpInvalidParameters;
+            //Act
+            var result = await controller.SignUpCitizen(testCitizen);
+            //Assert
+            Assert.AreEqual(result.Value.ErrorNo, errorNo);
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.SignUpCitizen))]
+        public async Task CitizenController_CitizenSignUp_MunicipalityNotFound_ErrorNo300()
+        {
+            //Arrange
+            var contextFactory = new MockHiveContextFactory();
+            CitizenSignUpInputDTO testCitizen = new()
+            {
+                PhoneNo = "11111111",
+                Name = "test",
+                MunicipalityId = 50
+            };
+            CitizenController controller = new(contextFactory);
+            int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
             //Act
             var result = await controller.SignUpCitizen(testCitizen);
             //Assert
@@ -350,8 +376,8 @@ namespace WASP.Test.UnitTests
                 },
                 new()
                 {
-                    Name = "Email",
-                    Value = "donaldo21@yahoo.com"
+                    Name = "MunicipalityId",
+                    Value = "1"
                 }
             };
 
@@ -366,7 +392,7 @@ namespace WASP.Test.UnitTests
                 Citizen newCitizen = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
                 // Check if the description has been updated after using UpdateIssue
                 Assert.AreEqual(citizenUpdate.ElementAt(0).Value, newCitizen.Name);
-                Assert.AreEqual(citizenUpdate.ElementAt(1).Value, newCitizen.Email);
+                Assert.AreEqual(int.Parse(citizenUpdate.ElementAt(1).Value.ToString()), newCitizen.MunicipalityId);
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
@@ -390,8 +416,8 @@ namespace WASP.Test.UnitTests
                 },
                 new()
                 {
-                    Name = "Email",
-                    Value = "magiker100@gmail.com"
+                    Name = "MunicipalityId",
+                    Value = "2"
                 }
             };
 
