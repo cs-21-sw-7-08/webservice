@@ -31,9 +31,13 @@ namespace WASP.DataAccessLayer
                        citizen.IsBlocked = true;
                    else
                        return new DataResponse((int)ResponseErrors.CitizenAlreadyBlocked);
-                   // Save the changes
-                   await context.SaveChangesAsync();
-                   // Return success response
+                   
+                   // Save changes to the database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   if (changes != 1)
+                       return new DataResponse<CitizenDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+
                    return new DataResponse();
                }
                );
@@ -53,9 +57,14 @@ namespace WASP.DataAccessLayer
                    if (citizen.IsBlocked == true)
                        citizen.IsBlocked = false;
                    else
-                       //TODO: Add errorcode in ErrorResponse enum
                        return new DataResponse((int)ResponseErrors.CitizenAlreadyUnblocked);
-                   await context.SaveChangesAsync();
+
+                   // Save changes to the database
+                   var changes = await context.SaveChangesAsync();
+                   // Check that the number of changed entities is 1
+                   if (changes != 1)
+                       return new DataResponse<CitizenDTO>((int)ResponseErrors.ChangesCouldNotBeAppliedToTheDatabase);
+
                    return new DataResponse();
                }
                );

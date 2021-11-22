@@ -22,23 +22,23 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.BlockCitizen))]
         public async Task CitizenController_BlockCitizen_Successful()
         {
-            //Arrange
+            // Arrange
             int testId = 3;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
 
-            //Block a user that is not blocked
+            // Block a user that is not blocked
             var result = await controller.BlockCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
                 // Return citizen with given Id
                 var citizen = await context.Citizens.FirstOrDefaultAsync(cit => cit.Id == testId);
 
-                //Assert
+                // Assert
 
-                //Verify that the citizen has become blocked & the result was sucessful
+                // Verify that the citizen has become blocked & the result was sucessful
                 Assert.IsTrue(citizen.IsBlocked);
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
@@ -49,22 +49,22 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.UnblockCitizen))]
         public async Task CitizenController_UnblockCitizen_Successful()
         {
-            //Arrange
+            // Arrange
             int testId = 5;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
 
-            //Unblock a user that has been blocked
+            // Unblock a user that has been blocked
             var result = await controller.UnblockCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
                 var citizen = await context.Citizens.FirstOrDefaultAsync(cit => cit.Id == testId);
 
-                //Assert
+                // Assert
 
-                //Check if the user has been blocked & the result was successful.
+                // Check if the user has been blocked & the result was successful.
                 Assert.IsFalse(citizen.IsBlocked);
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
@@ -74,22 +74,23 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.BlockCitizen))]
         public async Task CitizenController_BlockCitizen_CitizenAlreadyBlocked_ErrorNo203()
         {
-            //Arrange
+            // Arrange
             int testId = 5;
+            int errorNo = (int)ResponseErrors.CitizenAlreadyBlocked;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
 
-            //Attempt to block a user that is already blocked
+            // Attempt to block a user that is already blocked
             var result = await controller.BlockCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
 
-                //Assert
+                // Assert
 
-                //Verify that the function return the relevant error code
-                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyBlocked, (int)result.Value.ErrorNo);
+                // Verify that the function return the relevant error code
+                Assert.AreEqual(errorNo, result.Value.ErrorNo);
             }
         }
 
@@ -97,22 +98,23 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.UnblockCitizen))]
         public async Task CitizenController_UnblockUser_CitizenAlreadyUnblocked_ErrorNo204()
         {
-            //Arrange
+            // Arrange
             int testId = 2;
+            int errorNo = (int)ResponseErrors.CitizenAlreadyUnblocked;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
 
-            //Attempt to unblock a user that is already unblocked
+            // Attempt to unblock a user that is already unblocked
             var result = await controller.UnblockCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
 
-                //Assert
+                // Assert
 
-                //Verify that the function return the relevant error code
-                Assert.AreEqual((int)ResponseErrors.CitizenAlreadyUnblocked, (int)result.Value.ErrorNo);
+                // Verify that the function return the relevant error code
+                Assert.AreEqual(errorNo, result.Value.ErrorNo);
             }
         }
 
@@ -120,19 +122,20 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.BlockCitizen))]
         public async Task CitizenController_BlockUser_CitizenDoesNotExist_ErrorNo200()
         {
-            //Arrange
+            // Arrange
             int testId = 99;
+            int errorNo = (int)ResponseErrors.CitizenDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
             // Attempt block & unblock functions on non-existant Id
             var blockResult = await controller.BlockCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
-                //Verify that the functions return the relevant error codes
-                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)blockResult.Value.ErrorNo);
+                // Assert
+                // Verify that the functions return the relevant error codes
+                Assert.AreEqual(errorNo, blockResult.Value.ErrorNo);
             }
         }
 
@@ -140,20 +143,21 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.UnblockCitizen))]
         public async Task CitizenController_UnblockUser_CitizenDoesNotExist_ErrorNo200()
         {
-            //Arrange
+            // Arrange
             int testId = 99;
+            int errorNo = (int)ResponseErrors.CitizenDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
             // Attempt block & unblock functions on non-existant Id
             var unblockResult = await controller.UnblockCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
 
-                //Assert
-                //Verify that the functions return the relevant error codes
-                Assert.AreEqual((int)ResponseErrors.CitizenDoesNotExist, (int)unblockResult.Value.ErrorNo);
+                // Assert
+                // Verify that the functions return the relevant error codes
+                Assert.AreEqual(errorNo, unblockResult.Value.ErrorNo);
             }
         }
 
@@ -161,7 +165,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUpEmail_InsertCitizen_Successful()
         {
-            //Arrange
+            // Arrange
             var contextFactory = new MockHiveContextFactory();
             CitizenSignUpInputDTO testCitizen = new()
             {
@@ -171,13 +175,13 @@ namespace WASP.Test.UnitTests
             };
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
 
             using (var context = contextFactory.CreateDbContext())
             {
                 var response = context.Citizens.FirstOrDefault(x => x.Id == result.Value.Result.Id);
-                //Assert
+                // Assert
                 Assert.IsInstanceOfType(result.Value.Result, typeof(CitizenDTO));
                 Assert.AreEqual(testCitizen.Name, response.Name);
             }
@@ -187,7 +191,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUpPhoneNo_InsertCitizen_Successful()
         {
-            //Arrange
+            // Arrange
             var contextFactory = new MockHiveContextFactory();
             CitizenSignUpInputDTO testCitizen = new()
             {
@@ -196,13 +200,13 @@ namespace WASP.Test.UnitTests
                 MunicipalityId = 1
             };
             CitizenController controller = new(contextFactory);
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
 
             using (var context = contextFactory.CreateDbContext())
             {
                 var response = context.Citizens.FirstOrDefault(x => x.Id == result.Value.Result.Id);
-                //Assert
+                // Assert
                 Assert.IsInstanceOfType(result.Value.Result, typeof(CitizenDTO));
                 Assert.AreEqual(testCitizen.Name, response.Name);
             }
@@ -212,48 +216,48 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUpPhoneNo_CitizenSignUpPhoneNoIsAlreadyUsed_ErrorNo205()
         {
-            //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            // Arrange
+            int errorNo = (int)ResponseErrors.CitizenSignUpPhoneNoIsAlreadyUsed;
             CitizenSignUpInputDTO testCitizen = new()
             {
                 PhoneNo = "12345678",
                 Name = "test",
                 MunicipalityId = 1
             };
+            var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.CitizenSignUpPhoneNoIsAlreadyUsed;
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
-            //Assert
-            Assert.AreEqual(result.Value.ErrorNo, errorNo);
+            // Assert
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpEmailIsAlreadyUsed_ErrorNo206()
         {
-            //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            // Arrange
+            int errorNo = (int)ResponseErrors.CitizenSignUpEmailIsAlreadyUsed;
             CitizenSignUpInputDTO testCitizen = new()
             {
                 Email = "email@email.dk",
                 Name = "test",
                 MunicipalityId = 1
             };
+            var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.CitizenSignUpEmailIsAlreadyUsed;
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
-            //Assert
-            Assert.AreEqual(result.Value.ErrorNo, errorNo);
+            // Assert
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoFilledOut_ErrorNo207()
         {
-            //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            // Arrange
+            int errorNo = (int)ResponseErrors.CitizenSignUpInvalidParameters;
             CitizenSignUpInputDTO testCitizen = new()
             {
                 Email = "email@email.dk",
@@ -261,73 +265,73 @@ namespace WASP.Test.UnitTests
                 Name = "test",
                 MunicipalityId = 1
             };
+            var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.CitizenSignUpInvalidParameters;
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
-            //Assert
-            Assert.AreEqual(result.Value.ErrorNo, errorNo);
+            // Assert
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUpEmail_CitizenSignUpInvalidParametersEmailAndPhoneNoNull_ErrorNo207()
         {
-            //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            // Arrange
+            int errorNo = (int)ResponseErrors.CitizenSignUpInvalidParameters;
             CitizenSignUpInputDTO testCitizen = new()
             {
                 Name = "test",
                 MunicipalityId = 1
             };
+            var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.CitizenSignUpInvalidParameters;
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
-            //Assert
-            Assert.AreEqual(result.Value.ErrorNo, errorNo);
+            // Assert
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.SignUpCitizen))]
         public async Task CitizenController_CitizenSignUp_MunicipalityNotFound_ErrorNo300()
         {
-            //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            // Arrange
+            int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
             CitizenSignUpInputDTO testCitizen = new()
             {
                 PhoneNo = "11111111",
                 Name = "test",
                 MunicipalityId = 50
             };
+            var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
-            //Act
+            // Act
             var result = await controller.SignUpCitizen(testCitizen);
-            //Assert
-            Assert.AreEqual(result.Value.ErrorNo, errorNo);
+            // Assert
+            Assert.AreEqual(errorNo, result.Value.ErrorNo);
         }
 
         [TestMethod]
         [TestCategory(nameof(CitizenController.GetCitizen))]
         public async Task CitizenController_GetCitizen_Succesful()
         {
-            //Arrange
+            // Arrange
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
             int citizenId = 3;
             
-            //Act 
-            // Attempt to update an issue property with a new one
+            // Act 
+            // Attempt to retrieve a citizen using Get Citizen
             var result = await controller.GetCitizen(citizenId);
 
-            // Obtain the issue after it's property is updated.
+            
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
                 Citizen contextCit = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
-                // Check if the description has been updated after using UpdateIssue
+                // Check if the citizen from the context and the controller share properties
                 Assert.AreEqual(contextCit.Name, result.Value.Result.Name);
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
@@ -337,22 +341,21 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.GetCitizen))]
         public async Task CitizenController_GetCitizen_ErrorCitizenNotFound_Error200()
         {
-            //Arrange
+            // Arrange
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
             int ErrorNum = (int)ResponseErrors.CitizenDoesNotExist;
             int citizenId = -9;
 
-            //Act 
-            // Attempt to update an issue property with a new one
+            // Act 
+            // Attempt to retrieve a citizen using an invalid Id.
             var result = await controller.GetCitizen(citizenId);
 
-            // Obtain the issue after it's property is updated.
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
-                Citizen contextCit = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
-                // Check if the description has been updated after using UpdateIssue
+
+                // Assert that the result contains the relevant error code
                 Assert.AreEqual(ErrorNum, result.Value.ErrorNo);
                 Assert.IsFalse(result.Value.IsSuccessful);
             }
@@ -362,7 +365,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.UpdateCitizen))]
         public async Task CitizenController_UpdateCitizen_Succesful()
         {
-            //Arrange
+            // Arrange
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
@@ -381,16 +384,16 @@ namespace WASP.Test.UnitTests
                 }
             };
 
-            //Act 
-            // Attempt to update an issue property with a new one
+            // Act 
+            // Attempt to update a citizen with a list of updates
             var result = await controller.UpdateCitizen(citizenId, citizenUpdate);
 
-            // Obtain the issue after it's property is updated.
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
                 Citizen newCitizen = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
-                // Check if the description has been updated after using UpdateIssue
+                
+                // Assert that the citizen properties match the ones in the update
                 Assert.AreEqual(citizenUpdate.ElementAt(0).Value, newCitizen.Name);
                 Assert.AreEqual(int.Parse(citizenUpdate.ElementAt(1).Value.ToString()), newCitizen.MunicipalityId);
                 Assert.IsTrue(result.Value.IsSuccessful);
@@ -401,7 +404,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.UpdateCitizen))]
         public async Task CitizenController_UpdateCitizen_CitizenDoesNotExist()
         {
-            //Arrange
+            // Arrange
             int errorNum = (int)ResponseErrors.CitizenDoesNotExist;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
@@ -421,14 +424,15 @@ namespace WASP.Test.UnitTests
                 }
             };
 
-            //Act 
-            // Attempt to update an issue property with a new one
+            // Act 
+            // Attempt to update an a citizen using an invalid Id
             var result = await controller.UpdateCitizen(citizenId, citizenUpdate);
 
-            // Obtain the issue after it's property is updated.
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
+
+                // Assert that the result contains the relevant error code
                 Assert.AreEqual(result.Value.ErrorNo, errorNum);
             }
         }
@@ -437,7 +441,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.UpdateCitizen))]
         public async Task CitizenController_UpdateCitizen_ErrorWASPUpdateListBadFormat()
         {
-            //Arrange
+            // Arrange
             int errorNum = (int)ResponseErrors.WASPUpdateListBadFormat;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
@@ -452,16 +456,15 @@ namespace WASP.Test.UnitTests
                 },
             };
 
-            //Act 
-            // Attempt to update an issue property with a new one
+            // Act 
+            // Attempt to update an a citizen with an invalid property
             var result = await controller.UpdateCitizen(citizenId, citizenUpdate);
 
-            // Obtain the issue after it's property is updated.
             using (var context = contextFactory.CreateDbContext())
             {
                 // Assert
-                Citizen newCitizen = await context.Citizens.FirstOrDefaultAsync(ncit => ncit.Id == citizenId);
-                // Check if the description has been updated after using UpdateIssue
+
+                // Assert that the result contains the relevant error code
                 Assert.AreEqual(result.Value.ErrorNo, errorNum);
             }
         }
@@ -470,18 +473,18 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.LogInCitizen))]
         public async Task CitizenController_LogIn_LogInWithEmail_Successful()
         {
-            //Arrange
+            // Arrange
             CitizenLoginDTO testId = new CitizenLoginDTO();
             testId.Email = "email@email.dk";
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
             var result = await controller.LogInCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
@@ -490,18 +493,18 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.LogInCitizen))]
         public async Task CitizenController_LogIn_LogInWithEmail_ErrorNo202()
         {
-            //Arrange
+            // Arrange
             CitizenLoginDTO testId = new CitizenLoginDTO();
             testId.Email = "email@emailyolo.dk";
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
-            //Act
+            // Act
             var result = await controller.LogInCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
             }
         }
@@ -510,7 +513,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.LogInCitizen))]
         public async Task CitizenController_LogIn_LogInWithPhoneNo_Successful()
         {
-            //Arrange
+            // Arrange
             CitizenLoginDTO testId = new CitizenLoginDTO();
             testId.PhoneNo = "12345678";
 
@@ -518,11 +521,11 @@ namespace WASP.Test.UnitTests
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var result = await controller.LogInCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
 
@@ -532,7 +535,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.LogInCitizen))]
         public async Task CitizenController_LogIn_LogInWithPhoneNo_ErrorNo202()
         {
-            //Arrange
+            // Arrange
             CitizenLoginDTO testId = new CitizenLoginDTO();
             testId.PhoneNo = "12345679";
 
@@ -540,11 +543,11 @@ namespace WASP.Test.UnitTests
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var result = await controller.LogInCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenWithTheseCredentialsHasNotBeenSignedUp);
             }
 
@@ -554,7 +557,8 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.LogInCitizen))]
         public async Task CitizenController_LogIn_LogInWithBothFilled_ErrorNo201()
         {
-            //Arrange
+            // Arrange
+            int errorNo = (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled;
             CitizenLoginDTO testId = new CitizenLoginDTO();
             testId.PhoneNo = "12345678";
             testId.Email = "email@email.dk";
@@ -563,12 +567,12 @@ namespace WASP.Test.UnitTests
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var result = await controller.LogInCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
-                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+                // Assert
+                Assert.AreEqual(result.Value.ErrorNo, errorNo);
             }
 
         }
@@ -577,19 +581,19 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.LogInCitizen))]
         public async Task CitizenController_LogIn_LogInWithNullValues_ErrorNo201()
         {
-            //Arrange
+            // Arrange
             CitizenLoginDTO testId = new CitizenLoginDTO();
-
+            int ErrorNo = (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled;
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var result = await controller.LogInCitizen(testId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
-                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.CitizenLoginBothEmailAndPhoneNumberCannotBeFilled);
+                // Assert
+                Assert.AreEqual(result.Value.ErrorNo, ErrorNo);
             }
 
         }
@@ -597,18 +601,18 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.IsBlockedCitizen))]
         public async Task CitizenController_IsBlockedCitizen_true()
         {
-            //Arrange
+            // Arrange
             int citizenId = 5;
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var response = await controller.IsBlockedCitizen(citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.AreEqual((await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId)).IsBlocked, response.Result);
                 Assert.IsTrue(response.IsSuccessful);
                 Assert.AreEqual(response.Result, true);
@@ -619,18 +623,18 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.IsBlockedCitizen))]
         public async Task CitizenController_IsBlockedCitizen_false()
         {
-            //Arrange
+            // Arrange
             int citizenId = 3;
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var response = await controller.IsBlockedCitizen(citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.AreEqual((await context.Citizens.FirstOrDefaultAsync(x => x.Id == citizenId)).IsBlocked, response.Result);
                 Assert.IsTrue(response.IsSuccessful);
                 Assert.AreEqual(response.Result, false);
@@ -641,19 +645,19 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.IsBlockedCitizen))]
         public async Task CitizenController_IsBlockedCitizen_CitizenDoesNotExist_ErrorNo200()
         {
-            //Arrange
-            //This Id should not exist
+            // Arrange
+            // This Id should not exist
             int citizenId = 999999;
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
             int ErrorNo = (int)ResponseErrors.CitizenDoesNotExist;
 
-            //Act
+            // Act
             var response = await controller.IsBlockedCitizen(citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.AreEqual(ErrorNo, response.ErrorNo);
             }
 
@@ -663,18 +667,18 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.DeleteCitizen))]
         public async Task CitizenController_DeleteCitizen_Successful()
         {
-            //Arrange
+            // Arrange
             int citizenId = 4;
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
 
 
-            //Act
+            // Act
             var result = await controller.DeleteCitizen(citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
 
@@ -684,7 +688,7 @@ namespace WASP.Test.UnitTests
         [TestCategory(nameof(CitizenController.DeleteCitizen))]
         public async Task CitizenController_DeleteCitizen_citizenIdInvalid_ErrorNo200()
         {
-            //Arrange
+            // Arrange
             int citizenId = 99998;
 
             var contextFactory = new MockHiveContextFactory();
@@ -692,11 +696,11 @@ namespace WASP.Test.UnitTests
             var ErrorNo = (int)ResponseErrors.CitizenDoesNotExist;
 
 
-            //Act
+            // Act
             var result = await controller.DeleteCitizen(citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                //Assert
+                // Assert
                 Assert.AreEqual(result.Value.ErrorNo, ErrorNo);
             }
 

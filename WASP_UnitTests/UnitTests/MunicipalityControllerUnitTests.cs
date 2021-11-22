@@ -23,13 +23,13 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_CreateResponse_InsertResponse_Successful()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
             MunicipalityResponseInputDTO testResponse = new()
             {
                 IssueId = 1,
                 MunicipalityUserId = 1,
                 Response = "test response"
             };
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
 
             //Act
@@ -50,15 +50,15 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_CreateResponse_IssuesDoesNotExist_ErrorNo104()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            int errorNo = (int)ResponseErrors.IssueDoesNotExist;
             MunicipalityResponseInputDTO testResponse = new()
             {
                 IssueId = 50,
                 MunicipalityUserId = 1,
                 Response = "test response"
             };
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.IssueDoesNotExist;
 
             //Act
             var result = await controller.CreateMunicipalityResponse(testResponse);
@@ -72,15 +72,15 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_CreateResponse_MunicipalityUserMunicipalityIdDoesNotMatchIssueId_ErrorNo303()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            int errorNo = (int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId;
             MunicipalityResponseInputDTO testResponse = new()
             {
                 IssueId = 2,
                 MunicipalityUserId = 1,
                 Response = "test response"
             };
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.MunicipalityUserMunicipalityIdDoesNotMatchIssueMunicipalityId;
 
             //Act
             var result = await controller.CreateMunicipalityResponse(testResponse);
@@ -94,9 +94,9 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_DeleteResponse_Successful()
         {
             //Arrange
+            int responseId = 1;
             var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
-            int responseId = 1;
 
             //Act
             var result = await controller.DeleteMunicipalityResponse(responseId);
@@ -114,10 +114,10 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_DeleteResponse_ResponseDoesNotExist_ErrorNo304()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
-            MunicipalityController controller = new(contextFactory);
             int responseId = 50;
             int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
 
             //Act
             var result = await controller.DeleteMunicipalityResponse(responseId);
@@ -131,8 +131,6 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_UpdateResponse_UpdateResponseString_Successful()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
-            MunicipalityController controller = new(contextFactory);
             int responseId = 1;
             List<WASPUpdate> updates = new List<WASPUpdate>()
             {
@@ -142,6 +140,8 @@ namespace WASP.Test.UnitTests
                     Value = "This is a test"
                 }
             };
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
 
             //Act
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
@@ -159,9 +159,8 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_UpdateResponse_WASPUpdateListBadFormat_ErrorNo50()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
-            MunicipalityController controller = new(contextFactory);
             int responseId = 1;
+            int errorNo = (int)ResponseErrors.WASPUpdateListBadFormat;
             List<WASPUpdate> updates = new List<WASPUpdate>()
             {
                 new()
@@ -169,7 +168,8 @@ namespace WASP.Test.UnitTests
 
                 }
             };
-            int errorNo = (int)ResponseErrors.WASPUpdateListBadFormat;
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
 
             //Act
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
@@ -183,9 +183,8 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_UpdateResponse_ResponseDoesNotExist_ErrorNo304()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
-            MunicipalityController controller = new(contextFactory);
             int responseId = 50;
+            int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
             List<WASPUpdate> updates = new List<WASPUpdate>()
             {
                 new()
@@ -194,7 +193,8 @@ namespace WASP.Test.UnitTests
                     Value = "This is a test"
                 }
             };
-            int errorNo = (int)ResponseErrors.ResponseDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
 
             //Act
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
@@ -208,9 +208,8 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_UpdateResponse_ExceptionHandlingInGetResponse_ErrorNo2()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
-            MunicipalityController controller = new(contextFactory);
             int responseId = 1;
+            int errorNo = (int)ResponseErrors.AnExceptionOccurredInTheDAL;
             List<WASPUpdate> updates = new List<WASPUpdate>()
             {
                 new()
@@ -219,7 +218,8 @@ namespace WASP.Test.UnitTests
                     Value = JsonSerializer.Deserialize("{\"test\":\"This is a test\"}", typeof(JsonElement))
                 }
             };
-            int errorNo = (int)ResponseErrors.AnExceptionOccurredInTheDAL;
+            var contextFactory = new MockHiveContextFactory();
+            MunicipalityController controller = new(contextFactory);
 
             //Act
             var result = await controller.UpdateMunicipalityResponse(responseId, updates);
@@ -232,7 +232,6 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_SignUpMunicipality_InsertUser_Successful()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
             MunicipalityUserSignUpInputDTO testUser = new()
             {
                 Email = "test@test.com",
@@ -240,6 +239,7 @@ namespace WASP.Test.UnitTests
                 Password = "12345678",
                 MunicipalityId = 1
             };
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
 
             //Act
@@ -258,7 +258,7 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_SignUpMunicipality_MunicipalityUserSignUpEmailIsAlreadyUsed_ErrorNo305()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            int errorNo = (int)ResponseErrors.MunicipalityUserSignUpEmailIsAlreadyUsed;
             MunicipalityUserSignUpInputDTO testUser = new()
             {
                 Email = "grete@aalborg.dk",
@@ -266,8 +266,8 @@ namespace WASP.Test.UnitTests
                 Password = "12345678",
                 MunicipalityId = 1
             };
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.MunicipalityUserSignUpEmailIsAlreadyUsed;
 
             //Act
             var result = await controller.SignUpMunicipality(testUser);
@@ -282,7 +282,7 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_SignUpMunicipality_MunicipalityDoesNotExist_ErrorNo300()
         {
             //Arrange
-            var contextFactory = new MockHiveContextFactory();
+            int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
             MunicipalityUserSignUpInputDTO testUser = new()
             {
                 Email = "test@test.com",
@@ -290,8 +290,8 @@ namespace WASP.Test.UnitTests
                 Password = "12345678",
                 MunicipalityId = 50
             };
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
-            int errorNo = (int)ResponseErrors.MunicipalityDoesNotExist;
 
             //Act
             var result = await controller.SignUpMunicipality(testUser);
@@ -306,6 +306,7 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_LogInMunicipality_MunicipalityUserEmailAndOrPasswordNotMatched_Error302()
         {
             //Arrange
+            int errorNo = (int)ResponseErrors.MunicipalityUserEmailAndOrPasswordNotMatched;
             MunicipalityUserLoginDTO testMuni = new MunicipalityUserLoginDTO();
             testMuni.Email = "gretethebadass@aalborg.dk";
             testMuni.Password = "12345678";
@@ -317,7 +318,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
                 //Assert
-                Assert.AreEqual(result.Value.ErrorNo, (int)ResponseErrors.MunicipalityUserEmailAndOrPasswordNotMatched);
+                Assert.AreEqual(errorNo, result.Value.ErrorNo);
             }
 
         }
@@ -332,7 +333,6 @@ namespace WASP.Test.UnitTests
             testMuni.Password = "12345678";
             var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
-
 
             //Act
             var result = await controller.LogInMunicipality(testMuni);
@@ -375,7 +375,7 @@ namespace WASP.Test.UnitTests
         public async Task MunicipalityController_GetListOfMunicipalities_Successful()
         {
             // Arrange
-            MockHiveContextFactory contextFactory = new();
+            var contextFactory = new MockHiveContextFactory();
             MunicipalityController controller = new(contextFactory);
 
             // Act

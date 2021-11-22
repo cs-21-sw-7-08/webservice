@@ -58,6 +58,8 @@ namespace WASP.Test.UnitTests
             IssueController controller = new(contextFactory);
 
             // Act
+
+            // Retrieve a list of issues using the controller
             var result = await controller.GetListOfIssues(new IssuesOverviewFilter());
             using (var context = contextFactory.CreateDbContext())
             {
@@ -232,6 +234,8 @@ namespace WASP.Test.UnitTests
             IssueController controller = new(contextFactory);
 
             // Act
+
+            // Retrieve a list of issues using a date filter
             var result = await controller.GetListOfIssues(
                 new IssuesOverviewFilter()
                 {
@@ -240,7 +244,7 @@ namespace WASP.Test.UnitTests
             using (var context = contextFactory.CreateDbContext())
             {
 
-                // Return the length of the issue-list in the context
+                // Return the length of the issue-list in the context, using a date filter
                 var expectedList = context.Issues
                     .Where(Issue => DateTime.Compare(DateTime.Parse("2021-9-21 13:44:15"), Issue.DateCreated) <= 0)
                     .Count();
