@@ -506,7 +506,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.DeleteIssue(issueId);
             using (var context = contextFactory.CreateDbContext())
             {
-                var delVerif = context.IssueVerifications.FirstOrDefault(verif => verif.IssueId == issueId);
+                var delVerif = context.Verifications.FirstOrDefault(verif => verif.IssueId == issueId);
                 var delReport = context.Reports.FirstOrDefault(report => report.IssueId == issueId);
 
                 // Assert
@@ -538,7 +538,7 @@ namespace WASP.Test.UnitTests
             var result = await controller.VerifyIssue(issueId, citizenId);
             using (var context = contextFactory.CreateDbContext())
             {
-                IssueVerification verif = context.IssueVerifications.FirstOrDefault(cit => cit.CitizenId == citizenId);
+                Verification verif = context.Verifications.FirstOrDefault(cit => cit.CitizenId == citizenId);
 
                 // Assert
 

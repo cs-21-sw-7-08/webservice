@@ -72,12 +72,12 @@ namespace WASP.DataAccessLayer
                     if (issue == null)
                         return new DataResponse((int)ResponseErrors.IssueDoesNotExist);
                     // Get verifications
-                    var verifications = await context.IssueVerifications
+                    var verifications = await context.Verifications
                                              .Where(x => x.IssueId == issueId)
                                              .ToListAsync();
                     // Remove any verifications
                     if (verifications.Count > 0)
-                        context.IssueVerifications.RemoveRange(verifications);
+                        context.Verifications.RemoveRange(verifications);
                     // Get reports
                     var reports = await context.Reports
                                         .Where(x => x.IssueId == issueId)
@@ -132,7 +132,7 @@ namespace WASP.DataAccessLayer
                     .Include(issue => issue.Category)
                     .Include(issue => issue.SubCategory)
                     .Include(issue => issue.Municipality)
-                    .Include(issue => issue.IssueVerifications)
+                    .Include(issue => issue.Verifications)
                     .Where(issue => issue.Id == issueId)
                     .Select(issue => new IssueDetailsDTO(issue))
                     .FirstOrDefaultAsync();
@@ -376,7 +376,7 @@ namespace WASP.DataAccessLayer
                     // Check if citizen exist
                     if (citizen == null)
                         return new DataResponse((int)ResponseErrors.CitizenDoesNotExist);
-                    var issueVerification = await context.IssueVerifications
+                    var issueVerification = await context.Verifications
                                                   .FirstOrDefaultAsync(x => x.IssueId == issueId && x.CitizenId == citizenId);                   
                     // Check if issue verification exist
                     if (issueVerification != null)
@@ -385,7 +385,7 @@ namespace WASP.DataAccessLayer
                     if (citizen.IsBlocked)
                         return new DataResponse((int)ResponseErrors.CitizenIsBlocked);
                     // Add issue verification
-                    await context.IssueVerifications.AddAsync(new IssueVerification()
+                    await context.Verifications.AddAsync(new Verification()
                     {
                         CitizenId = citizenId,
                         IssueId = issueId

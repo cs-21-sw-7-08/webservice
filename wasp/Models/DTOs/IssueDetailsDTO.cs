@@ -26,7 +26,7 @@ namespace WASP.Models
             Category = new CategoryDTO(issue.Category);                        
             IssueState = new IssueStateDTO(issue.IssueState);
             MunicipalityResponses = issue.MunicipalityResponses.Select(x => new MunicipalityResponseOutputDTO(x)).ToList();
-            IssueVerificationCitizenIds = issue.IssueVerifications.Select(x => x.CitizenId).ToList();
+            IssueVerificationCitizenIds = issue.Verifications.Select(x => x.CitizenId).ToList();
         }
 
         public int Id { get; set; }

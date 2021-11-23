@@ -213,12 +213,12 @@ namespace WASP.DataAccessLayer
                                        .ToListAsync();
                    var issueIds = issues.Select(x => x.Id);
                    // Get verifications
-                   var verifications = await context.IssueVerifications
+                   var verifications = await context.Verifications
                                             .Where(x => x.CitizenId == citizenId || issueIds.Any(id => id == x.IssueId))
                                             .ToListAsync();
                    // Remove any verifications
                    if (verifications.Count > 0)
-                       context.IssueVerifications.RemoveRange(verifications);
+                       context.Verifications.RemoveRange(verifications);
                    // Get municipality responses
                    var responses = await context.MunicipalityResponses
                                        .Where(x => issueIds.Any(id => id == x.IssueId))

@@ -10,9 +10,9 @@ namespace WASP.Models
     {
         public Issue()
         {
-            IssueVerifications = new HashSet<IssueVerification>();
             MunicipalityResponses = new HashSet<MunicipalityResponse>();
-            Reports = new HashSet<Report>();            
+            Reports = new HashSet<Report>();
+            Verifications = new HashSet<Verification>();
         }
 
         public int Id { get; set; }
@@ -35,8 +35,8 @@ namespace WASP.Models
         public virtual Municipality Municipality { get; set; }
         public virtual SubCategory SubCategory { get; set; }
         public virtual Category Category { get; set; }
-        public virtual ICollection<IssueVerification> IssueVerifications { get; set; }
         public virtual ICollection<MunicipalityResponse> MunicipalityResponses { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<Verification> Verifications { get; set; }
     }
 }

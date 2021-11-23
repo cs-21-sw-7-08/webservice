@@ -274,14 +274,14 @@ namespace WASP.Test.Model
                 }
             );
             // IssueVerifications
-            IssueVerifications.AddRange(
-                new IssueVerification()
+            Verifications.AddRange(
+                new Verification()
                 {
                     Id = 1,
                     IssueId = 1,
                     CitizenId = 2
                 },
-                new IssueVerification()
+                new Verification()
                 {
                     Id = 2,
                     IssueId = 2,

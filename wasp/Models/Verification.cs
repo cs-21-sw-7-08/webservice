@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WASP.Models
 {
-    public partial class IssueVerification
+    public partial class Verification
     {
         public int Id { get; set; }
         public int IssueId { get; set; }
