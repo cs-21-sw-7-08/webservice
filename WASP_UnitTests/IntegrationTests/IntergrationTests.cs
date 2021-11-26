@@ -22,7 +22,7 @@ namespace WASP.Test.IntegrationTests
         /// Sets up a local test server where the configuration is giving through the appsettings file.
         /// </summary>
         /// <returns>a test server</returns>
-        private TestServer getTestServer()
+        private TestServer GetTestServer()
         {
             var configurationBuilder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -41,7 +41,7 @@ namespace WASP.Test.IntegrationTests
         public async Task IssueController_GetIssueDetails_CorrectJSONResponse()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {   
                 // Act
@@ -59,7 +59,7 @@ namespace WASP.Test.IntegrationTests
         public async Task IssueController_GetIssueDetails_IssueDoesNotExist_ErrorNo104()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
@@ -76,7 +76,7 @@ namespace WASP.Test.IntegrationTests
         public async Task CitizenController_SignUpCitizen_CorrectJSONResponse()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
@@ -103,7 +103,7 @@ namespace WASP.Test.IntegrationTests
         public async Task CitizenController_SignUpCitizen_EmailIsAlreadyUsed_ErrorNo206()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
@@ -129,7 +129,7 @@ namespace WASP.Test.IntegrationTests
         public async Task MunicipalityController_DeleteMunicipalityResponse_CorrectJSONResponse()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
@@ -146,7 +146,7 @@ namespace WASP.Test.IntegrationTests
         public async Task MunicipalityController_DeleteMunicipalityResponse_ResponseDoesNotExist_ErrorNo304()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
@@ -163,7 +163,7 @@ namespace WASP.Test.IntegrationTests
         public async Task WrongEndpoint_WrongControllerName_NotFound404()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
@@ -179,7 +179,7 @@ namespace WASP.Test.IntegrationTests
         public async Task WrongEndpoint_WrongActionName_NotFound404()
         {
             // Arrange
-            using (var server = getTestServer())
+            using (var server = GetTestServer())
             using (var client = server.CreateClient())
             {
                 // Act
