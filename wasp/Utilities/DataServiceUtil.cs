@@ -90,7 +90,7 @@ namespace WASP.Utilities
             // the property type defined in the PropertyInfo
             if (sourceValue is JsonElement)
             {                
-                if (((JsonElement)sourceValue).ValueKind == JsonValueKind.String)
+                if (((JsonElement)sourceValue).ValueKind == JsonValueKind.String && targetObjPropertyInfo.PropertyType == typeof(string))
                 {
                     value = sourceValue.ToString();
                 }
@@ -103,7 +103,7 @@ namespace WASP.Utilities
                         );
                 }
             }
-            if (sourceValue is string)
+            if (value is string)
             {
                 if (targetObjPropertyInfo.PropertyType == typeof(int))
                     value = int.Parse(sourceValue.ToString());
