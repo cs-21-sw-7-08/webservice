@@ -89,11 +89,20 @@ namespace WASP.Utilities
             // If source value is a JSON element, convert it to
             // the property type defined in the PropertyInfo
             if (sourceValue is JsonElement)
-                value = JsonSerializer.Deserialize
-                    (
-                        sourceValue.ToString(),
-                        targetObjPropertyInfo.PropertyType
-                    );
+            {                
+                if (((JsonElement)sourceValue).ValueKind == JsonValueKind.String)
+                {
+                    value = sourceValue.ToString();
+                }
+                else
+                {
+                    value = JsonSerializer.Deserialize
+                        (
+                            sourceValue.ToString(),
+                            targetObjPropertyInfo.PropertyType
+                        );
+                }
+            }
             if (sourceValue is string)
             {
                 if (targetObjPropertyInfo.PropertyType == typeof(int))
