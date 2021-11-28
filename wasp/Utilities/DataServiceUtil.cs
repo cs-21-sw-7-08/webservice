@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -103,10 +104,10 @@ namespace WASP.Utilities
                         );
                 }
             }
-            if (value is string)
+            else if (value is string)
             {
-                if (targetObjPropertyInfo.PropertyType == typeof(int))
-                    value = int.Parse(sourceValue.ToString());
+                TypeConverter typeConverter = TypeDescriptor.GetConverter(targetObjPropertyInfo.PropertyType);
+                value = typeConverter.ConvertFromString(value.ToString());                
             }
             // Set property
             targetObjPropertyInfo.SetValue(targetObj, value);            
