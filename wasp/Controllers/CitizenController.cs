@@ -43,7 +43,6 @@ namespace WASP.Controllers
             return await ControllerUtil.GetResponse(
                 async () => await DataService.GetCitizen(citizenId),
                 (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
-
         }
 
         [HttpPut]

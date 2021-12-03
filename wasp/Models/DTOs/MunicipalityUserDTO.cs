@@ -16,10 +16,12 @@ namespace WASP.Models
         {
             Id = municipalityUser.Id;
             Name = municipalityUser.Name;
+            MunicipalityId = municipalityUser.MunicipalityId;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public int MunicipalityId { get; set; }
     }
 
 }

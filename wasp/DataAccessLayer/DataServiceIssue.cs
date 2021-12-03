@@ -125,7 +125,7 @@ namespace WASP.DataAccessLayer
                 async (context) =>
                 {
                     // Get issue
-                    var issue = await context.Issues
+                    IssueDetailsDTO issue = await context.Issues
                     .AsNoTracking()                    
                     .Include(issue => issue.MunicipalityResponses)
                     .Include(issue => issue.IssueState)
