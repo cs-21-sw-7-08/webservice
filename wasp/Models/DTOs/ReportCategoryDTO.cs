@@ -7,10 +7,6 @@ namespace WASP.Models
 {
     public class ReportCategoryDTO
     {
-        public ReportCategoryDTO()
-        {
-
-        }
         public ReportCategoryDTO(ReportCategory reportCategory)
         {
             Id = reportCategory.Id;

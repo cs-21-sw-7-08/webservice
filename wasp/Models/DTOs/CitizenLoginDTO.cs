@@ -11,12 +11,8 @@ namespace WASP.Models
         {
 
         }
-        public CitizenLoginDTO(Citizen citizen)
-        {
-            Email = citizen.Email;
-            PhoneNo = citizen.PhoneNo;
-        }
-            public string Email { get; set; }
-            public string PhoneNo { get; set; }
+
+        public string Email { get; set; }
+        public string PhoneNo { get; set; }
     }
 }

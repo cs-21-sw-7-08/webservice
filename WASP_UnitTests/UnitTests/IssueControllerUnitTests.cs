@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using WASP.Enums;
 using System;
+using System.Text.Json;
 
 namespace WASP.Test.UnitTests
 {
@@ -146,7 +147,8 @@ namespace WASP.Test.UnitTests
             var result = await controller.GetListOfIssues(
                 new IssuesOverviewFilter()
                 {
-                    IssueStateIds = new List<int>() { 2 }
+                    IssueStateIds = new List<int>() { 2 },
+                    CitizenIds = null
                 });
             using (var context = contextFactory.CreateDbContext())
             {
@@ -346,12 +348,20 @@ namespace WASP.Test.UnitTests
             MockHiveContextFactory contextFactory = new();
             IssueController controller = new(contextFactory);
             int issueId = 1;
+
+            var jsonInput = @"{
+                                ""Value"": ""Der er lort på fortorvet""
+                            }";
+            var parsed = JsonDocument.Parse(jsonInput);
+            var element = parsed.RootElement;
+            var value = element.GetProperty("Value");
+            
             IEnumerable<WASPUpdate> update = new List<WASPUpdate>()
                 {
                     new()
                     {
                         Name = "Description",
-                        Value = "Vejen er blevet beskidt",
+                        Value = value,
                     },
                     new ()
                     {
@@ -372,7 +382,7 @@ namespace WASP.Test.UnitTests
                 // Assert
 
                 // Check if the description has been updated after using UpdateIssue
-                Assert.AreEqual(update.First().Value, newIssue.Value.Result.Description);
+                Assert.AreEqual("Der er lort på fortorvet", newIssue.Value.Result.Description);
                 Assert.IsTrue(result.Value.IsSuccessful);
             }
         }
@@ -462,7 +472,7 @@ namespace WASP.Test.UnitTests
         public async Task IssueController_DeleteIssue_Successful()
         {
             // Arrange
-            int issueId = 3;
+            int issueId = 1;
             var contextFactory = new MockHiveContextFactory();
             IssueController controller = new(contextFactory);
 
@@ -674,7 +684,7 @@ namespace WASP.Test.UnitTests
                     new()
                     {
                         Name = "Description",
-                        Value = "Der er lort på fortorvet" // ;)
+                        Value = "Der er lort på fortorvet"
                     }
                 };
 
@@ -1087,6 +1097,162 @@ namespace WASP.Test.UnitTests
                 // Verify that the length of the list is equal to the context issue-list length
                 Assert.AreEqual(expectedList, result.Value.Result.Count());
                 Assert.IsTrue(result.Value.IsSuccessful);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfReports))]
+        public async Task IssueController_GetListOfReports_MunicipalityDoesNotExist()
+        {
+            // Arrange
+            int municipalityId = 10;            
+            int errorCode = (int)ResponseErrors.MunicipalityDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act            
+            var result = await controller.GetListOfReports(municipalityId);
+
+            // Assert                
+            using (var context = contextFactory.CreateDbContext())
+            {
+                Assert.AreEqual(errorCode, result.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueController.GetListOfReports))]
+        public async Task IssueController_GetListOfReports_Success()
+        {
+            // Arrange
+            int municipalityId = 1;            
+            var contextFactory = new MockHiveContextFactory();
+            IssueController controller = new(contextFactory);
+
+            // Act            
+            var result = await controller.GetListOfReports(municipalityId);
+
+            // Assert                
+            using (var context = contextFactory.CreateDbContext())
+            {
+                Assert.IsTrue(result.Value.IsSuccessful);
+                Assert.IsInstanceOfType(result.Value.Result, typeof(IEnumerable<IssueReportDTO>));
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueDetailsDTO))]
+        public void IssueController_IssueDetailsDTO_LocationPlaceHolder_CorrectValues()
+        {
+            // Arrange
+            var contextFactory = new MockHiveContextFactory();
+            var location = new Location()
+            {
+                Latitude = 1,
+                Longitude = 1
+            };
+
+            // Act 
+            // Assert
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var dto = new IssueDetailsDTO(context.Issues.FirstOrDefault());
+                dto.LocationPlaceHolder = location;
+
+                Assert.AreEqual(location.Latitude, dto.LocationPlaceHolder.Latitude);
+                Assert.AreEqual(location.Longitude, dto.LocationPlaceHolder.Longitude);                
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssuesOverviewDTO))]
+        public void IssueController_IssueOverviewDTO_LocationPlaceHolder_CorrectValues()
+        {
+            // Arrange
+            var contextFactory = new MockHiveContextFactory();
+            var location = new Location(1, 1);
+
+            // Act 
+            // Assert
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var dto = new IssuesOverviewDTO(context.Issues.FirstOrDefault());
+                dto.LocationPlaceHolder = location;
+
+                Assert.AreEqual(location.Latitude, dto.LocationPlaceHolder.Latitude);
+                Assert.AreEqual(location.Longitude, dto.LocationPlaceHolder.Longitude);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CategoryListDTO))]
+        public void IssueController_CategoryListDTO_CorrectValues()
+        {
+            // Arrange
+            var contextFactory = new MockHiveContextFactory();            
+
+            // Act 
+            // Assert
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var category = context.Categories.FirstOrDefault();
+                var dto = new CategoryListDTO(category);                
+
+                Assert.AreEqual(category.Id, dto.Id);
+                Assert.AreEqual(category.Name, dto.Name);
+                Assert.AreEqual(category.SubCategories.Count, dto.SubCategories.Count);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueDetailsDTO))]
+        public void IssueController_IssueDetailsDTO_CorrectValues()
+        {
+            // Arrange
+            var contextFactory = new MockHiveContextFactory();
+
+            // Act 
+            // Assert
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var issue = context.Issues.FirstOrDefault();
+                var dto = new IssueDetailsDTO(issue);                
+
+                Assert.AreEqual(issue.CitizenId, dto.CitizenId);
+                Assert.AreEqual(issue.DateCreated, dto.DateCreated);
+                Assert.AreEqual(issue.DateEdited, dto.DateEdited);
+                Assert.AreEqual(issue.Address, dto.Address);
+                Assert.AreEqual(issue.Picture1, dto.Picture1);
+                Assert.AreEqual(issue.Picture2, dto.Picture2);
+                Assert.AreEqual(issue.Picture3, dto.Picture3);
+                Assert.AreEqual(issue.Category.Name, dto.Category.Name);
+                Assert.AreEqual(issue.SubCategory.Name, dto.SubCategory.Name);
+                Assert.AreEqual(issue.Municipality.Name, dto.Municipality.Name);
+                Assert.AreEqual(issue.IssueState.Name, dto.IssueState.Name);
+                Assert.AreEqual(issue.MunicipalityResponses.Count, dto.MunicipalityResponses.Count);
+                Assert.AreEqual(issue.Verifications.Count, dto.IssueVerificationCitizenIds.Count);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(IssueReportDTO))]
+        public void IssueController_IssueReportDTO_CorrectValues()
+        {
+            // Arrange
+            var contextFactory = new MockHiveContextFactory();
+
+            // Act 
+            // Assert
+            using (var context = contextFactory.CreateDbContext())
+            {
+                var issue = context.Issues.FirstOrDefault();
+                var dto = new IssueReportDTO(issue);
+
+                Assert.AreEqual(issue.Id, dto.Id);
+                Assert.AreEqual(issue.Description, dto.Description);
+                Assert.AreEqual(issue.MunicipalityId, dto.MunicipalityId);
+                Assert.AreEqual(issue.Citizen.Id, dto.Citizen.Id);
+                Assert.AreEqual(issue.Reports.Count, dto.Reports.Count);
             }
         }
     }

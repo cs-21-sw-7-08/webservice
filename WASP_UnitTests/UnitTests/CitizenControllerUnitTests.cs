@@ -664,7 +664,7 @@ namespace WASP.Test.UnitTests
         public async Task CitizenController_DeleteCitizen_Successful()
         {
             //Arrange
-            int citizenId = 4;
+            int citizenId = 1;
 
             var contextFactory = new MockHiveContextFactory();
             CitizenController controller = new(contextFactory);
@@ -699,7 +699,73 @@ namespace WASP.Test.UnitTests
                 //Assert
                 Assert.AreEqual(result.Value.ErrorNo, ErrorNo);
             }
+        }
 
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.GetListOfCitizens))]
+        public async Task CitizenController_GetListOfCitizens_MunicipalityDoesNotExist()
+        {
+            // Arrange
+            int municipalityId = 10;
+            int errorCode = (int)ResponseErrors.MunicipalityDoesNotExist;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            // Act            
+            var result = await controller.GetListOfCitizens(municipalityId, false);
+
+            // Assert                
+            using (var context = contextFactory.CreateDbContext())
+            {
+                Assert.AreEqual(errorCode, result.Value.ErrorNo);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenController.GetListOfCitizens))]
+        public async Task IssueController_GetListOfCitizens_Success()
+        {
+            // Arrange
+            int municipalityId = 1;
+            var contextFactory = new MockHiveContextFactory();
+            CitizenController controller = new(contextFactory);
+
+            // Act            
+            var result = await controller.GetListOfCitizens(municipalityId, true);
+
+            // Assert                
+            using (var context = contextFactory.CreateDbContext())
+            {
+                Assert.IsTrue(result.Value.IsSuccessful);
+                Assert.IsInstanceOfType(result.Value.Result, typeof(IEnumerable<CitizenDTO>));
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(nameof(CitizenDTO))]
+        public void CitizenController_CitizenDTO_CorrectValues()
+        {
+            // Arrange
+            var contextFactory = new MockHiveContextFactory();
+            var email = "test@test.com";
+            var phoneNo = "1234";
+            var isBlocked = true;
+            
+            using (var context = contextFactory.CreateDbContext())
+            {
+                // Act 
+                var dto = new CitizenDTO(context.Citizens.Include(x => x.Municipality).FirstOrDefault());
+                var municipality = new MunicipalityDTO(context.Municipalities.FirstOrDefault());
+                dto.Email = email;
+                dto.PhoneNo = phoneNo;
+                dto.IsBlocked = isBlocked;
+                dto.Municipality = municipality;
+                // Assert
+                Assert.AreEqual(email, dto.Email);
+                Assert.AreEqual(phoneNo, dto.PhoneNo);
+                Assert.AreEqual(isBlocked, dto.IsBlocked);
+                Assert.AreEqual(municipality.Id, dto.Municipality.Id);
+            }
         }
     }
 }

@@ -253,6 +253,14 @@ namespace WASP.Test.Model
                     MunicipalityUserId = 3,
                     Response = "Vi har taget os af det meget farlige træ",
                     DateCreated = DateTime.Parse("2021-10-22 13:44:15"),
+                },
+                new MunicipalityResponse()
+                {
+                    Id = 3,
+                    IssueId = 1,
+                    MunicipalityUserId = 2,
+                    Response = "Det kigger vi på straks, der skal nok komme salt på fortorvet",
+                    DateCreated = DateTime.Parse("2021-10-22 13:44:15"),
                 }
             );
             // ReportCategories
