@@ -23,11 +23,11 @@ namespace WASP.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<WASPResponse<MunicipalityUserSignUpOutputDTO>>> SignUpMunicipality(MunicipalityUserSignUpInputDTO munUser)
+        public async Task<ActionResult<WASPResponse>> SignUpMunicipality(MunicipalityUserSignUpInputDTO munUser)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.MunicipalitySignUp(munUser),
-                (dataResponse) => new WASPResponse<MunicipalityUserSignUpOutputDTO>(dataResponse.Result)
+                (dataResponse) => new WASPResponse()
             );
         }
 
@@ -41,20 +41,20 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WASPResponse<MunicipalityResponseOutputDTO>>> CreateMunicipalityResponse(MunicipalityResponseInputDTO response)
+        public async Task<ActionResult<WASPResponse>> CreateMunicipalityResponse(MunicipalityResponseInputDTO response)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.CreateResponse(response),
-               (dataResponse) => new WASPResponse<MunicipalityResponseOutputDTO>(dataResponse.Result)
+               (dataResponse) => new WASPResponse()
            );
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse<MunicipalityResponseOutputDTO>>> UpdateMunicipalityResponse(int responseId, IEnumerable<WASPUpdate> updates)
+        public async Task<ActionResult<WASPResponse>> UpdateMunicipalityResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
                async () => await DataService.UpdateResponse(responseId, updates),
-               (dataResponse) => new WASPResponse<MunicipalityResponseOutputDTO>(dataResponse.Result)
+               (dataResponse) => new WASPResponse()
            );
         }
 

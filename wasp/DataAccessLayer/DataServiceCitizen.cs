@@ -260,6 +260,24 @@ namespace WASP.DataAccessLayer
                }
                );
         }
+        public async Task<DataResponse<List<CitizenDTO>>> GetCitizens(int municipalityId, bool isBlocked)
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   var municipality = await context.Municipalities.FirstOrDefaultAsync(x => x.Id == municipalityId);
+                   if (municipality == null)
+                       return new DataResponse<List<CitizenDTO>>((int)ResponseErrors.MunicipalityDoesNotExist);
+
+                   var reports = await context.Citizens                                        
+                                        .Where(x => x.MunicipalityId == municipalityId && x.IsBlocked == isBlocked)
+                                        .Select(x => new CitizenDTO(x))
+                                        .ToListAsync();
+                   return new DataResponse<List<CitizenDTO>>(reports);
+               }
+               );
+        }
+
         #endregion
     }
 }

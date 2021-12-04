@@ -45,6 +45,14 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
         }
 
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<List<CitizenDTO>>>> GetListOfCitizens(int municipalityId, bool isBlocked)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetCitizens(municipalityId, isBlocked),
+                (dataResponse) => new WASPResponse<List<CitizenDTO>>(dataResponse.Result));
+        }
+
         [HttpPut]
         public async Task<ActionResult<WASPResponse>> UpdateCitizen(int citizenId, IEnumerable<WASPUpdate> updates)
         {

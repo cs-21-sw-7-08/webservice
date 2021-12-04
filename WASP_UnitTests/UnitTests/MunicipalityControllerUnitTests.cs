@@ -37,7 +37,7 @@ namespace WASP.Test.UnitTests
 
             using (var context = contextFactory.CreateDbContext())
             {
-                var response = context.MunicipalityResponses.FirstOrDefault(x => x.Id == result.Value.Result.Id);
+                var response = context.MunicipalityResponses.FirstOrDefault(x => x.Response == testResponse.Response && x.IssueId == testResponse.IssueId);
                 //Assert
                 Assert.AreEqual(testResponse.IssueId, response.IssueId);
                 Assert.AreEqual(testResponse.MunicipalityUserId, response.MunicipalityUserId);
@@ -247,7 +247,7 @@ namespace WASP.Test.UnitTests
 
             using (var context = contextFactory.CreateDbContext())
             {
-                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Id == result.Value.Result.Id);
+                var user = context.MunicipalityUsers.FirstOrDefault(x => x.Email == testUser.Email);
                 //Assert
                 Assert.AreEqual(testUser.Email, user.Email);
             }

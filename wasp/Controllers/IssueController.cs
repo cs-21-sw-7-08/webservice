@@ -114,5 +114,14 @@ namespace WASP.Controllers
             );
         }
 
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<IssueReportDTO>>>> GetListOfReports(int municipalityId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetReports(municipalityId),
+                (dataResponse) => new WASPResponse<IEnumerable<IssueReportDTO>>(dataResponse.Result)
+            );
+        }
+
     }
 }

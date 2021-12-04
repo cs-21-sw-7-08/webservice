@@ -96,7 +96,7 @@ namespace WASP.Interfaces
         /// <param name="muniUser">A set of properties used when signing up a municipality user. 
         /// These include an Email, Password, Name and a valid Int MunicipalityId </param>
         /// <returns></returns>
-        public Task<DataResponse<MunicipalityUserSignUpOutputDTO>> MunicipalitySignUp(MunicipalityUserSignUpInputDTO muniUser);
+        public Task<DataResponse> MunicipalitySignUp(MunicipalityUserSignUpInputDTO muniUser);
         /// <summary>
         /// Takes a MunicipalityUserLogin DTO and returns a MunicipalityUserDTO. This function is used when a municipality user login.
         /// The MunicipalityUserLogin needs a email and a password. Neither is case sensitive. 
@@ -111,7 +111,7 @@ namespace WASP.Interfaces
         /// <param name="response">Contains the information nessecary to create a response.
         /// This includes a int issue identifier, a int municipalityuser identifier and a string response message</param>
         /// <returns></returns>
-        public Task<DataResponse<MunicipalityResponseOutputDTO>> CreateResponse(MunicipalityResponseInputDTO response);
+        public Task<DataResponse> CreateResponse(MunicipalityResponseInputDTO response);
         /// <summary>
         /// Takes a int responseId and a list of WASPUpdate updates and returns the updated Municipality response. 
         /// This function updates a given municipality response values specified by the list of updates given.
@@ -120,7 +120,7 @@ namespace WASP.Interfaces
         /// <param name="updates">The list of updates for the response. 
         /// A single update contains a string Name identifier for the value and the actual updated value. </param>
         /// <returns></returns>
-        public Task<DataResponse<MunicipalityResponseOutputDTO>> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
+        public Task<DataResponse> UpdateResponse(int responseId, IEnumerable<WASPUpdate> updates);
         /// <summary>
         /// Takes a int responseId and returns a dataresponse. This function deletes the given response. 
         /// </summary>
@@ -190,5 +190,18 @@ namespace WASP.Interfaces
         /// <param name="citizenId">A int identifier for citizen.</param>
         /// <returns></returns>
         public Task<DataResponse<bool>> IsBlockedCitizen(int citizenId);
+        /// <summary>
+        /// This function takes an int municipality ID and a bool is blocked. 
+        /// </summary>
+        /// <param name="municipalityId">Municipality ID</param>
+        /// <param name="isBlocked">Flag telling whether a citizen is blocked or not</param>
+        /// <returns>It returns a list of citizens corresponding to the given parameters</returns>
+        public Task<DataResponse<List<CitizenDTO>>> GetCitizens(int municipalityId, bool isBlocked);
+        /// <summary>
+        /// Get reports for a given municipality ID
+        /// </summary>
+        /// <param name="municipalityId">Municipality ID</param>
+        /// <returns></returns>
+        public Task<DataResponse<List<IssueReportDTO>>> GetReports(int municipalityId);
     }
 }

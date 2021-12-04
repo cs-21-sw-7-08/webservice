@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WASP.Models.DTOs
+namespace WASP.Models
 {
     public class ReportCategoryDTO
     {

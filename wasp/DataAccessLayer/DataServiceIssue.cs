@@ -412,6 +412,28 @@ namespace WASP.DataAccessLayer
             );
         }
 
+        public async Task<DataResponse<List<IssueReportDTO>>> GetReports(int municipalityId)
+        {
+            return await DataServiceUtil.GetResponse(ContextFactory,
+               async (context) =>
+               {
+                   var municipality = await context.Municipalities.FirstOrDefaultAsync(x => x.Id == municipalityId);
+                   if (municipality == null)
+                       return new DataResponse<List<IssueReportDTO>>((int)ResponseErrors.MunicipalityDoesNotExist);
+
+                   var reports = await context.Issues
+                                        .Include(x => x.Citizen)
+                                        .Include(x => x.Reports)
+                                        .ThenInclude(y => y.ReportCategory)                                        
+                                        .Where(x => x.MunicipalityId == municipalityId && x.Reports.Count > 0)
+                                        .Select(x => new IssueReportDTO(x))
+                                        .ToListAsync();
+                   return new DataResponse<List<IssueReportDTO>>(reports);
+               }
+            );
+        }
+
+
         #endregion
     }
 }
