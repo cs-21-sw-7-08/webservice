@@ -45,7 +45,7 @@ namespace WASP.Test.IntegrationTests
             using (var client = server.CreateClient())
             {   
                 // Act
-                HttpResponseMessage responseMessage = await client.GetAsync("/WASP/Issues/GetIssueDetails?issueId=1");
+                HttpResponseMessage responseMessage = await client.GetAsync("/WASP/Issue/GetIssueDetails?issueId=1");
                 string content = await responseMessage.Content.ReadAsStringAsync();
 
                 // Assert
@@ -63,7 +63,7 @@ namespace WASP.Test.IntegrationTests
             using (var client = server.CreateClient())
             {
                 // Act
-                HttpResponseMessage responseMessage = await client.GetAsync("/WASP/Issues/GetIssueDetails?issueId=99");
+                HttpResponseMessage responseMessage = await client.GetAsync("/WASP/Issue/GetIssueDetails?issueId=99");
                 string content = await responseMessage.Content.ReadAsStringAsync();
 
                 // Assert
@@ -183,7 +183,7 @@ namespace WASP.Test.IntegrationTests
             using (var client = server.CreateClient())
             {
                 // Act
-                HttpResponseMessage responseMessage = await client.GetAsync("/WASP/Issues/GetIssueTails?issueId=1");
+                HttpResponseMessage responseMessage = await client.GetAsync("/WASP/Issue/GetIssueTails?issueId=1");
                 string content = await responseMessage.Content.ReadAsStringAsync();
 
                 // Assert

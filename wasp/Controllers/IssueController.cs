@@ -15,7 +15,7 @@ using WASP.Utilities;
 namespace WASP.Controllers
 {
     [ApiController]
-    [Route("WASP/Issues/[action]")]
+    [Route("WASP/Issue/[action]")]
     public class IssueController : BaseController
     {
         public IssueController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
