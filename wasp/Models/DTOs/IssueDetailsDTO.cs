@@ -15,7 +15,9 @@ namespace WASP.Models
             Description = issue.Description;
             CitizenId = issue.CitizenId;
             DateCreated = issue.DateCreated;
+            DateEdited = issue.DateEdited;
             Location = issue.Location;
+            Address = issue.Address;
             Picture1 = issue.Picture1;
             Picture2 = issue.Picture2;
             Picture3 = issue.Picture3;
@@ -23,15 +25,18 @@ namespace WASP.Models
             SubCategory = new SubCategoryDTO(issue.SubCategory);
             Category = new CategoryDTO(issue.Category);                        
             IssueState = new IssueStateDTO(issue.IssueState);
-            MunicipalityResponses = issue.MunicipalityResponses.Select(x => new MunicipalityResponseDTO(x)).ToList();
+            MunicipalityResponses = issue.MunicipalityResponses.Select(x => new MunicipalityResponseOutputDTO(x)).ToList();
+            IssueVerificationCitizenIds = issue.Verifications.Select(x => x.CitizenId).ToList();
         }
 
         public int Id { get; set; }
         public int CitizenId { get; set; }                        
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
+        public DateTime? DateEdited { get; set; }
         [JsonIgnore]
         public Geometry Location { get; set; }
+        public string Address { get; set; }
         public string Picture1 { get; set; }
         public string Picture2 { get; set; }
         public string Picture3 { get; set; }
@@ -47,6 +52,7 @@ namespace WASP.Models
         public virtual SubCategoryDTO SubCategory { get; set; }
         public virtual MunicipalityDTO Municipality { get; set; }
         public virtual IssueStateDTO IssueState { get; set; }
-        public virtual ICollection<MunicipalityResponseDTO> MunicipalityResponses { get; set; }
+        public virtual ICollection<MunicipalityResponseOutputDTO> MunicipalityResponses { get; set; }
+        public virtual ICollection<int> IssueVerificationCitizenIds { get; set; }
     }
 }

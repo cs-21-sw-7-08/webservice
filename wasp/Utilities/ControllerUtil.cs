@@ -10,7 +10,19 @@ namespace WASP.Utilities
 {
     public class ControllerUtil
     {
-        public static async Task<TypeWASPResponse> GetResponse<TypeDataResponse, TypeWASPResponse>(Func<Task<TypeDataResponse>> getDataResponseMethod, Func<TypeDataResponse, TypeWASPResponse> parseDataResponseMethod)
+        /// <summary>
+        /// Method used to get WASPResponse object
+        /// </summary>
+        /// <typeparam name="TypeDataResponse">DataResponse type</typeparam>
+        /// <typeparam name="TypeWASPResponse">WASPResponse type</typeparam>
+        /// <param name="getDataResponseMethod">Method returning DataResponse object</param>
+        /// <param name="parseDataResponseMethod">Method returning WASPResponse object</param>
+        /// <returns></returns>
+        public static async Task<TypeWASPResponse> GetResponse<TypeDataResponse, TypeWASPResponse>
+            (
+                Func<Task<TypeDataResponse>> getDataResponseMethod, 
+                Func<TypeDataResponse, TypeWASPResponse> parseDataResponseMethod
+            )
             where TypeDataResponse : DataResponse
             where TypeWASPResponse : WASPResponse
         {

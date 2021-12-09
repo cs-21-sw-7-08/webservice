@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using WASP.DataAccessLayer;
 using WASP.Enums;
 using WASP.Models;
+using WASP.Models.DTOs;
 using WASP.Objects;
 using WASP.Utilities;
 
 namespace WASP.Controllers
 {
     [ApiController]
-    [Route("WASP/Issues/[action]")]
+    [Route("WASP/Issue/[action]")]
     public class IssueController : BaseController
     {
         public IssueController(IDbContextFactory<HiveContext> contextFactory) : base(contextFactory)
@@ -51,20 +52,29 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WASPResponse<Issue>>> CreateIssue(Issue issue)
+        public async Task<ActionResult<WASPResponse>> CreateIssue(IssueCreateDTO issue)
         {
             return await ControllerUtil.GetResponse(
                 async () => await DataService.CreateIssue(issue),
-                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+                (dataResponse) => new WASPResponse()
             );
         }
 
         [HttpPut]
-        public async Task<ActionResult<WASPResponse<Issue>>> UpdateIssue(Issue issue)
+        public async Task<ActionResult<WASPResponse>> UpdateIssue(int issueId, IEnumerable<WASPUpdate> updates)
         {
             return await ControllerUtil.GetResponse(
-                async () => await DataService.UpdateIssue(issue),
-                (dataResponse) => new WASPResponse<Issue>(dataResponse.Result)
+                async () => await DataService.UpdateIssue(issueId, updates),
+                (dataResponse) => new WASPResponse()
+            );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> UpdateIssueStatus(int issueId, int issueStateId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UpdateIssueStatus(issueId, issueStateId),
+                (dataResponse) => new WASPResponse()
             );
         }
 
@@ -76,5 +86,42 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse()
             );
         }
+
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> VerifyIssue(int issueId, int citizenId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.VerifyIssue(issueId, citizenId),
+                (dataResponse) => new WASPResponse()
+            );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> ReportIssue(int issueId, int reportCategoryId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.ReportIssue(issueId, reportCategoryId),
+                (dataResponse) => new WASPResponse()
+            );
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<ReportCategoryDTO>>>> GetListOfReportCategories()
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetReportCategories(),
+                (dataResponse) => new WASPResponse<IEnumerable<ReportCategoryDTO>>(dataResponse.Result)
+            );
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<IssueReportDTO>>>> GetListOfReports(int municipalityId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetReports(municipalityId),
+                (dataResponse) => new WASPResponse<IEnumerable<IssueReportDTO>>(dataResponse.Result)
+            );
+        }
+
     }
 }

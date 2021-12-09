@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using WASP.Models;
 using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
+using WASP.Utilities;
+using WASP.Objects;
+using WASP.Models.DTOs;
 
 namespace WASP.Controllers
 {
@@ -20,46 +23,57 @@ namespace WASP.Controllers
 
 
         [HttpPost]
-        public async Task<WASPResponse> SignUp(MunicipalityUser munUser)
+        public async Task<ActionResult<WASPResponse>> SignUpMunicipality(MunicipalityUserSignUpInputDTO munUser)
         {
-            await DataService.MunicipalitySignUp(munUser);
-            return new WASPResponse();
-        }
-
-        [HttpGet]
-        public async Task<WASPResponse> LogIn(MunicipalityUser munUser)
-        {
-            await DataService.MunicipalityLogIn(munUser);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.MunicipalitySignUp(munUser),
+                (dataResponse) => new WASPResponse()
+            );
         }
 
         [HttpPost]
-        public async Task<WASPResponse> CreateResponse(MunicipalityResponse response)
+        public async Task<ActionResult<WASPResponse<MunicipalityUserDTO>>> LogInMunicipality(MunicipalityUserLoginDTO munUser)
         {
-            await DataService.CreateResponse(response);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.MunicipalityLogIn(munUser),
+                (dataResponse) => new WASPResponse<MunicipalityUserDTO>(dataResponse.Result)
+            );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> CreateMunicipalityResponse(MunicipalityResponseInputDTO response)
+        {
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.CreateResponse(response),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
         [HttpPut]
-        public async Task<WASPResponse> UpdateResponse(MunicipalityResponse response)
+        public async Task<ActionResult<WASPResponse>> UpdateMunicipalityResponse(int responseId, IEnumerable<WASPUpdate> updates)
         {
-            await DataService.UpdateResponse(response);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.UpdateResponse(responseId, updates),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteResponse(int response_id)
+        public async Task<ActionResult<WASPResponse>> DeleteMunicipalityResponse(int responseId)
         {
-            await DataService.DeleteResponse(response_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+               async () => await DataService.DeleteResponse(responseId),
+               (dataResponse) => new WASPResponse()
+           );
         }
 
-        [HttpPut]
-        public async Task<WASPResponse> UpdateIssueStatus(int issue_id)
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<IEnumerable<MunicipalityDTO>>>> GetListOfMunicipalities()
         {
-            await DataService.UpdateIssueStatus(issue_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetMunicipalities(),
+                (dataResponse) => new WASPResponse<IEnumerable<MunicipalityDTO>>(dataResponse.Result)
+            );
         }
-
     }
 }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using WASP.Models;
 using WASP.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
+using WASP.Utilities;
+using WASP.Models.DTOs;
+using WASP.Objects;
 
 namespace WASP.Controllers
 {
@@ -19,43 +22,74 @@ namespace WASP.Controllers
         }
 
         [HttpPost]
-        public async Task<WASPResponse> SignUp(Citizen citizen)
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> SignUpCitizen(CitizenSignUpInputDTO citizen)
         {
-            await DataService.CitizenSignUp(citizen);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.CitizenSignUp(citizen),
+                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
+        }
 
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> LogInCitizen(CitizenLoginDTO citizen)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.CitizenLogIn(citizen),
+                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
         }
 
         [HttpGet]
-        public async Task<WASPResponse> LogIn(Citizen citizen)
+        public async Task<ActionResult<WASPResponse<CitizenDTO>>> GetCitizen(int citizenId)
         {
-            await DataService.CitizenLogIn(citizen);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetCitizen(citizenId),
+                (dataResponse) => new WASPResponse<CitizenDTO>(dataResponse.Result));
+        }
 
+        [HttpGet]
+        public async Task<ActionResult<WASPResponse<List<CitizenDTO>>>> GetListOfCitizens(int municipalityId, bool isBlocked)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.GetCitizens(municipalityId, isBlocked),
+                (dataResponse) => new WASPResponse<List<CitizenDTO>>(dataResponse.Result));
         }
 
         [HttpPut]
-        public async Task<WASPResponse> BlockUser(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> UpdateCitizen(int citizenId, IEnumerable<WASPUpdate> updates)
         {
-            await DataService.BlockCitizen(citizen_id);
-            return new WASPResponse();
-
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UpdateCitizen(citizenId, updates),
+                (dataResponse) => new WASPResponse());
         }
 
-        [HttpPut]
-        public async Task<WASPResponse> UnblockUser(int citizen_id)
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> BlockCitizen(int citizenId)
         {
-            await DataService.UnblockCitizen(citizen_id);
-            return new WASPResponse();
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.BlockCitizen(citizenId),
+                (dataResponse) => new WASPResponse());
+        }
 
+        [HttpPost]
+        public async Task<ActionResult<WASPResponse>> UnblockCitizen(int citizenId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.UnblockCitizen(citizenId),
+                (dataResponse) => new WASPResponse());
         }
 
         [HttpDelete]
-        public async Task<WASPResponse> DeleteUser(int citizen_id)
+        public async Task<ActionResult<WASPResponse>> DeleteCitizen(int citizenId)
         {
-            await DataService.DeleteCitizen(citizen_id);
-            return new WASPResponse();
-
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.DeleteCitizen(citizenId),
+                (dataResponse) => new WASPResponse());
+        }
+        [HttpGet]
+        public async Task<WASPResponse<bool>> IsBlockedCitizen(int citizenId)
+        {
+            return await ControllerUtil.GetResponse(
+                async () => await DataService.IsBlockedCitizen(citizenId),
+                (dataResponse) => new WASPResponse<bool>(dataResponse.Result));
         }
 
     }

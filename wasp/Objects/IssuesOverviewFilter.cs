@@ -9,9 +9,11 @@ namespace WASP.Objects
     {
         public DateTime? FromTime { get; set; }
         public DateTime? ToTime { get; set; }
-        public int? MunicipalityId { get; set; }
-        public int? IssueStateId { get; set; }
-        public int? CategoryId { get; set; }
-        public int? SubCategoryId { get; set; }
+        public List<int> CitizenIds { get; set; }
+        public List<int> MunicipalityIds { get; set; }
+        public List<int> IssueStateIds { get; set; }
+        public List<int> CategoryIds { get; set; }
+        public List<int> SubCategoryIds { get; set; }
+        public bool? IsBlocked { get; set; }
     }
 }

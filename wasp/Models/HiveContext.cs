@@ -23,10 +23,14 @@ namespace WASP.Models
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<ReportCategory> ReportCategories { get; set; }
         public virtual DbSet<SubCategory> SubCategories { get; set; }
+        public virtual DbSet<Verification> Verifications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=Hive;Trusted_Connection=True;", x => x.UseNetTopologySuite());
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,7 +41,7 @@ namespace WASP.Models
             {
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(63)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
             });
 
@@ -47,7 +51,7 @@ namespace WASP.Models
                     .IsUnique();
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(63)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
@@ -58,11 +62,24 @@ namespace WASP.Models
                 entity.Property(e => e.PhoneNo)
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Municipality)
+                    .WithMany(p => p.Citizens)
+                    .HasForeignKey(d => d.MunicipalityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Citizens__Munici__276EDEB3");
             });
 
             modelBuilder.Entity<Issue>(entity =>
             {
+                entity.Property(e => e.Address)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
+
+                entity.Property(e => e.DateEdited).HasColumnType("datetime");
 
                 entity.Property(e => e.Description)
                     .IsRequired()
@@ -81,25 +98,25 @@ namespace WASP.Models
                     .WithMany(p => p.Issues)
                     .HasForeignKey(d => d.CitizenId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Issues__CitizenI__34C8D9D1");
+                    .HasConstraintName("FK__Issues__CitizenI__35BCFE0A");
 
                 entity.HasOne(d => d.IssueState)
                     .WithMany(p => p.Issues)
                     .HasForeignKey(d => d.IssueStateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Issues__IssueSta__36B12243");
+                    .HasConstraintName("FK__Issues__IssueSta__37A5467C");
 
                 entity.HasOne(d => d.Municipality)
                     .WithMany(p => p.Issues)
                     .HasForeignKey(d => d.MunicipalityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Issues__Municipa__35BCFE0A");
+                    .HasConstraintName("FK__Issues__Municipa__36B12243");
 
                 entity.HasOne(d => d.SubCategory)
                     .WithMany(p => p.Issues)
                     .HasForeignKey(d => new { d.SubCategoryId, d.CategoryId })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Issues__37A5467C");
+                    .HasConstraintName("FK__Issues__38996AB5");
             });
 
             modelBuilder.Entity<IssueState>(entity =>
@@ -122,6 +139,8 @@ namespace WASP.Models
             {
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
+                entity.Property(e => e.DateEdited).HasColumnType("datetime");
+
                 entity.Property(e => e.Response)
                     .IsRequired()
                     .HasMaxLength(255)
@@ -131,18 +150,18 @@ namespace WASP.Models
                     .WithMany(p => p.MunicipalityResponses)
                     .HasForeignKey(d => d.IssueId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Municipal__Issue__3A81B327");
+                    .HasConstraintName("FK__Municipal__Issue__3B75D760");
 
                 entity.HasOne(d => d.MunicipalityUser)
                     .WithMany(p => p.MunicipalityResponses)
                     .HasForeignKey(d => d.MunicipalityUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Municipal__Munic__3B75D760");
+                    .HasConstraintName("FK__Municipal__Munic__3C69FB99");
             });
 
             modelBuilder.Entity<MunicipalityUser>(entity =>
             {
-                entity.HasIndex(e => e.Email, "UQ__Municipa__A9D105348B21313D")
+                entity.HasIndex(e => e.Email, "UQ__Municipa__A9D10534F65BA803")
                     .IsUnique();
 
                 entity.Property(e => e.Email)
@@ -164,7 +183,7 @@ namespace WASP.Models
                     .WithMany(p => p.MunicipalityUsers)
                     .HasForeignKey(d => d.MunicipalityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Municipal__Munic__31EC6D26");
+                    .HasConstraintName("FK__Municipal__Munic__32E0915F");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -173,13 +192,13 @@ namespace WASP.Models
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.IssueId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reports__IssueId__403A8C7D");
+                    .HasConstraintName("FK__Reports__IssueId__412EB0B6");
 
                 entity.HasOne(d => d.ReportCategory)
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.ReportCategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Reports__ReportC__412EB0B6");
+                    .HasConstraintName("FK__Reports__ReportC__4222D4EF");
             });
 
             modelBuilder.Entity<ReportCategory>(entity =>
@@ -200,14 +219,32 @@ namespace WASP.Models
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(63)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.SubCategories)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SubCatego__Categ__2A4B4B5E");
+                    .HasConstraintName("FK__SubCatego__Categ__2D27B809");
+            });
+
+            modelBuilder.Entity<Verification>(entity =>
+            {
+                entity.HasIndex(e => new { e.IssueId, e.CitizenId }, "IssueVerifications_UQ")
+                    .IsUnique();
+
+                entity.HasOne(d => d.Citizen)
+                    .WithMany(p => p.Verifications)
+                    .HasForeignKey(d => d.CitizenId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Verificat__Citiz__46E78A0C");
+
+                entity.HasOne(d => d.Issue)
+                    .WithMany(p => p.Verifications)
+                    .HasForeignKey(d => d.IssueId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Verificat__Issue__45F365D3");
             });
 
             OnModelCreatingPartial(modelBuilder);

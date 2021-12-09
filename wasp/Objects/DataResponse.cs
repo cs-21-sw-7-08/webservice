@@ -25,7 +25,6 @@ namespace WASP.Models
 
     public class DataResponse<ResultType> : DataResponse
     {
-
         public ResultType Result { get; set; }
 
         public DataResponse(ResultType result)
@@ -38,6 +37,5 @@ namespace WASP.Models
         {
             Result = default;
         }
-
     }
 }
