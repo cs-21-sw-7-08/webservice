@@ -69,7 +69,7 @@ namespace WASP.Controllers
             );
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<WASPResponse>> UpdateIssueStatus(int issueId, int issueStateId)
         {
             return await ControllerUtil.GetResponse(

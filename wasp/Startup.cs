@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WASP.Models;
 using System.Runtime.InteropServices;
+using System;
 
 namespace WASP
 {
@@ -35,7 +36,7 @@ namespace WASP
                     options.UseSqlServer(Configuration.GetConnectionString(
                         RuntimeInformation.IsOSPlatform(OSPlatform.Windows)?"HiveConnection":"HiveConnectionLinux"), //might become a problem with macOS
                         x => x.UseNetTopologySuite());
-                    options.UseLoggerFactory(_myLoggerFactory);
+                    options.LogTo(Console.WriteLine, LogLevel.Information);
                 }
             );            
             // Set JSON options

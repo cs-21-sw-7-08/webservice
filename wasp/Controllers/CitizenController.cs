@@ -61,7 +61,7 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse());
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<WASPResponse>> BlockCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
@@ -69,7 +69,7 @@ namespace WASP.Controllers
                 (dataResponse) => new WASPResponse());
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<WASPResponse>> UnblockCitizen(int citizenId)
         {
             return await ControllerUtil.GetResponse(
