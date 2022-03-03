@@ -18,10 +18,8 @@ namespace WASP.Test.Model
             var optionsBuilder = new DbContextOptionsBuilder<HiveContext>();
             optionsBuilder.UseInMemoryDatabase("Hive");
             // Get reset flag
-            var resetDatabase = ResetDatabase;
-            // Set the flag to false if it is true
-            if (ResetDatabase)
-                ResetDatabase = false;
+            var resetDatabase = ResetDatabase;            
+            ResetDatabase = false;
             // Return context
             return new MockHiveContext(optionsBuilder.Options, resetDatabase);
         }

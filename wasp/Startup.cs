@@ -34,11 +34,10 @@ namespace WASP
             services.AddDbContextFactory<HiveContext>(
                 options => {
                     options.UseSqlServer(Configuration.GetConnectionString(
-                        RuntimeInformation.IsOSPlatform(OSPlatform.Windows)?"HiveConnection":"HiveConnectionLinux"), //might become a problem with macOS
+                        RuntimeInformation.IsOSPlatform(OSPlatform.Windows)? "HiveConnection" : "HiveConnectionLinux"), //might become a problem with macOS
                         x => x.UseNetTopologySuite());
                     options.LogTo(Console.WriteLine, LogLevel.Information);
-                }
-            );            
+                });            
             // Set JSON options
             services.AddMvc().AddJsonOptions(options =>
             {

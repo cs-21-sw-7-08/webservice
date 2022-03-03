@@ -52,8 +52,7 @@ namespace WASP.DataAccessLayer
                    // Set flag if not set; return errorResponse if already set
                    if (citizen.IsBlocked == true)
                        citizen.IsBlocked = false;
-                   else
-                       //TODO: Add errorcode in ErrorResponse enum
+                   else                       
                        return new DataResponse((int)ResponseErrors.CitizenAlreadyUnblocked);
                    await context.SaveChangesAsync();
                    return new DataResponse();
